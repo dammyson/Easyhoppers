@@ -1,20 +1,17 @@
 import React, {Component} from 'react';
-import {ActivityIndicator, Picker, TextInput, StyleSheet, Text, View,Image, Dimensions, TouchableOpacity} from 'react-native';
-import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import {PieChart} from 'react-native-chart-kit'   
-import Icon from 'react-native-vector-icons/FontAwesome';
+import {ActivityIndicator, AsyncStorage, TextInput, StyleSheet, Text, View,Alert, Dimensions, TouchableOpacity} from 'react-native';
+import PickerModal from 'react-native-picker-modal-view';
+const URL = require("../../components/server");
 
+
+const list = [
+	{Id: 1, Name: 'Food', Value: 'Food'},
+	{Id: 2, Name: 'Hotel', Value: 'Hotel'},
+	{Id: 3, Name: 'House Kepping', Value: 'House Kepping'},
+	{Id: 4, Name: 'Parking', Value: 'Parking'}
+]
 export default class AddBudget extends Component{
-      static navigationOptions = {
-        title: 'AddBudget',
-        headerStyle: {
-            backgroundColor: '#AFC1F2',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-      };
+    
       
       constructor(props) {
         super(props);
@@ -25,57 +22,114 @@ export default class AddBudget extends Component{
           data: [],
           search: '',
           transaction_id:'',
-          fill:76,
+          
+          selectedItem: {},
+          auth:"",
+          cat:"",
+          textcat:"",
+          des:"",
+          ammount:"",
+          expense_id:1
         };
     
        this.arrayholder = [];
-    
-    
-       const actions = [{
-        text: 'Accessibility',
-        name: 'bt_accessibility',
-        position: 2
-      }];
-    
       }      
-
+      selected(selected) {
+        this.setState({
+          selectedItem: selected
+        })
+      }
+    
          
   componentWillUnmount() {
     clearTimeout(this.timeout);
   }
+ 
+
+
   componentDidMount() {
-    this.makeRemoteRequest();
+
+    this.setState({
+      id:this.props.navigation.getParam("s_id", "defaultValue")
+    })
+    AsyncStorage.getItem('auth').then((value) => this.setState({ 'auth': value.toString()}))
+    AsyncStorage.getItem('auth').then((value) => {
+      if(value==''){
+       
+      }else{
+        this.setState({auth: value})
+      }
+     // this.makeRemoteRequest();
+    })
+
+
      }
 
-  makeRemoteRequest = () => {
-    const url = 'http://192.168.43.230/may/inde.php';
-    this.setState({ loading: true });
+     newExpenseDetails()
+     {
+      
 
-    fetch(url, { method: 'GET',  headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    } }
+                const {cat, ammount, auth, des, textcat,expense_id} = this.state
+                if(cat !== ""){
+                 this.newExpenseDetailsProcess(cat, ammount, auth, des, expense_id)
+                }else if(textcat !== ""){
+
+                  this.newExpenseDetailsProcess(textcat, ammount, auth, des, expense_id)
+                
+                }else{
+                  Alert.alert('Process failed', 'Select or type a category', [{text: 'Okay'}])
+                  return
+                }
+
+             if(ammount == ""){
+               Alert.alert('Process failed', 'Select a statuse', [{text: 'Okay'}])
+               return
+              }
+            
+       
+
+           
+   }
+
+
+   newExpenseDetailsProcess(cat, ammount, auth, des, expense_id)
+   {
     
-    )
-      .then(res => res.json())
-      .then(res => {
-        this.setState({
-          data: res.data,
-          loading: false,
-          status: res.status,
+           this.setState({loading: true})
+           fetch(URL.url+'/api/expense/add/details', { method: 'POST',  headers: {
+             Accept: 'application/json',
+             'Authorization': 'Bearer ' + auth,
+             'Content-Type': 'application/json',
+           }, body: JSON.stringify({
+                    category: cat,
+                    amount:ammount,
+                    description: des,
+                    expense_id: expense_id
+                  }), 
+          })
+           .then(res => res.json())
+           .then(res => {
+   
+             if(res.status){ 
+             this.setState({ loading: false})
+             Alert.alert('Operation Successful', res.message, [{text: 'Okay'}])
+   
+             }else{
+   
+           Alert.alert('Operation failed', res.message, [{text: 'Okay'}])
+           this.setState({ loading: false})
+             }
+           }).catch((error)=>{
+             console.log("Api call error");
+             alert(error.message);
+             this.setState({ loading: false})
+          });
           
-        });
-        this.arrayholder = res.data;
-      })
-      .catch(error => {
-        this.setState({ error, loading: false });
-      });
-  };
-
+   }
 
 
   render() {
-
+    
 
     if (this.state.loading) {
       return (
@@ -89,105 +143,75 @@ export default class AddBudget extends Component{
     return (
        
       <View style = {styles.container}>
+      <View style={{alignItems: 'center', justifyContent: 'center',paddingTop:8, paddingBottom:10, color:"#fff", fontWeight: '900',  fontSize:13,}}>
+          <Text style={{color:"#fff", fontWeight: '900',  fontSize:16,}}>Input Expense</Text>
+        </View>
           <View style = {styles.main}>
             
             <View style = {styles.submain}>
-             
-
-              <View >
-            <TextInput
-              style = {styles.input}
-              placeholder="Type Here..."
-              placeholderTextColor= '#fff'
-              round
-              value={this.state.search}
-              onChangeText={this.searchFilterFunction}
-            /></View>
-
-              <View style = {styles.search}>
-                  <TouchableOpacity style={styles.buttonContainer} >
-                    <Text style={styles.buttonText}
-                   >Save</Text>
-
-                </TouchableOpacity>
-
-                </View>
+    
                 <View style = {styles.submaintwo}>
-
-                    <AnimatedCircularProgress
-                      size={200}
-                      width={16}
-                      fill={this.state.fill}
-                      tintColor="#7892fb"
-                      backgroundColor="#a8bbf3">
-                      {
-                        (fill) => (
-                          <Text  style = {styles.headText}> N35000
-                            
-                          </Text>
-                        )
-                      }
-                         </AnimatedCircularProgress>
+                <TouchableOpacity style={{ height:30,width:80, backgroundColor: "#f44242", justifyContent: 'center',borderRadius: 10, marginLeft:50,}}
+                        onPress={() => this.props.navigation.navigate('Expense')} >
+                      <Text style={styles.buttonText} > Close</Text>
+                  </TouchableOpacity> 
                      <TextInput
                         style = {styles.inputtwo}
                         placeholder="Enter Amount of Expenses"
                         placeholderTextColor= '#000'
                         round
-                        value={this.state.search}
-                        onChangeText={this.searchFilterFunction}
+                        onChangeText = {text => this.setState({ammount: text})}
                         />
-                </View>
 
-                  <View style = {styles.submainthree}>
-                  
-                   
-                  <Picker
-                    selectedValue={this.state.language}
-                    style = {styles.inputpicker}
-                    onValueChange={(itemValue, itemIndex) =>
-                      this.setState({language: itemValue})
-                    }>
-                    <Picker.Item label="Java" value="java" />
-                    <Picker.Item label="JavaScript" value="js" />
-                    <Picker.Item label="Java" value="java" />
-                    <Picker.Item label="JavaScript" value="js" />
-                  </Picker>
-                 
+                         <View style = {styles.cat}>
+                  <PickerModal
+                    onSelected={(selected) => this.setState({cat: selected.Value})}
+                    onRequestClosed={()=> console.warn('closed...')}
+                    onBackRequest={()=> console.warn('back key pressed')}
+                    items={list}
+                    sortingLanguage={'tr'}
+                    showToTopButton={true}
+                    defaultSelected={this.state.selectedItem}
+                    autoCorrect={false}
+                    autoGenerateAlphabet={true}
+                    chooseText={'Choose Category'}
+                    searchText={'Search...'} 
+                    forceSelect={false}
+                    autoSort={true}
+                    style={styles.buttonContainer} 
+	                	/>
                   </View>
-          
-                  <View style={styles.header}> 
+                  <Text style={{fontSize: 12, fontWeight: '200',  color: '#f44242', textAlign:"center"}}>If category is not in the list enter in the field below</Text>
+                     <TextInput
+                        style = {styles.inputtwo}
+                        placeholder="Enter Category"
+                        placeholderTextColor= '#000'
+                        round
+                        onChangeText = {text => this.setState({textcat: text})}
+                        />
 
-                    <View style={styles.headerchild}> 
-                    <TouchableOpacity style={styles.button} onPress={this.showDialog}> 
-                    <Text style={{fontSize: 15, fontWeight: '900',  color: '#AFC1F2',}}>ADD</Text>
-                    </TouchableOpacity>
-                    </View>
-                     <View style={styles.headerchild}>  
-                     
-                     <TouchableOpacity style={styles.button} onPress={this.showDialog}> 
-                                <Image
-                                    style={styles.image}
-                                    resizeMode='contain'
-                                    source={require('../../images/camera.png')} />
-                                      <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>reciept</Text>
-                                 </TouchableOpacity> 
-                      </View>
-                                <View style={styles.headerchild}> 
-                                <TouchableOpacity style={styles.button} onPress={this.showDialog}> 
-                                <Image
-                                    style={styles.image}
-                                    resizeMode='contain'
-                                    source={require('../../images/add.png')} />
-                                      <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>New cat</Text>
-                                 </TouchableOpacity> 
-                                </View>
 
-              
-              
+                          <TextInput
+                        style = {styles.inputtwo}
+                        placeholder="Description"
+                        placeholderTextColor= '#000'
+                        round
+                        onChangeText = {text => this.setState({des: text})}
+                        />
 
-               
+                  <View style = {styles.search}>
+                  <TouchableOpacity style={styles.buttonContainer} 
+                  onPress={() => this.newExpenseDetails()}>
+                    <Text style={styles.buttonText}
+                   >Save</Text>
+                    
+                </TouchableOpacity>
+                
                 </View>
-            </View>
+                </View>
+
+                
+         </View>
                 
           </View>
      </View>
@@ -233,8 +257,8 @@ const styles = StyleSheet.create({
   main: {
     flex: 1,
     justifyContent: 'center',
-    paddingTop:14,
-    paddingBottom:14,
+    paddingTop:8,
+    paddingBottom:8,
     borderRadius: 20,
     marginBottom:30,
     marginLeft:10,
@@ -252,7 +276,6 @@ const styles = StyleSheet.create({
   submaintwo: {
     flex: 4,
     justifyContent: 'center',
-    alignItems: 'center',
     
   },
 
@@ -262,31 +285,20 @@ const styles = StyleSheet.create({
     
   },
   search: {
+    flexDirection: "row",
     justifyContent: 'center',
     alignItems: 'center',
+   
   },
 
-  input:{
-    height:40,
-    backgroundColor: '#eff3fd',
-    marginBottom:6,
-    color: '#fff',
-    paddingHorizontal: 40,
-    borderRadius: 25,
-    marginLeft:40,
-    marginRight:40,
-    textAlign: 'center',
-    fontWeight: '700',
-    
-    },
     inputtwo:{
         height:40,
-        backgroundColor: '#eff3fd',
         marginBottom:10,
         marginTop:15,
-        color: '#fff',
+        color: '#000',
         paddingHorizontal: 40,
-        borderRadius: 25,
+        borderWidth: 1,
+        borderColor:"#b2aeae",
         marginLeft:40,
         marginRight:40,
         textAlign: 'center',
@@ -302,9 +314,9 @@ const styles = StyleSheet.create({
       marginLeft:10,
     marginRight:10,
     },
-    routmain: {
-      flex: 1,
-      flexDirection: "row",
+    cat: {
+      marginLeft:40,
+      marginRight:40,
     }, 
     listItemWhite: {
       backgroundColor: '#eff3fd',
@@ -321,7 +333,7 @@ const styles = StyleSheet.create({
       marginBottom:10,
       backgroundColor: "#AFC1F2",
       justifyContent: 'center',
-      borderRadius: 20,
+      borderRadius: 10,
       margin:10,
     },
     buttonText:{
@@ -330,6 +342,6 @@ const styles = StyleSheet.create({
       fontWeight: '500',
       fontSize:13,
     },
-    
+   
 });
 

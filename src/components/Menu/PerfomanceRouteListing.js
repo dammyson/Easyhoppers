@@ -1,74 +1,72 @@
 
 import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, Text, View,TouchableOpacity, Image, TextInput} from 'react-native';
+import {ActivityIndicator, AsyncStorage,FlatList, StyleSheet, Text, View,TouchableOpacity, Image, TextInput} from 'react-native';
+const URL = require("../../components/server");
 
 export default class PerfomanceRouteListing extends Component{
+  
+  constructor(props) {
+    super(props);
 
-    static navigationOptions = {
-        title: 'Performance',
-        headerStyle: {
-            backgroundColor: '#AFC1F2',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-      };
-      
-      constructor(props) {
-        super(props);
-    
-        this.state = {
-          loading: false,
-          status: false,
-          data: [],
-          search: '',
-          transaction_id:'',
-        };
-    
-       this.arrayholder = [];
-    
-    
-       const actions = [{
-        text: 'Accessibility',
-        name: 'bt_accessibility',
-        position: 2
-      }];
-    
-      }      
+    this.state = {
+      loading: false,
+      status: false,
+      data: [],
+      search: '',
+      transaction_id:'',
+      auth:"",
+    };
 
-       
-  componentWillUnmount() {
-    clearTimeout(this.timeout);
+   this.arrayholder = [];
+
+  }      
+
+   
+componentWillUnmount() {
+clearTimeout(this.timeout);
+}
+componentDidMount() {
+
+AsyncStorage.getItem('auth').then((value) => this.setState({ 'auth': value.toString()}))
+AsyncStorage.getItem('auth').then((value) => {
+  if(value==''){
+   
+  }else{
+    this.setState({auth: value})
   }
-  componentDidMount() {
-    this.makeRemoteRequest();
-     }
+  this.makeRemoteRequest();
+})
 
-  makeRemoteRequest = () => {
-    const url = 'http://192.168.43.230/may/inde.php';
-    this.setState({ loading: true });
 
-    fetch(url, { method: 'GET',  headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    } }
-    
-    )
-      .then(res => res.json())
-      .then(res => {
-        this.setState({
-          data: res.data,
-          loading: false,
-          status: res.status,
-          
-        });
-        this.arrayholder = res.data;
-      })
-      .catch(error => {
-        this.setState({ error, loading: false });
-      });
-  };
+}
+
+makeRemoteRequest = () => {
+const {auth} = this.state
+this.setState({ loading: true });
+fetch(URL.url+'/api/schedules', { method: 'GET',  headers: {
+  Accept: 'application/json',
+  'Authorization': 'Bearer ' + auth,
+  'Content-Type': 'application/json',
+ }
+ })
+
+  .then(res => res.json())
+  .then(res => {
+    console.log(res)
+    this.setState({
+      data: res.data,
+      loading: false,
+      status: res.status,
+      
+    });
+    this.arrayholder = res.data;
+  })
+  .catch(error => {
+    alert(error.message);
+      this.setState({ loading: false})
+  }); 
+};
+
 
   renderSeparator = () => {
     return (
@@ -133,8 +131,8 @@ export default class PerfomanceRouteListing extends Component{
 
 
                             <View style = {styles.menudetailsTopchild}>
-                            <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Flight</Text>
-                                <Text style={{marginTop:7, fontSize: 15, fontWeight: '500',  color: '#AFC1F2',}}>{item.flight}</Text>
+                            <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Airline</Text>
+                                <Text style={{marginTop:7, fontSize: 15, fontWeight: '500',  color: '#AFC1F2',}}>{item.name}</Text>
                                             
                                     </View>
                     
@@ -142,54 +140,80 @@ export default class PerfomanceRouteListing extends Component{
 
                              <View style = {styles.menudetailsTopchild}>
                                     <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Route</Text>
-                                    <Text style={{marginTop:7, fontSize: 15, fontWeight: '500',  color: '#000',}}>{item.route}</Text>
+                                    <Text style={{marginTop:7, fontSize: 15, fontWeight: '500',  color: '#000',}}>{item.departure_port + " - " + item.arrival_port }</Text>
                                     </View>
                     
                     
                         </View>
+                        <Text style={{fontSize: 10, fontWeight: '800',  color: '#000',}}>Departure</Text>
 
-                        <View style = {styles.menudetailsMid}>
-                
-                        <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>On Time Departure</Text>
+                    <View style = {styles.menudetailsBottom}> 
+                   
+
+                    <View style = {styles.menudetailsTopchild}>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Early </Text>
                         <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#AFC1F2',}}>%60</Text>
                         </View>
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>On Time Arrival</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>On Time</Text>
                         <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#AFC1F2',}}>%40</Text>
                         </View>
+                          
 
+                           <View style = {styles.menudetailsTopchild}>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Late</Text>
+                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#AFC1F2',}}>%40</Text>
+                        </View>
                     
                     <View style = {styles.menudetailsTopchild}>
                         <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Cancellation</Text>
-                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>60%</Text>
-                        </View>
-
-                       
-                
-                    </View>
-                    <View style = {styles.menudetailsBottom}> 
-                
-                    <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Route</Text>
-                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.route}</Text>
-                        </View>
-
-                        <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Status</Text>
-                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.status}</Text>
+                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#AFC1F2',}}>60%</Text>
                         </View>
 
                         <View style = {styles.menudetailsTopchild}>
                         <TouchableOpacity style={styles.buttonContainer} >
                     <Text style={styles.buttonText}
-                    onPress={() => this.props.navigation.navigate('RoutePerfomance')}>More >></Text>
+                    onPress={() => this.props.navigation.navigate('RoutePerfomanceDeparture')}>Graph</Text>
 
                 </TouchableOpacity>
                          </View>
 
                 
                     </View>
+
+
+
+                       <Text style={{fontSize: 10, fontWeight: '800',  color: '#000',}}>Arrival</Text>
+
+                       <View style = {styles.menudetailsBottom}> 
+                       <View style = {styles.menudetailsTopchild}>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Early</Text>
+                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#AFC1F2',}}>%60</Text>
+                        </View>
+                        <View style = {styles.menudetailsTopchild}>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>On Time</Text>
+                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#AFC1F2',}}>%40</Text>
+                        </View>
+
+                        <View style = {styles.menudetailsTopchild}>
+                       </View>
+
+                    
+                    <View style = {styles.menudetailsTopchild}>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Late</Text>
+                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#AFC1F2',}}>60%</Text>
+                        </View>
+
+                    <View style = {styles.menudetailsTopchild}>
+                    <TouchableOpacity style={styles.buttonContainer} >
+                <Text style={styles.buttonText}
+                onPress={() => this.props.navigation.navigate('RoutePerfomanceArivall')}>Graph</Text>
+
+            </TouchableOpacity>
+                     </View>
+
+            
+                </View>
                 
                     </View>
 
@@ -225,13 +249,16 @@ export default class PerfomanceRouteListing extends Component{
     return (
        
           <View style = {styles.container}>
+           <View style={{alignItems: 'center', justifyContent: 'center',paddingTop:8, paddingBottom:10, color:"#fff", fontWeight: '900',  fontSize:13,}}>
+          <Text style={{color:"#fff", fontWeight: '900',  fontSize:16,}}>Performance</Text>
+        </View>
              <View style = {styles.main}>
 
           <FlatList
                 style={{paddingBottom:10}}
                 data={this.state.data}
                 renderItem={this.renderItem}
-                keyExtractor={item => item.detail}
+                keyExtractor={item => item.description}
                 ItemSeparatorComponent={this.renderSeparator}
                 ListHeaderComponent={this.renderHeader}
              />
@@ -257,7 +284,7 @@ const styles = StyleSheet.create({
     paddingTop:14,
     paddingBottom:14,
     borderRadius: 20,
-    marginBottom:50,
+    marginBottom:20,
     marginLeft:10,
     marginRight:10,
     backgroundColor: '#fff',

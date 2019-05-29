@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import {TextInput, StyleSheet, Text, View,TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, Alert, AsyncStorage} from 'react-native';
+import {TextInput, StyleSheet,ScrollView, Text, View,TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, Alert, AsyncStorage} from 'react-native';
 const URL = require("../../components/server");
 export default class Login extends Component{
 
@@ -80,14 +80,14 @@ export default class Login extends Component{
       );
     }
     return (
-      <KeyboardAvoidingView behavior="padding" style={styles.container}>
+      <View behavior="padding" style={styles.container}>
 
-        <View>
+       
+         <KeyboardAvoidingView style={styles.textInputcontainer}>
+         <View>
         <Text style={styles.headText}
                         >Sign In</Text>
         </View>
-         <View style={styles.textInputcontainer}>
-                      
                     <TextInput
                         placeholder= "Email"
                         placeholderTextColor= '#55575b'
@@ -114,7 +114,7 @@ export default class Login extends Component{
                         onChangeText = {text => this.setState({password: text})}
                 />
 
-           </View>    
+           </KeyboardAvoidingView>    
            <View style={styles.Linkcontainer}>
                 <TouchableOpacity style={styles.buttonContainer} >
                     <Text style={styles.buttonText}
@@ -139,7 +139,7 @@ export default class Login extends Component{
           </TouchableOpacity>
 
         </View>
-      </KeyboardAvoidingView>
+      </View>
     );
   }
 }
@@ -207,14 +207,15 @@ const styles = StyleSheet.create({
         fontWeight: '900',
         fontSize:25,
         textAlign:'left',
-        marginLeft: 50
+        marginLeft: 50,
+        marginBottom:30
       },
       bottom:{
-        height:60,
+        height:30,
         flexDirection: "row",
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom:10
+        marginBottom:1
       },
       linkText:{
         flex: 1,

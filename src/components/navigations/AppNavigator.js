@@ -6,10 +6,11 @@ import Register from '../Users/Register';
 import ForgotPassword from '../Users/ForgotPassword';
 import UserLanding from '../Menu/UserLanding';
 import LiveUpdate from '../Menu/LiveUpdate';
-import Perfomance from '../Menu/Perfomance';
+import RoutePerfomanceArivall from '../Menu/RoutePerfomanceArivall';
 import AirLinePerfomance from '../Menu/AirLinePerfomance';
 import Boarding from '../Menu/Boarding';
-import RoutePerfomance from '../Menu/RoutePerfomance';
+import Checkout from '../Menu/Checkout';
+import RoutePerfomanceDeparture from '../Menu/RoutePerfomanceDeparture';
 import PerfomanceRouteListing from '../Menu/PerfomanceRouteListing';
 import Expense from '../Expenses/Expense';
 import AddBudget from '../Expenses/AddBudget';
@@ -23,14 +24,13 @@ import UpdateStatus from '../Agents/UpdateStatus';
 
 const AppNavigator = createStackNavigator({
   
-
- 
-  /*
-  AgentSheduleListing: {screen: AgentSheduleListing},
+  
+  
+ /* 
     Splash: {screen: Splash,
     navigationOptions: {
       header:null 
-    }}, */
+    }}, 
     Login: {screen: Login,
       navigationOptions: {
         header:null 
@@ -46,29 +46,82 @@ const AppNavigator = createStackNavigator({
     UserLanding: {screen: UserLanding,
       navigationOptions: {
         header:null 
-      }},
+      }}, 
+      LiveUpdate: {screen: LiveUpdate,
+        navigationOptions: {
+          header:null 
+        }},
       AgentLanding: {screen: AgentLanding,
         navigationOptions: {
           header:null 
         }},
-      LiveUpdate: {screen: LiveUpdate},
-      Boarding: {screen: Boarding},
-      AirLinePerfomance: {screen: AirLinePerfomance},
-      PerfomanceRouteListing: {screen: PerfomanceRouteListing},
-      Perfomance: {screen: Perfomance},
-      LiveUpdate: {screen: LiveUpdate},
-      AgentSheduleListing: {screen: AgentSheduleListing},
-      UpdateStatus: {screen: UpdateStatus},
-      PerfomanceRouteListing: {screen: PerfomanceRouteListing},
-      RoutePerfomance: {screen: RoutePerfomance},
-      AddBudget: {screen: AddBudget},
-      Reciept: {screen: Reciept},
-      Reciept: {screen: Reciept},
-      ExpensesSum: {screen: ExpensesSum},
-      Expense: {screen: Expense},
-    
+ 
+        Boarding: {screen: Boarding,
+          navigationOptions: {
+            header:null 
+          }},
+          
+          Checkout: {screen: Checkout,
+            navigationOptions: {
+              header:null 
+            }},
+
+          AirLinePerfomance: {screen: AirLinePerfomance,
+            navigationOptions: {
+              header:null 
+            }},
+            
+        PerfomanceRouteListing: {screen: PerfomanceRouteListing,
+        navigationOptions: {
+          header:null 
+        }},
+        
+      
+        AgentSheduleListing: {screen: AgentSheduleListing,
+          navigationOptions: {
+            header:null 
+          }},
+    UpdateStatus: {screen: UpdateStatus,
+    navigationOptions: {
+      header:null 
+    }},
+     */
+    PerfomanceRouteListing: {screen: PerfomanceRouteListing,
+    navigationOptions: {
+      header:null 
+    }},
+
+    RoutePerfomanceArivall: {screen: RoutePerfomanceArivall,
+      navigationOptions: {
+        header:null 
+      }},
+    RoutePerfomanceDeparture: {screen: RoutePerfomanceDeparture,
+      navigationOptions: {
+        header:null 
+      }},
       
      
+     Expense: {screen: Expense,
+      navigationOptions: {
+        header:null 
+      }},
+      AddBudget: {screen: AddBudget,
+      navigationOptions: {
+        header:null 
+      }},
+     
+    
+     
+      ExpensesSum: {screen: ExpensesSum,
+      navigationOptions: {
+        header:null 
+      }},
+      Reciept: {screen: Reciept,
+        navigationOptions: {
+          header:null 
+        }},
+   
+
     
     
    

@@ -4,22 +4,28 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "test": "jest"
+    "test": "jest",
+    "cleanRNSVG": "find ./node_modules -type d -mindepth 2 -name react-native-svg -exec rm -rf {} \\;"
   },
   "dependencies": {
     "chart.js": "^2.8.0",
-    "clarifai": "^2.9.0",
     "react": "16.8.3",
     "react-chartkick": "^0.3.0",
     "react-native": "0.59.5",
     "react-native-camera": "^2.9.0",
     "react-native-chart-kit": "^2.6.0",
-    "react-native-circular-progress": "^1.1.0",
+    "react-native-d3multiline-chart": "^1.0.18",
     "react-native-elements": "^1.1.0",
     "react-native-gesture-handler": "^1.2.1",
+    "react-native-indicators": "^0.13.0",
+    "react-native-material-dialog": "^0.7.6",
+    "react-native-pathjs-charts": "0.0.34",
+    "react-native-picker-modal-view": "^1.2.2",
     "react-native-svg": "^9.4.0",
+    "react-native-svg-animations": "^0.1.6",
     "react-native-vector-icons": "^6.4.2",
-    "react-navigation": "^3.9.1"
+    "react-navigation": "^3.9.1",
+    "svg-path-properties": "^0.4.8"
   },
   "devDependencies": {
     "@babel/core": "7.4.4",

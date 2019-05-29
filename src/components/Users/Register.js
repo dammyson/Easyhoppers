@@ -7,7 +7,7 @@ export default class Register extends Component{
   {
       super(props);
       this.state = {
-        loading: true,
+        loading: false,
         email: "", 
         phone: "", 
         name: "", 
@@ -63,14 +63,14 @@ export default class Register extends Component{
     }
   
     return (
-      <KeyboardAvoidingView behavior="padding" style={styles.container}>
+      <View behavior="padding" style={styles.container}>
 
-        <View>
-        <Text style={styles.headText}
-                        >Sign Up</Text>
-        </View>
-         <View style={styles.textInputcontainer}>
-                      
+       
+         <KeyboardAvoidingView style={styles.textInputcontainer}>
+                      <View>
+                      <Text style={styles.headText}
+                                      >Sign Up</Text>
+                      </View>
                     <TextInput
                         placeholder= "Email"
                         placeholderTextColor= '#55575b'
@@ -120,7 +120,7 @@ export default class Register extends Component{
                         onChangeText = {text => this.setState({password: text})}
                 />
 
-           </View>    
+           </KeyboardAvoidingView>    
            <View style={styles.Linkcontainer}>
                 <TouchableOpacity style={styles.buttonContainer} >
                     <Text style={styles.buttonText}
@@ -144,7 +144,7 @@ export default class Register extends Component{
           </TouchableOpacity>
 
         </View>
-      </KeyboardAvoidingView>
+      </View>
     );
   }
 }
@@ -212,14 +212,15 @@ const styles = StyleSheet.create({
         fontWeight: '900',
         fontSize:25,
         textAlign:'left',
-        marginLeft: 50
+        marginLeft: 50,
+        marginBottom: 30
       },
       bottom:{
-        height:60,
+        height:30,
         flexDirection: "row",
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom:10
+        marginBottom:1
       },
       linkText:{
         flex: 1,

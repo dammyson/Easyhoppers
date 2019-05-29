@@ -4,17 +4,6 @@ import {ActivityIndicator, FlatList, StyleSheet, Text, View,TouchableOpacity, Im
 
 
 export default class AirLinePerfomance extends Component{
-
-    static navigationOptions = {
-        title: 'Live Update',
-        headerStyle: {
-            backgroundColor: '#AFC1F2',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-      };
       
       constructor(props) {
         super(props);
@@ -48,7 +37,7 @@ export default class AirLinePerfomance extends Component{
 
   makeRemoteRequest = () => {
     const url = 'http://192.168.10.165/may/inde.php';
-    this.setState({ loading: true });
+    this.setState({ loading: false });
 
     fetch(url, { method: 'GET',  headers: {
       Accept: 'application/json',
@@ -167,6 +156,10 @@ export default class AirLinePerfomance extends Component{
     return (
        
           <View style = {styles.container}>
+
+            <View style={{alignItems: 'center', justifyContent: 'center',paddingTop:8, paddingBottom:10, color:"#fff", fontWeight: '900',  fontSize:13,}}>
+          <Text style={{color:"#fff", fontWeight: '900',  fontSize:16,}}>Performance</Text>
+        </View>
              <View style = {styles.main}>
 
           <FlatList

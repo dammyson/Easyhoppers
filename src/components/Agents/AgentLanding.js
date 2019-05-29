@@ -14,7 +14,6 @@ export default class AgentLanding extends Component{
            <View style={styles.Headercontainer}>
                
                 <View style={styles.header}> 
-                <Text style={styles.headTextW}>Log Out</Text>
                 <Text style={styles.headTextW}>Agent</Text>
 
                
@@ -129,14 +128,12 @@ const styles = StyleSheet.create({
     padding:2
   },
   header:{
-    height:100,
+    height:30,
     flexDirection: "row",
-    justifyContent: 'center',
-    alignItems: 'center',
     marginBottom:10,
     marginRight:15,
     marginLeft:15,
-    marginTop:20
+    marginTop:2
   },
   headText:{
     color: "#000",

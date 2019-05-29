@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import {ActivityIndicator, Picker,AsyncStorage, StyleSheet, Text, View,Image, Alert, TouchableOpacity} from 'react-native';
 const URL = require("../../components/server");
 
-export default class UpdateStatus extends Component{
+export default class Checkout extends Component{
 
     static navigationOptions = {
         title: 'Update Status',
@@ -27,6 +27,7 @@ export default class UpdateStatus extends Component{
           transaction_id:'',
           id:0, 
           auth:"",
+          email:"",
 
           name:"",
         };
@@ -61,7 +62,15 @@ export default class UpdateStatus extends Component{
       this.makeRemoteRequest();
     })
 
-    
+    AsyncStorage.getItem('email').then((value) => this.setState({ 'email': value.toString()}))
+    AsyncStorage.getItem('email').then((value) => {
+      if(value==''){
+       
+      }else{
+        this.setState({email: value})
+      }
+     
+    })
 
 
 
@@ -95,18 +104,20 @@ export default class UpdateStatus extends Component{
   checkUpdate()
   {
     
-        const {id, auth} = this.state
+        const {id, auth, email} = this.state
+       
          if(id == ""){
             Alert.alert('Process failed', 'Select a statuse', [{text: 'Okay'}])
             return
           }
         this.setState({ loading: true})
-        fetch(URL.url+'/api/schedule/update/'+id, { method: 'PUT',  headers: {
+        fetch(URL.url+'/api/subscribe', { method: 'POST',  headers: {
           Accept: 'application/json',
           'Authorization': 'Bearer ' + auth,
           'Content-Type': 'application/json',
         }, body: JSON.stringify({
-          status: id,
+          email:email,  
+          schedule_id: id,
         }), 
        })
         .then(res => res.json())
@@ -145,7 +156,7 @@ export default class UpdateStatus extends Component{
        
       <View style = {styles.container}>
        <View style={{alignItems: 'center', justifyContent: 'center',paddingTop:8, paddingBottom:10, color:"#fff", fontWeight: '900',  fontSize:13,}}>
-          <Text style={{color:"#fff", fontWeight: '900',  fontSize:16,}}>Update</Text>
+          <Text style={{color:"#fff", fontWeight: '900',  fontSize:16,}}>Subscribe</Text>
         </View>
           <View style = {styles.main}>
             
@@ -198,20 +209,9 @@ export default class UpdateStatus extends Component{
                         </View>
 
                <View style = {styles.maintwo}>
-             <Picker
-              selectedValue={(this.state && this.state.pickerValue) || 3}
-                    style = {styles.inputpicker}
-                    onValueChange={(itemValue) =>
-                      this.setState({id: itemValue})
-                      
-                    }
-                    selectedValue={this.state.id}>
-                    <Picker.Item label="Arrived" value="1" />
-                    <Picker.Item label="Boarding" value="2" />
-                    <Picker.Item label="Cargo" value="3" />
-                    <Picker.Item label="Taking off" value="4" />
-                   
-                  </Picker>
+               <TouchableOpacity style={styles.listItemWhite }  >
+                                        <Text style={{margin:10, fontSize: 18, fontWeight: '600',  color: '#5b97dc',}}>N 1000.00</Text>
+                         </TouchableOpacity>
              
                   </View>
              </View>
@@ -222,10 +222,13 @@ export default class UpdateStatus extends Component{
                 <TouchableOpacity style={styles.buttonContainer} >
                     <Text style={styles.buttonText}
                      onPress ={() => this.checkUpdate()}
-                    > UPDATE</Text>
+                    > PAY</Text>
 
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.cancelContainer} >
+                <TouchableOpacity style={styles.cancelContainer} 
+              onPress={() => this.props.navigation.navigate('Boarding')}>
+
+                
                      <Text style={styles.cancleText}
                      >X</Text>
 

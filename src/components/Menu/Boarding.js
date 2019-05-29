@@ -1,60 +1,63 @@
 
 import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, Text, View,TouchableOpacity, Image, TextInput} from 'react-native';
-
+import {ActivityIndicator,  Easing, FlatList, Animated, StyleSheet, AsyncStorage, Text, View,TouchableOpacity, Image, TextInput} from 'react-native';
+const URL = require("../../components/server");
 export default class Boarding extends Component{
 
-    static navigationOptions = {
-        title: 'Live Update',
-        headerStyle: {
-            backgroundColor: '#AFC1F2',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-      };
-      
-      constructor(props) {
-        super(props);
-    
-        this.state = {
-          loading: false,
-          status: false,
-          data: [],
-          search: '',
-          transaction_id:'',
-        };
-    
-       this.arrayholder = [];
-    
-    
-       const actions = [{
-        text: 'Accessibility',
-        name: 'bt_accessibility',
-        position: 2
-      }];
-    
-      }      
+  constructor(props) {
+    super(props);
+    this.triggerAnimation = this.triggerAnimation.bind(this)
+    this.animation = new Animated.Value(0)
+    this.state = {
+      loading: true,
+      status: false,
+      data: [],
+      search: '',
+      transaction_id:'',
+      auth:"",
+    };
 
-       
-  componentWillUnmount() {
-    clearTimeout(this.timeout);
+   this.arrayholder = [];
+
+  }    
+
+  triggerAnimation(){
+this.animation.setValue(0);
+Animated.timing(this.animation, {
+  duration:2000,
+  toValue: 3,
+  ease:Easing.bounce,
+}).start();
   }
-  componentDidMount() {
-    this.makeRemoteRequest();
-     }
+   
+componentWillUnmount() {
+  this.animation = new Animated.Value(0)
+}
+componentDidMount() {
 
-  makeRemoteRequest = () => {
-    const url = 'http://192.168.10.165/may/index.php';
+AsyncStorage.getItem('auth').then((value) => this.setState({ 'auth': value.toString()}))
+AsyncStorage.getItem('auth').then((value) => {
+  if(value==''){
+   
+  }else{
+    this.setState({auth: value})
+  }
+  this.makeRemoteRequest();
+})
+
+
+}
+
+makeRemoteRequest = () => {
+    const {auth} = this.state
     this.setState({ loading: true });
-
-    fetch(url, { method: 'GET',  headers: {
+    fetch(URL.url+'/api/schedules', { method: 'GET',  headers: {
       Accept: 'application/json',
+      'Authorization': 'Bearer ' + auth,
       'Content-Type': 'application/json',
-    } }
-    
-    )
+    }
+    })
+
       .then(res => res.json())
       .then(res => {
         this.setState({
@@ -62,13 +65,20 @@ export default class Boarding extends Component{
           loading: false,
           status: res.status,
           
+          
         });
+        this.triggerAnimation();
         this.arrayholder = res.data;
       })
       .catch(error => {
-        this.setState({ error, loading: false });
-      });
-  };
+        alert(error.message);
+          this.setState({ loading: false})
+      }); 
+};
+checkAlert = () => {
+  alert("You Are already subscribe to this Schedule");
+}
+
 
   renderSeparator = () => {
     return (
@@ -111,21 +121,49 @@ export default class Boarding extends Component{
     );
   };
   renderItem=({ item , index}) => 
-  {
+  { 
+    const interpolated = this.animation.interpolate({
+      inputRange: [0, .5, 1, 1.5, 2, 2.5, 3],
+      outputRange: [0, -15, 0 , 15 , 0, -15, 0]
+    })
+
+    const style={
+     transform:[
+      { translateX: interpolated }
+    ]
+  }
+
+
+
     return (
     <View style={
         index % 2 == 0 ? styles.listItemWhite : styles.listItemBlack
       }  onPress={() => this.props.navigation.navigate('Perfomance')}>
            
-           <View style = {styles.submain}>
+           <View style = {styles.submain}
 
-                    <TouchableOpacity  style={styles.image}>
+           >
+
+                    <TouchableOpacity  style={styles.image}
+                    onPress={ 
+                      item.isSubscribed == false ?  () => this.props.navigation.navigate('Checkout', 
+                    {
+                      s_id: item.id,
+                    
+                    }) : () => this.checkAlert()
+                     }
+                    >
 
                         <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2', marginBottom:10}}>Sub</Text>
-                         <Image
-                                
-                                resizeMode='contain'
-                                source={  item.sta == 1 ? require('../../images/inactivebell.png') : require('../../images/activeball.png')   } />
+                      
+                     
+                            <Animated.Image
+                            style={style}
+                            source={ item.isSubscribed == false ? require('../../images/inactivebell.png') : require('../../images/activeball.png')   }
+                            resizeMode='contain'
+                            
+                              />
+                     
                        </TouchableOpacity>
                
 
@@ -133,22 +171,22 @@ export default class Boarding extends Component{
                         <View style = {styles.menudetailsTop}>
                 
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Flight</Text>
-                        <Text style={{marginTop:7, fontSize: 13, fontWeight: '500',  color: '#AFC1F2',}}>{item.flight}</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Airline</Text>
+                        <Text style={{marginTop:7, fontSize: 13, fontWeight: '500',  color: '#000',}}>{item.name}</Text>
                         </View>
 
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Details</Text>
-                        <Text style={{marginTop:7, fontSize: 13, fontWeight: '500',  color: '#AFC1F2',}}>{item.detail }</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Flight Number</Text>
+                        <Text style={{marginTop:7, fontSize: 13, fontWeight: '500',  color: '#AFC1F2',}}>{item.description }</Text>
                         </View>
                         <View style = {styles.menudetailsTopchild}>
                         <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Depature</Text>
-                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.deptime}</Text>
+                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.scheduled_departure_time}</Text>
                         </View>
 
                         <View style = {styles.menudetailsTopchild}>
                         <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Arival</Text>
-                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.arvtime}</Text>
+                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.scheduled_arrival_time}</Text>
                         </View>
                     
                 
@@ -159,12 +197,12 @@ export default class Boarding extends Component{
                        
                        <View style = {styles.menudetailsTopchild}>
                         <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Route</Text>
-                        <Text style={{marginTop:7, fontSize: 15, fontWeight: '500',  color: '#000',}}>{item.route}</Text>
+                        <Text style={{marginTop:7, fontSize: 15, fontWeight: '500',  color: '#AFC1F2',}}>{item.departure_port + " - " + item.arrival_port}</Text>
                         </View>
 
                         <View style = {styles.menudetailsTopchild}>
                         <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Date</Text>
-                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>Mon 23, April, 2019</Text>
+                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.scheduled_arrival_date}</Text>
                         </View>
 
                 
@@ -182,6 +220,8 @@ export default class Boarding extends Component{
   render() {
 
     const { search } = this.state;
+
+
 
     if (this.state.loading) {
       return (
@@ -204,13 +244,17 @@ export default class Boarding extends Component{
     return (
        
           <View style = {styles.container}>
+
+          <View style={{alignItems: 'center', justifyContent: 'center',paddingTop:8, paddingBottom:10, color:"#fff", fontWeight: '900',  fontSize:13,}}>
+          <Text style={{color:"#fff", fontWeight: '900',  fontSize:16,}}>Boarding Alert</Text>
+        </View>
              <View style = {styles.main}>
 
           <FlatList
                 style={{paddingBottom:10}}
                 data={this.state.data}
                 renderItem={this.renderItem}
-                keyExtractor={item => item.detail}
+                keyExtractor={item => item.description}
                 ItemSeparatorComponent={this.renderSeparator}
                 ListHeaderComponent={this.renderHeader}
              />
@@ -236,7 +280,7 @@ const styles = StyleSheet.create({
     paddingTop:14,
     paddingBottom:14,
     borderRadius: 20,
-    marginBottom:50,
+    marginBottom:20,
     marginLeft:10,
     marginRight:10,
     backgroundColor: '#fff',

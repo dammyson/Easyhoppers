@@ -11,7 +11,7 @@ export default class UserLanding extends Component{
     super(props);
 
     this.state = {
-      loading: false,
+      loading: true,
       status: false,
       auth:"",
       name:""
@@ -50,8 +50,10 @@ export default class UserLanding extends Component{
       .then(res => res.json())
       .then(res => {
         if(res.status){
+          AsyncStorage.setItem('email', res.user.email);
         this.setState({
           name: res.user.name,
+
           loading: false,
           
           
@@ -98,7 +100,7 @@ export default class UserLanding extends Component{
                 <View style={styles.header}> 
                 
                 <Text style={styles.headTextWt}>Log Out</Text>
-                <Text style={styles.headTextW}>Welcome {this.state.name}</Text>
+                <Text style={styles.headTextW}>{this.state.name}</Text>
 
                 <TouchableOpacity style={styles.button} onPress={this.showDialog}> 
                 <Icon
@@ -166,7 +168,7 @@ export default class UserLanding extends Component{
                         
                         </View>
                         <View style={styles.rowchild}>
-                        <TouchableOpacity style={styles.items}  onPress={() => this.props.navigation.navigate('AirLinePerfomance')}>
+                        <TouchableOpacity style={styles.items}  onPress={() => this.props.navigation.navigate('PerfomanceRouteListing')}>
                                     <Image
                                         style={styles.image}
                                         source={require('../../images/osci.png')} />
@@ -218,7 +220,7 @@ const styles = StyleSheet.create({
     
   },
   Headercontainer: {
-    flex: 4,
+    flex: 3,
     backgroundColor: '#8694f4',
     alignItems: 'center',
     justifyContent: 'center',
@@ -229,14 +231,14 @@ const styles = StyleSheet.create({
     padding:2
   },
   header:{
-    height:100,
+    height:40,
     flexDirection: "row",
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom:10,
     marginRight:15,
     marginLeft:15,
-    marginTop:20
+    marginTop:10
   },
   headText:{
     color: "#000",
@@ -304,7 +306,7 @@ const styles = StyleSheet.create({
   },
   scrollView:{
     flex:1,
-    marginBottom:40,
+    marginBottom:20,
   },
 body:{
     flex:1,

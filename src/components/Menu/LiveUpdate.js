@@ -2,20 +2,21 @@
 import React, {Component} from 'react';
 import {ActivityIndicator, FlatList, StyleSheet, Text, View,AsyncStorage, Image, TextInput} from 'react-native';
 import { List, ListItem, SearchBar} from 'react-native-elements';
+import { PacmanIndicator} from 'react-native-indicators';
+import PickerModal from 'react-native-picker-modal-view';
 const URL = require("../../components/server");
+
+
+
+const list = [
+	{Id: 1, Name: 'Food', Value: 'Food'},
+	{Id: 2, Name: 'Hotel', Value: 'Hotel'},
+	{Id: 3, Name: 'House Kepping', Value: 'House Kepping'},
+	{Id: 4, Name: 'Parking', Value: 'Parking'}
+]
 
 export default class LiveUpdate extends Component{
 
-    static navigationOptions = {
-        title: 'Live Update',
-        headerStyle: {
-            backgroundColor: '#AFC1F2',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-      };
       
       constructor(props) {
         super(props);
@@ -107,15 +108,54 @@ export default class LiveUpdate extends Component{
   
   renderHeader = () => {
     return (
+      <View style={{ flexDirection: "row",  justifyContent: 'center', alignItems: 'center', marginLeft:10, marginRight:10}} 
+     >
+
+     <View style={styles.searchcontainer}>
+     <PickerModal
+                    onSelected={(selected) => this.setState({cat: selected.Value})}
+                    onRequestClosed={()=> console.warn('closed...')}
+                    onBackRequest={()=> console.warn('back key pressed')}
+                    items={list}
+                    sortingLanguage={'tr'}
+                    showToTopButton={true}
+                    defaultSelected={this.state.selectedItem}
+                    autoCorrect={false}
+                    autoGenerateAlphabet={true}
+                    chooseText={'Airline'}
+                    searchText={'Search...'} 
+                    selectPlaceholderText={'LOVe'}
+                    forceSelect={false}
+                    autoSort={true}
+                    style={styles.buttonContainer} 
+	                	/>
+     </View>
+
+
       
-      <TextInput
-        style = {styles.input}
-        placeholder="Type Here..."
-        placeholderTextColor= '#fff'
-        round
-        value={this.state.search}
-        onChangeText={this.searchFilterFunction}
-      />
+
+
+       <View style={styles.searchcontainer}>
+     <PickerModal
+                    onSelected={(selected) => this.setState({cat: selected.Value})}
+                    onRequestClosed={()=> console.warn('closed...')}
+                    onBackRequest={()=> console.warn('back key pressed')}
+                    items={list}
+                    sortingLanguage={'tr'}
+                    showToTopButton={true}
+                    defaultSelected={this.state.selectedItem}
+                    autoCorrect={false}
+                    autoGenerateAlphabet={true}
+                    chooseText={'Airline'}
+                    searchText={'Search...'} 
+                    forceSelect={false}
+                    autoSort={true}
+                    style={styles.buttonContainer} 
+	                	/>
+     </View>
+
+                  </View>
+
     );
   };
   renderItem=({ item , index}) => 
@@ -137,11 +177,11 @@ export default class LiveUpdate extends Component{
                         <View style = {styles.menudetailsTop}>
                 
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Flight</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>AirLine</Text>
                         <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#AFC1F2',}}>{item.name}</Text>
                         </View>
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Details</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Flight Number</Text>
                         <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#AFC1F2',}}>{item.description }</Text>
                         </View>
 
@@ -166,7 +206,7 @@ export default class LiveUpdate extends Component{
 
                         <View style = {styles.menudetailsTopchild}>
                         <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Status</Text>
-                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{ item.status == 0 ? "Not Time" :"djdjd"}</Text>
+                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{ item.status == 0 ? "On Time" :"djdjd"}</Text>
                         </View>
 
                          <View style = {styles.menudetailsTopchild}>
@@ -198,10 +238,10 @@ export default class LiveUpdate extends Component{
 
     if (this.state.loading) {
       return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <ActivityIndicator />
-          <Text>Loading products</Text>
-        </View>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',  backgroundColor: '#a8bbf3', }}>
+        <PacmanIndicator color='white' />
+        <Text style={{ color: '#fff' }}>Processing</Text>
+    </View>
       );
     }
 
@@ -217,10 +257,15 @@ export default class LiveUpdate extends Component{
     return (
        
           <View style = {styles.container}>
+        <View style={{alignItems: 'center', justifyContent: 'center',paddingTop:8, paddingBottom:10, color:"#fff", fontWeight: '900',  fontSize:13,}}>
+          <Text style={{color:"#fff", fontWeight: '900',  fontSize:16,}}>LiveUpdate</Text>
+        </View>
+
+
              <View style = {styles.main}>
 
           <FlatList
-                style={{paddingBottom:10}}
+                style={{paddingBottom:5}}
                 data={this.state.data}
                 renderItem={this.renderItem}
                 keyExtractor={item => item.description}
@@ -242,14 +287,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: '#a8bbf3',
+    paddingTop:10,
+  },
+  searchcontainer:{
+    flex: 1,
+   
   },
   main: {
     flex: 1,
     justifyContent: 'center',
-    paddingTop:14,
+    paddingTop:10,
     paddingBottom:14,
     borderRadius: 20,
-    marginBottom:50,
+    marginBottom:20,
     marginLeft:10,
     marginRight:10,
     backgroundColor: '#fff',

@@ -1,61 +1,57 @@
+
 import React, {Component} from 'react';
-import {ActivityIndicator, Picker, TextInput, StyleSheet, Text, View,Image, Dimensions, TouchableOpacity} from 'react-native';
-import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import {PieChart} from 'react-native-chart-kit'   
-const screenWidth = Dimensions.get('window').width
+import {ActivityIndicator, TouchableOpacity, FlatList, StyleSheet, Text, View,AsyncStorage, Image, TextInput} from 'react-native';
+import { List, ListItem, SearchBar} from 'react-native-elements';
+const URL = require("../../components/server");
+
 export default class ExpensesSum extends Component{
-      static navigationOptions = {
-        title: 'Expense Summary',
-        headerStyle: {
-            backgroundColor: '#AFC1F2',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-      };
-   
+
+      
       constructor(props) {
         super(props);
-        
+    
         this.state = {
-          loading: false,
+          loading: true,
           status: false,
           data: [],
           search: '',
           transaction_id:'',
-          fill:76,
+          auth:"",
         };
     
        this.arrayholder = [];
-     
-    
-       const actions = [{
-        text: 'Accessibility',
-        name: 'bt_accessibility',
-        position: 2
-      }];
-    
+  
       }      
 
-         
+       
   componentWillUnmount() {
     clearTimeout(this.timeout);
   }
   componentDidMount() {
-    this.makeRemoteRequest();
-     }
+  
+    AsyncStorage.getItem('auth').then((value) => this.setState({ 'auth': value.toString()}))
+    AsyncStorage.getItem('auth').then((value) => {
+      if(value==''){
+       
+      }else{
+        this.setState({auth: value})
+      }
+      this.makeRemoteRequest();
+    })
+    
+
+  }
 
   makeRemoteRequest = () => {
-    const url = 'http://192.168.10.165/may/inde.php';
-    this.setState({ loading: false });
-
-    fetch(url, { method: 'GET',  headers: {
+    const {auth} = this.state
+    this.setState({ loading: true });
+    fetch(URL.url+'/api/expense', { method: 'GET',  headers: {
       Accept: 'application/json',
+      'Authorization': 'Bearer ' + auth,
       'Content-Type': 'application/json',
-    } }
-    
-    )
+     }
+     })
+
       .then(res => res.json())
       .then(res => {
         this.setState({
@@ -67,124 +63,157 @@ export default class ExpensesSum extends Component{
         this.arrayholder = res.data;
       })
       .catch(error => {
-        this.setState({ error, loading: false });
-      });
+        alert(error.message);
+          this.setState({ loading: false})
+      }); 
   };
 
+  renderSeparator = () => {
+    return (
+      <View
+        style={{
+          height: 1,
+          width: '86%',
+          backgroundColor: '#fff',
+        }}
+      />
+    );
+  };
+
+  searchFilterFunction = search => {
+    this.setState({ search });
+    console.log(this.arrayholder);
+    const newData = this.arrayholder.filter(item => {
+      const itemData = `${item.name.toUpperCase()} ${item.departure_port.toUpperCase()} ${item.arrival_port.toUpperCase()}`;
+
+      const textData = search.toUpperCase();
+      return itemData.indexOf(textData) > -1;
+    });
+    this.setState({
+      data: newData,
+    });
+  };
+
+  
+  renderHeader = () => {
+    return (
+      
+      <TextInput
+        style = {styles.input}
+        placeholder="Type Here..."
+        placeholderTextColor= '#fff'
+        round
+        value={this.state.search}
+        onChangeText={this.searchFilterFunction}
+      />
+    );
+  };
+  renderItem=({ item , index}) => 
+  {
+    return (
+    <View style={
+        index % 2 == 0 ? styles.listItemWhite : styles.listItemBlack
+      } >
+           
+           <View style = {styles.submain} 
+            >
+
+
+             <Image
+               style={styles.image}
+               resizeMode='contain'
+               source={require('../../images/ticket.png')}/>
+
+                    <View style = {styles.details} >
+                        <View style = {styles.menudetailsTop}>
+                
+                        <View style = {styles.menudetailsTopchild}>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Name</Text>
+                        <Text style={{marginTop:7, fontSize: 15, fontWeight: '500',  color: '#000',}}>{item.name}</Text>
+                        </View>
+                        <TouchableOpacity style={{ height:40,width:150, backgroundColor: "#AFC1F2", justifyContent: 'center',borderRadius: 10, margin:5,}} 
+                                  onPress={() => this.props.navigation.navigate('Reciept', 
+                                  {
+                                    e_id: item.id,
+                                    name:item.name,
+                                  })
+                                  
+                                }
+                                 >
+                          <Text style={styles.buttonText} >More Details >> </Text>
+                            </TouchableOpacity>  
+                            
+                    </View>
+                    <View style = {styles.menudetailsBottom}> 
+                
+                    <View style = {styles.menudetailsTopchild}>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Budget</Text>
+                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#000',}}>{item.budget}</Text>
+                        </View>
+
+                          <View style = {styles.menudetailsTopchild}>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Amount Spent</Text>
+                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#000',}}>{item.amount_spent}</Text>
+                        </View>
+
+                     </View>
+
+                          
+                     </View>
+                
+                    </View>
+                
+                    </View>
+
+
+          
+    
+        )}
 
 
   render() {
 
+    const { search } = this.state;
 
     if (this.state.loading) {
       return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <ActivityIndicator />
-          <Text>Processing</Text>
+          <Text>Loading products</Text>
         </View>
       );
     }
 
+    if (this.state.error) {
+      return (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <Text>No Product found at this time</Text>
+        </View>
+      );
+    }
+
+ 
     return (
        
-      <View style = {styles.container}>
-          <View style = {styles.main}>
+          <View style = {styles.container}>
+        <View style={{alignItems: 'center', justifyContent: 'center',paddingTop:8, paddingBottom:10, color:"#fff", fontWeight: '900',  fontSize:13,}}>
+          <Text style={{color:"#fff", fontWeight: '900',  fontSize:16,}}>Expenses</Text>
+        </View>
+
+
+             <View style = {styles.main}>
+
+          <FlatList
+                style={{paddingBottom:5}}
+                data={this.state.data}
+                renderItem={this.renderItem}
+                keyExtractor={item => item.name}
+                ItemSeparatorComponent={this.renderSeparator}
+                ListHeaderComponent={this.renderHeader}
+             />
             
-            <View style = {styles.submain}>
-             
-
-              <View >
-            <TextInput
-              style = {styles.input}
-              placeholder="Type Here..."
-              placeholderTextColor= '#fff'
-              round
-              value={this.state.search}
-              onChangeText={this.searchFilterFunction}
-            /></View>
-
-              <View style = {styles.search}>
-                  <TouchableOpacity style={styles.buttonContainer} >
-                    <Text style={styles.buttonText}
-                   >Save</Text>
-
-                </TouchableOpacity>
-
-                </View>
-                <View style = {styles.submaintwo}>
-                            <PieChart
-                            data={[
-                              { name: 'Toronto', population: 28, color: '#F00' },
-                              { name: 'Beijing', population: 52, color: '#ddd' },
-                              { name: 'Beij', population: 52, color: '#000' },
-                            ]}
-                            width={screenWidth}
-                            height={200}
-                            chartConfig={{
-                              backgroundColor: '#e26a00',
-                              backgroundGradientFrom: '#fb8c00',
-                              backgroundGradientTo: '#ffa726',
-                              decimalPlaces: 2, // optional, defaults to 2dp
-                              color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                              style: {
-                                borderRadius: 6
-                              }
-                            }}
-                            accessor="population"
-                            backgroundColor="transparent"
-                            paddingLeft="35"
-                            absolute
-                          />
-                       
-
-                </View>
-
-                  <View style = {styles.submainthree}>
-                  <AnimatedCircularProgress
-                      size={200}
-                      width={16}
-                      fill={this.state.fill}
-                      tintColor="#7892fb"
-                      backgroundColor="#a8bbf3">
-                      {
-                        (fill) => (
-                            <View>
-                            <Text  style = {styles.headText}> Balance </Text>
-                          <Text  style = {styles.headText}> N35000 </Text>
-                          </View>
-                        )
-                      }
-                         </AnimatedCircularProgress>
-                  </View>
-          
-                  <View style={styles.header}> 
-
-<View style={styles.headerchild}> 
-<TouchableOpacity style={styles.button} onPress={this.showDialog}> 
-                                <Image
-                                    style={styles.image}
-                                    resizeMode='contain'
-                                    source={require('../../images/share.png')} />
-                                   
-                                 </TouchableOpacity> 
-</View>
- <View style={styles.headerchild}>  
- 
- 
-  </View>
-            <View style={styles.headerchild}> 
-           
             </View>
-
-
-
-
-
-</View>
             </View>
-                
-          </View>
-     </View>
     );
 
 
@@ -197,57 +226,57 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: '#a8bbf3',
+    paddingTop:10,
   },
-  ariline: {
-    flexDirection: "row",
-    marginLeft:10,
-    marginRight:10,
-  },
-  headText:{
-    color: "#000",
-    fontWeight: '700',
-    fontSize:20,
-    textAlign:'left',
-  },
-
   main: {
     flex: 1,
     justifyContent: 'center',
-    paddingTop:14,
+    paddingTop:10,
     paddingBottom:14,
     borderRadius: 20,
-    marginBottom:50,
+    marginBottom:20,
     marginLeft:10,
     marginRight:10,
     backgroundColor: '#fff',
   },
   submain: {
     flex: 1,
+    flexDirection: "row",
   },
-  submainone: {
+
+  details: {
+    flex: 10,
+  },
+
+
+  menudetailsTop:{
+    flexDirection: "row",
+    flex: 1,
+     marginBottom:9,
+  },
+  menudetailsTopchild:{
+    flex: 1,
+  },
+  menudetailsBottom:{
+    flexDirection: "row",
     flex: 1,
   },
 
-  submaintwo: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  listItemWhite: {
+    backgroundColor: '#eff3fd',
+    padding:9,
+    
   },
-
-  submainthree: {
-    flex: 1,
-    alignItems: 'center',
+  listItemBlack: {
+    backgroundColor: '#fff',
+    padding:9,
   },
-  search: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
+  
   input:{
-    height:50,
+    height:40,
     backgroundColor: '#eff3fd',
     marginBottom:15,
-    color: '#fff',
+    color: '#a8bbf3',
     paddingHorizontal: 40,
     borderRadius: 25,
     marginLeft:40,
@@ -256,56 +285,39 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     
     },
-    inputpicker:{
-      height: 50,
-       width: 100,
-      
+    image:{
+        flex: 2,
+        margin:2,
+        justifyContent: 'center',
+        alignItems: 'center',
       },
-    menudetailsTopchild:{
-      marginLeft:10,
-    marginRight:10,
-    },
-    routmain: {
-      flex: 1,
-      flexDirection: "row",
-    }, 
-    listItemWhite: {
-      backgroundColor: '#eff3fd',
-      padding:9,
-      
-    },
-    listItemBlack: {
-      backgroundColor: '#fff',
-      padding:9,
-    },
-    buttonContainer:{
-      height:40,
-      width:150,
-      backgroundColor: "#AFC1F2",
-      justifyContent: 'center',
-      borderRadius: 20,
-      margin:10,
-    },
-    buttonText:{
+      status:{
+        flex: 1,
+        margin:5,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      circle: {
+        width: 20,
+        height: 20,
+        backgroundColor: 'red',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+     },
+     circletwo: {
+        width: 20,
+        height: 20,
+        backgroundColor: 'green',
+        borderRadius: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+     },
+     buttonText:{
       textAlign:'center',
       color: "#FFFFFF",
       fontWeight: '500',
       fontSize:13,
     },
-    header:{
-        height:40,
-        flexDirection: "row",
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginBottom:10,
-        marginRight:15,
-        marginLeft:15,
-      },
-      headerchild:{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
-    
+     
 });
-

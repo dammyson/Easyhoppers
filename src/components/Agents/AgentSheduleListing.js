@@ -182,7 +182,13 @@ export default class AgentSheduleListing extends Component{
                         <View style = {styles.menudetailsTopchild}>
                         <TouchableOpacity style={styles.buttonContainer} >
                     <Text style={styles.buttonText}
-                    onPress={() => this.props.navigation.navigate('UpdateStatus')}>Update</Text>
+                    onPress={() => this.props.navigation.navigate('UpdateStatus', 
+                    {
+                      s_id: item.id,
+                    
+                    })
+                    
+                  }>Update</Text>
 
                 </TouchableOpacity>
                          </View>
@@ -224,6 +230,11 @@ export default class AgentSheduleListing extends Component{
     return (
        
           <View style = {styles.container}>
+
+            <View style={{alignItems: 'center', justifyContent: 'center',paddingTop:8, paddingBottom:10, color:"#fff", fontWeight: '900',  fontSize:13,}}>
+          <Text style={{color:"#fff", fontWeight: '900',  fontSize:16,}}>LiveUpdate</Text>
+        </View>
+
              <View style = {styles.main}>
 
           <FlatList
@@ -256,7 +267,7 @@ const styles = StyleSheet.create({
     paddingTop:14,
     paddingBottom:14,
     borderRadius: 20,
-    marginBottom:50,
+    marginBottom:20,
     marginLeft:10,
     marginRight:10,
     backgroundColor: '#fff',
