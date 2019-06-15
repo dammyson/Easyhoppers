@@ -132,15 +132,15 @@ export default class Reciept extends Component{
                     <View style = {styles.details} >
                         <View style = {styles.menudetailsTop}>
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Name</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Name</Text>
                         <Text style={{marginTop:7, fontSize: 15, fontWeight: '500',  color: '#000',}}>{this.state.name}</Text>
                         </View>
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Category</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Category</Text>
                         <Text style={{marginTop:7, fontSize: 15, fontWeight: '500',  color: '#000',}}>{item.category}</Text>
                         </View>
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Amount Spent</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Amount Spent</Text>
                         <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#000',}}>{item.amount}</Text>
                         </View>
                   
@@ -149,7 +149,7 @@ export default class Reciept extends Component{
                     <View style = {styles.menudetailsBottom}> 
                 
                     <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Description</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Description</Text>
                         <Text style={{marginTop:7, fontSize: 14, fontWeight: '300',  color: '#000',}}>{item.description}</Text>
                         </View>
 
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#a8bbf3',
+    backgroundColor: '#7892FB',
     paddingTop:10,
   },
   main: {
@@ -275,7 +275,7 @@ const styles = StyleSheet.create({
     height:40,
     backgroundColor: '#eff3fd',
     marginBottom:15,
-    color: '#a8bbf3',
+    color: '#7892FB',
     paddingHorizontal: 40,
     borderRadius: 25,
     marginLeft:40,

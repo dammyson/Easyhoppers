@@ -2,6 +2,8 @@
 import React, {Component} from 'react';
 import {ActivityIndicator, AsyncStorage,FlatList, StyleSheet, Text, View,TouchableOpacity, Image, TextInput} from 'react-native';
 const URL = require("../../components/server");
+import DatePicker from 'react-native-datepicker'
+import { Card, Icon,SocialIcon} from 'react-native-elements'
 
 export default class PerfomanceRouteListing extends Component{
   
@@ -9,12 +11,15 @@ export default class PerfomanceRouteListing extends Component{
     super(props);
 
     this.state = {
-      loading: false,
+      loading: true,
       status: false,
       data: [],
       search: '',
       transaction_id:'',
       auth:"",
+      fromdate:"2019-05-29",
+      todate:"2019-06-11",
+      today:""
     };
 
    this.arrayholder = [];
@@ -26,6 +31,15 @@ componentWillUnmount() {
 clearTimeout(this.timeout);
 }
 componentDidMount() {
+  var date = new Date().getDate();
+    var month = new Date().getMonth() + 1;
+    var year = new Date().getFullYear();
+    this.setState({
+      today: year + '-' + month + '-' + date,
+      
+    });
+   
+
 
 AsyncStorage.getItem('auth').then((value) => this.setState({ 'auth': value.toString()}))
 AsyncStorage.getItem('auth').then((value) => {
@@ -41,13 +55,16 @@ AsyncStorage.getItem('auth').then((value) => {
 }
 
 makeRemoteRequest = () => {
-const {auth} = this.state
+const {auth, today} = this.state
 this.setState({ loading: true });
-fetch(URL.url+'/api/schedules', { method: 'GET',  headers: {
+fetch(URL.url+'/api/performanceAggregation', { method: 'POST',  headers: {
   Accept: 'application/json',
   'Authorization': 'Bearer ' + auth,
   'Content-Type': 'application/json',
- }
+ },body: JSON.stringify({
+  from: today,
+  to: today,
+}), 
  })
 
   .then(res => res.json())
@@ -67,7 +84,51 @@ fetch(URL.url+'/api/schedules', { method: 'GET',  headers: {
   }); 
 };
 
+RemakeRemoteRequest = () => {
+  const {auth, fromdate, todate} = this.state
+  this.setState({ loading: true });
+  fetch(URL.url+'/api/performanceAggregation', { method: 'POST',  headers: {
+    Accept: 'application/json',
+    'Authorization': 'Bearer ' + auth,
+    'Content-Type': 'application/json',
+   },body: JSON.stringify({
+    from: fromdate,
+    to: todate,
+  }), 
+   })
+  
+    .then(res => res.json())
+    .then(res => {
+      console.log(res)
+      this.setState({
+        data: res.data,
+        loading: false,
+        status: res.status,
+        
+      });
+      this.arrayholder = res.data;
+    })
+    .catch(error => {
+      alert(error.message);
+        this.setState({ loading: false})
+    }); 
+  };
 
+  startFilter = () => {
+    const {fromdate, todate, auth} = this.state
+    if(fromdate == "" || todate == "" ){
+    alert('Select start and end date')
+      return
+    }
+    var diff =  Math.floor(( Date.parse(todate) - Date.parse(fromdate) ) / 86400000); 
+       if(diff > 7){
+         alert("Select Interval of Seven (7) days")
+         return
+       }else{
+        this.RemakeRemoteRequest();
+       }
+    
+  };
   renderSeparator = () => {
     return (
       <View
@@ -97,15 +158,87 @@ fetch(URL.url+'/api/schedules', { method: 'GET',  headers: {
   
   renderHeader = () => {
     return (
-      
+      <View>
+
+         
       <TextInput
         style = {styles.input}
-        placeholder="Type Here..."
-        placeholderTextColor= '#fff'
+        placeholder="Search..."
+        placeholderTextColor= '#4286f4'
         round
         value={this.state.search}
         onChangeText={this.searchFilterFunction}
       />
+   
+
+      <View style = {styles.headerform}>
+             
+ <DatePicker
+        style={{width: 120}}
+        date={this.state.fromdate}
+        mode="date"
+        placeholder="select date"
+        format="YYYY-MM-DD"
+        minDate="2019-05-01"
+        maxDate={this.state.today}
+        confirmBtnText="Confirm"
+        cancelBtnText="Cancel"
+        customStyles={{
+          dateIcon: {
+            position: 'absolute',
+            left: 0,
+            top: 4,
+            marginLeft: 0
+          },
+          dateInput: {
+            marginLeft: 36
+          }
+          // ... You can check the source to find the other keys.
+        }}
+        onDateChange={(date) => {this.setState({fromdate: date})}}
+      />
+          
+
+ <Text style={{fontSize: 12,   margin:10,fontWeight: '600',  color: '#000',}}>TO</Text> 
+            <DatePicker
+        style={{width: 120}}
+        date={this.state.todate}
+        mode="date"
+        placeholder="select date"
+        format="YYYY-MM-DD"
+        minDate="2019-05-01"
+        maxDate={this.state.today}
+        confirmBtnText="Confirm"
+        cancelBtnText="Cancel"
+        customStyles={{
+          dateIcon: {
+            position: 'absolute',
+            left: 0,
+            top: 4,
+            marginLeft: 0
+          },
+          dateInput: {
+            marginLeft: 36
+          }
+          // ... You can check the source to find the other keys.
+        }}
+        onDateChange={(date) => {this.setState({todate: date})}}
+      />
+
+
+
+      <TouchableOpacity style={styles.circle } onPress={() => this.startFilter()} >
+
+<Icon
+  name="bars"
+  style={{marginRight:10}} name="search" size={20}
+  type="font-awesome"
+  color="#000"
+  />
+</TouchableOpacity>
+       </View>
+
+          </View>
     );
   };
   renderItem=({ item , index}) => 
@@ -131,16 +264,16 @@ fetch(URL.url+'/api/schedules', { method: 'GET',  headers: {
 
 
                             <View style = {styles.menudetailsTopchild}>
-                            <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Airline</Text>
-                                <Text style={{marginTop:7, fontSize: 15, fontWeight: '500',  color: '#AFC1F2',}}>{item.name}</Text>
+                            <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Airline</Text>
+                                <Text style={{marginTop:7, fontSize: 15, fontWeight: '500',  color: '#7892FB',}}>{item.flight}</Text>
                                             
                                     </View>
                     
 
 
                              <View style = {styles.menudetailsTopchild}>
-                                    <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Route</Text>
-                                    <Text style={{marginTop:7, fontSize: 15, fontWeight: '500',  color: '#000',}}>{item.departure_port + " - " + item.arrival_port }</Text>
+                                    <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Route</Text>
+                                    <Text style={{marginTop:7, fontSize: 15, fontWeight: '500',  color: '#000',}}>{item.route}</Text>
                                     </View>
                     
                     
@@ -151,29 +284,38 @@ fetch(URL.url+'/api/schedules', { method: 'GET',  headers: {
                    
 
                     <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Early </Text>
-                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#AFC1F2',}}>%60</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Early </Text>
+                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#7892FB',}}>{item.percentageEarlyDepartures}%</Text>
                         </View>
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>On Time</Text>
-                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#AFC1F2',}}>%40</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>On Time</Text>
+                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#7892FB',}}>{item.percentageOnTimeDepartures}%</Text>
                         </View>
                           
 
                            <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Late</Text>
-                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#AFC1F2',}}>%40</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Late</Text>
+                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#7892FB',}}>{item.percentageDelayedDepartures}%</Text>
                         </View>
                     
                     <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Cancellation</Text>
-                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#AFC1F2',}}>60%</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Cancellation</Text>
+                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#7892FB',}}>{item.percentageCancellations}%</Text>
                         </View>
 
                         <View style = {styles.menudetailsTopchild}>
-                        <TouchableOpacity style={styles.buttonContainer} >
-                    <Text style={styles.buttonText}
-                    onPress={() => this.props.navigation.navigate('RoutePerfomanceDeparture')}>Graph</Text>
+                        <TouchableOpacity style={styles.buttonContainer} 
+                         
+                    onPress={() => this.props.navigation.navigate('RoutePerfomanceDeparture', 
+                    {
+                      airline: item.airlineId,
+                      rout:item.routeId,
+                      airlinename: item.flight,
+                      route:item.route,
+                    })
+                    
+                    }>
+                    <Text style={styles.buttonText}>Graph</Text>
 
                 </TouchableOpacity>
                          </View>
@@ -187,27 +329,38 @@ fetch(URL.url+'/api/schedules', { method: 'GET',  headers: {
 
                        <View style = {styles.menudetailsBottom}> 
                        <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Early</Text>
-                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#AFC1F2',}}>%60</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Early</Text>
+                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#7892FB',}}>{item.percentageEarlyArrival}%</Text>
                         </View>
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>On Time</Text>
-                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#AFC1F2',}}>%40</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>On Time</Text>
+                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#7892FB',}}>{item.percentageOnTimeArrivals}%</Text>
                         </View>
 
-                        <View style = {styles.menudetailsTopchild}>
-                       </View>
+                       
 
                     
                     <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Late</Text>
-                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#AFC1F2',}}>60%</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Late</Text>
+                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#7892FB',}}>{item.percentageDelayedArrivals}%</Text>
                         </View>
+                        <View style = {styles.menudetailsTopchild}>
+                       </View>
 
                     <View style = {styles.menudetailsTopchild}>
-                    <TouchableOpacity style={styles.buttonContainer} >
-                <Text style={styles.buttonText}
-                onPress={() => this.props.navigation.navigate('RoutePerfomanceArivall')}>Graph</Text>
+                    <TouchableOpacity style={styles.buttonContainer}
+                    
+                    onPress={() => this.props.navigation.navigate('RoutePerfomanceArivall', 
+                    {
+                      airline: item.airlineId,
+                      rout:item.routeId,
+                      airlinename: item.flight,
+                      route:item.route,
+                    })
+                    
+                    }
+                    >
+                        <Text style={styles.buttonText}>Graph</Text>
 
             </TouchableOpacity>
                      </View>
@@ -276,7 +429,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#a8bbf3',
+    backgroundColor: '#7892FB',
   },
   main: {
     flex: 1,
@@ -337,7 +490,7 @@ const styles = StyleSheet.create({
     height:40,
     backgroundColor: '#eff3fd',
     marginBottom:15,
-    color: '#a8bbf3',
+    color: '#7892FB',
     paddingHorizontal: 40,
     borderRadius: 25,
     marginLeft:40,
@@ -375,7 +528,7 @@ const styles = StyleSheet.create({
      },
      buttonContainer:{
         height:30,
-        backgroundColor: "#AFC1F2",
+        backgroundColor: "#7892FB",
         justifyContent: 'center',
         borderRadius: 20,
       },
@@ -385,4 +538,29 @@ const styles = StyleSheet.create({
         fontWeight: '500',
         fontSize:13,
       },
+
+      headerform:{
+        height:40,
+        flexDirection: "row",
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom:4,
+        marginRight:15,
+        marginLeft:15, 
+         marginTop:4,
+      },
+      circle: {
+       width: 40,
+       height: 40,
+       backgroundColor: '#7892FB',
+       borderRadius: 10,
+       justifyContent: 'center',
+       alignItems: 'center',
+       shadowColor: '#000',
+       shadowOffset: { width: 0, height: 2 },
+       shadowOpacity: 0.5,
+       shadowRadius: 2,
+       elevation: 2,
+       marginLeft:20
+    },
 });

@@ -2,13 +2,21 @@ import React, {Component} from 'react';
 import {ActivityIndicator, AsyncStorage, TextInput, StyleSheet, Text, View,Alert, Dimensions, TouchableOpacity} from 'react-native';
 import PickerModal from 'react-native-picker-modal-view';
 const URL = require("../../components/server");
-
-
+import DatePicker from 'react-native-datepicker'
+import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
 const list = [
 	{Id: 1, Name: 'Food', Value: 'Food'},
 	{Id: 2, Name: 'Hotel', Value: 'Hotel'},
 	{Id: 3, Name: 'House Kepping', Value: 'House Kepping'},
-	{Id: 4, Name: 'Parking', Value: 'Parking'}
+  {Id: 4, Name: 'Parking', Value: 'Parking'},
+  {Id: 5, Name: 'Others', Value: 'other'}
+]
+
+const currecny= [
+	{Id: 1, Name: 'Naira - N', Value: 'Food'},
+	{Id: 2, Name: 'Dollar $', Value: 'Hotel'},
+	{Id: 3, Name: 'Pounds GB', Value: 'House Kepping'},
+  {Id: 4, Name: 'Euros E', Value: 'Parking'},
 ]
 export default class AddBudget extends Component{
     
@@ -22,14 +30,17 @@ export default class AddBudget extends Component{
           data: [],
           search: '',
           transaction_id:'',
-          
+          st:false,
           selectedItem: {},
           auth:"",
           cat:"",
           textcat:"",
           des:"",
           ammount:"",
-          expense_id:1
+          expense_id:1,
+          curr: "NGN",
+          fromdate:"2019-05-29 00:00",
+          today:""
         };
     
        this.arrayholder = [];
@@ -48,11 +59,27 @@ export default class AddBudget extends Component{
 
 
   componentDidMount() {
+    AsyncStorage.getItem('eid').then((value) => {
+      if(value==''){
+      }else{
+        
+        this.setState({expense_id: value})
+       
+      }
+     
+    })
+    var date = new Date().getDate();
+    var month = new Date().getMonth() + 1;
+    var year = new Date().getFullYear();
+    this.setState({
+      today: year + '-' + month + '-' + date,
+      
+    });
 
     this.setState({
-      id:this.props.navigation.getParam("s_id", "defaultValue")
+      expense_id:this.props.navigation.getParam("expense_id", "defaultValue")
     })
-    AsyncStorage.getItem('auth').then((value) => this.setState({ 'auth': value.toString()}))
+
     AsyncStorage.getItem('auth').then((value) => {
       if(value==''){
        
@@ -67,8 +94,6 @@ export default class AddBudget extends Component{
 
      newExpenseDetails()
      {
-      
-
                 const {cat, ammount, auth, des, textcat,expense_id} = this.state
                 if(cat !== ""){
                  this.newExpenseDetailsProcess(cat, ammount, auth, des, expense_id)
@@ -85,11 +110,23 @@ export default class AddBudget extends Component{
                Alert.alert('Process failed', 'Select a statuse', [{text: 'Okay'}])
                return
               }
-            
-       
-
-           
    }
+
+
+   _menu = null;
+ 
+   setMenuRef = ref => {
+     this._menu = ref;
+   };
+  
+   hideMenu = () => {
+     this._menu.hide();
+   };
+  
+   showMenu = () => {
+     this._menu.show();
+   };
+
 
 
    newExpenseDetailsProcess(cat, ammount, auth, des, expense_id)
@@ -126,7 +163,10 @@ export default class AddBudget extends Component{
           });
           
    }
-
+setCurren( curr){
+  this.setState({curr: curr}),  
+  this.hideMenu()
+}
 
   render() {
     
@@ -155,21 +195,14 @@ export default class AddBudget extends Component{
                         onPress={() => this.props.navigation.navigate('Expense')} >
                       <Text style={styles.buttonText} > Close</Text>
                   </TouchableOpacity> 
-                     <TextInput
-                        style = {styles.inputtwo}
-                        placeholder="Enter Amount of Expenses"
-                        placeholderTextColor= '#000'
-                        round
-                        onChangeText = {text => this.setState({ammount: text})}
-                        />
+                    
 
                          <View style = {styles.cat}>
                   <PickerModal
-                    onSelected={(selected) => this.setState({cat: selected.Value})}
+                    onSelected={(selected) =>   selected.Value=="other" ? this.setState({st: true}) : this.setState({cat: selected.Value})}
                     onRequestClosed={()=> console.warn('closed...')}
                     onBackRequest={()=> console.warn('back key pressed')}
                     items={list}
-                    sortingLanguage={'tr'}
                     showToTopButton={true}
                     defaultSelected={this.state.selectedItem}
                     autoCorrect={false}
@@ -177,18 +210,84 @@ export default class AddBudget extends Component{
                     chooseText={'Choose Category'}
                     searchText={'Search...'} 
                     forceSelect={false}
-                    autoSort={true}
                     style={styles.buttonContainer} 
 	                	/>
                   </View>
-                  <Text style={{fontSize: 12, fontWeight: '200',  color: '#f44242', textAlign:"center"}}>If category is not in the list enter in the field below</Text>
+
+      
+
+                       {this.state.st ?   
                      <TextInput
                         style = {styles.inputtwo}
                         placeholder="Enter Category"
                         placeholderTextColor= '#000'
                         round
                         onChangeText = {text => this.setState({textcat: text})}
+                        /> : null}
+
+
+
+                  <View>
+                  <TextInput
+                        style = {styles.inputtwo}
+                        placeholder="Enter Amount"
+                        placeholderTextColor= '#000'
+                        keyboardType = "numeric"
+                        round
+                        onChangeText = {text => this.setState({ammount: text})}
                         />
+
+                  </View>
+                      
+                    
+                  <View style = {{ flexDirection: "row", marginLeft:40, marginRight:40,}}> 
+                            <DatePicker
+                                style={{width: 250}}
+                                date={this.state.fromdate}
+                                mode="datetime"
+                                placeholder="select date"
+                                format="YYYY-MM-DD hh:ss"
+                                minDate="2019-06-01 00:00"
+                                maxDate={this.state.today}
+                                confirmBtnText="Confirm"
+                                cancelBtnText="Cancel"
+                                customStyles={{
+                                  dateIcon: {
+                                    position: 'absolute',
+                                    left: 0,
+                                    top: 4,
+                                    marginLeft: 0
+                                  },
+                                  dateInput: {
+                                    marginLeft: 36
+                                  }
+                                  // ... You can check the source to find the other keys.
+                                }}
+                                onDateChange={(date) => {this.setState({fromdate: date})}}
+                              />
+                              
+                              <Menu
+                                ref={this.setMenuRef}
+                                button={<TouchableOpacity style={styles.circle } onPress={this.showMenu} >
+                              <Text>{this.state.curr}</Text>
+                            </TouchableOpacity>}
+                              >
+                                <MenuItem  onPress={() =>  this.setCurren("NGN")}>NGN</MenuItem>
+                                <MenuDivider />
+                                <MenuItem  onPress={() =>  this.setCurren("USD")}>USD</MenuItem>
+                                <MenuDivider />
+                                <MenuItem  onPress={() =>  this.setCurren("GBP")}>GBP</MenuItem>
+                              </Menu>
+                              
+                        </View>  
+
+    
+                        
+          
+
+
+
+
 
 
                           <TextInput
@@ -199,7 +298,7 @@ export default class AddBudget extends Component{
                         onChangeText = {text => this.setState({des: text})}
                         />
 
-                  <View style = {styles.search}>
+                                    <View style = {styles.search}>
                   <TouchableOpacity style={styles.buttonContainer} 
                   onPress={() => this.newExpenseDetails()}>
                     <Text style={styles.buttonText}
@@ -226,7 +325,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#a8bbf3',
+    backgroundColor: '#7892FB',
   },
   ariline: {
     flexDirection: "row",
@@ -318,6 +417,11 @@ const styles = StyleSheet.create({
       marginLeft:40,
       marginRight:40,
     }, 
+    catone: {
+      marginLeft:40,
+      marginRight:40,
+      flexDirection: "row",
+    }, 
     listItemWhite: {
       backgroundColor: '#eff3fd',
       padding:9,
@@ -331,7 +435,7 @@ const styles = StyleSheet.create({
       height:40,
       width:150,
       marginBottom:10,
-      backgroundColor: "#AFC1F2",
+      backgroundColor: "#7892FB",
       justifyContent: 'center',
       borderRadius: 10,
       margin:10,
@@ -342,6 +446,20 @@ const styles = StyleSheet.create({
       fontWeight: '500',
       fontSize:13,
     },
+    circle: {
+      width: 40,
+      height: 40,
+      backgroundColor: '#7892FB',
+      borderRadius: 10,
+      justifyContent: 'center',
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.5,
+      shadowRadius: 2,
+      elevation: 2,
+      marginLeft:20
+   },
    
 });
 

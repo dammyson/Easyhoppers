@@ -71,8 +71,8 @@ const styles = StyleSheet.create({
     marginLeft:40,
     },
     buttonContainer:{
-        height:60,
-        backgroundColor: "#AFC1F2",
+        height:50,
+        backgroundColor: "#7892FB",
         borderTopRightRadius: 30,
         justifyContent: 'center',
         borderBottomRightRadius: 30,
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
         fontSize:18,
       },
       cancelContainer:{
-        height:60,
+        height:50,
         backgroundColor: "#FFFFFF",
         borderTopRightRadius: 30,
         justifyContent: 'center',

@@ -41,15 +41,7 @@ export default class AgentLanding extends Component{
                         
                         </View>
                         <View style={styles.rowchild}>
-                        <TouchableOpacity style={styles.items}
-                             onPress={() => this.props.navigation.navigate('LiveUpdate')}>
-                                    <Image
-                                    style={styles.image}
-                                    source={require('../../images/live.png')} />
-                                      <Text style={styles.headText}>Update</Text>
-                                      <Text style={styles.headText}>Status</Text>
-                                    <Text style={styles.headlink}>Update Now</Text>
-                                </TouchableOpacity>
+                        
                         </View>
                         <View style={styles.rowchild}>
                         
@@ -60,13 +52,13 @@ export default class AgentLanding extends Component{
                      <View style={styles.row}>
                      <View style={styles.rowchild}>
                      <TouchableOpacity style={styles.items}
-                            onPress={() => this.props.navigation.navigate('Boarding')}>
+                             onPress={() => this.props.navigation.navigate('LiveUpdate')}>
                                     <Image
                                     style={styles.image}
-                                    source={require('../../images/bell.png')} />
-                                   <Text style={styles.headText}>Boarding</Text>
-                                      <Text style={styles.headText}>Alert</Text>
-                                    <Text style={styles.headlink}>Get Alert</Text>
+                                    source={require('../../images/live.png')} />
+                                      <Text style={styles.headText}>Update</Text>
+                                      <Text style={styles.headText}>Status</Text>
+                                    <Text style={styles.headlink}>Update Now</Text>
                                 </TouchableOpacity>
 
                         </View>
@@ -118,7 +110,7 @@ const styles = StyleSheet.create({
   },
   Headercontainer: {
     flex: 4,
-    backgroundColor: '#8694f4',
+    backgroundColor: '#7892FB',
     alignItems: 'center',
     justifyContent: 'center',
    
@@ -148,7 +140,7 @@ const styles = StyleSheet.create({
     textAlign:'left',
   },
   headlink:{
-    color: "#8694f4",
+    color: "#7892FB",
     fontWeight: '500',
     fontSize:12,
     textAlign:'left',

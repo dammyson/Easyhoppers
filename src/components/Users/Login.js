@@ -105,7 +105,7 @@ export default class Login extends Component{
                 <TextInput
                         placeholder= "Password"
                         secureTextEntry
-                        keyboardType = "email-address"
+                        keyboardType = "default"
                         maxLength={16}
                         placeholderTextColor= '#55575b'
                         returnKeyType= "go"
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer:{
         height:50,
-        backgroundColor: "#AFC1F2",
+        backgroundColor: "#7892FB",
         borderTopRightRadius: 30,
         justifyContent: 'center',
         borderBottomRightRadius: 30,

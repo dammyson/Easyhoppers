@@ -1,8 +1,10 @@
 
 import React, {Component} from 'react';
-import {TextInput,ScrollView, StyleSheet, Text, View,TouchableOpacity, KeyboardAvoidingView, ActivityIndicator,AsyncStorage, Alert} from 'react-native';
+import {TextInput, StyleSheet,ScrollView, Text, View,TouchableOpacity, KeyboardAvoidingView, ActivityIndicator,AsyncStorage, Alert} from 'react-native';
 const URL = require("../../components/server");
-export default class Register extends Component{
+import RadioGroup from 'react-native-radio-buttons-group';
+import DatePicker from 'react-native-datepicker'
+export default class Edit extends Component{
   constructor(props) 
   {
       super(props);
@@ -10,9 +12,20 @@ export default class Register extends Component{
         loading: false,
         email: "", 
         phone: "", 
-        fname: "", 
-        lname: "", 
-        password: ""
+        name: "", 
+        password: "",
+
+        data: [
+            
+            {
+                label: 'Male',
+                size: 32,
+            },
+            {
+                label: 'Female',
+                size: 32,
+            },
+        ],
                   }
 
   }
@@ -20,7 +33,7 @@ export default class Register extends Component{
   checkReg()
     {
     
-        const {email,phone, fname, lname,password} = this.state
+        const {email,phone, name, password} = this.state
 
           if(email == "" || password == "" || name == "" || phone == "" ){
             Alert.alert('Validation failed', 'field(s) cannot be empty', [{text: 'Okay'}])
@@ -31,8 +44,7 @@ export default class Register extends Component{
           Accept: 'application/json',
           'Content-Type': 'application/json',
         }, body: JSON.stringify({
-          first_name: fname,
-          last_name: lname,
+          name: name,
           email: email,
           password: password,
           state: "Nig",
@@ -72,32 +84,9 @@ export default class Register extends Component{
          <KeyboardAvoidingView style={styles.textInputcontainer}>
                       <View>
                       <Text style={styles.headText}
-                                      >Sign Up</Text>
+                                      >Edit Profile</Text>
                       </View>
-                    <TextInput
-                        placeholder= "Email"
-                        placeholderTextColor= '#55575b'
-                        returnKeyType = "next"
-                        onSubmitEditing = {() => this.passwordInput.focus()}
-                        keyboardType = "email-address"
-                        autoCapitalize= "none"
-                        autoCorrect = {false}
-                        style = {styles.input}
-                        onChangeText = {text => this.setState({email: text})}
-                       
-                />
-                  <TextInput
-                        placeholder= "Phone"
-                        placeholderTextColor= '#55575b'
-                        returnKeyType = "next"
-                        onSubmitEditing = {() => this.passwordInput.focus()}
-                        keyboardType = "numeric"
-                        autoCapitalize= "none"
-                        autoCorrect = {false}
-                        style = {styles.input}
-                        onChangeText = {text => this.setState({phone: text})}
-                       
-                />
+                   
                  <TextInput
                         placeholder= "First Name"
                         placeholderTextColor= '#55575b'
@@ -122,25 +111,60 @@ export default class Register extends Component{
                         style = {styles.input}
                         onChangeText = {text => this.setState({lname: text})}
                        
-                />
-
+                /> 
                 <TextInput
-                        placeholder= "Password"
-                        secureTextEntry
-                        keyboardType = "default"
-                        maxLength={16}
-                        placeholderTextColor= '#55575b'
-                        returnKeyType= "go"
-                        style = {styles.input}
-                        ref={(input)=> this.passwordInput = input}
-                        onChangeText = {text => this.setState({password: text})}
-                />
+                    placeholder= "Occupation"
+                    placeholderTextColor= '#55575b'
+                    returnKeyType = "next"
+                    onSubmitEditing = {() => this.passwordInput.focus()}
+                    keyboardType = "email-address"
+                    autoCapitalize= "none"
+                    autoCorrect = {false}
+                    style = {styles.input}
+                    onChangeText = {text => this.setState({occupation: text})}
+               
+                 />
+                    <View style= {{flexDirection: "row",  alignItems: 'center', marginLeft:45, marginBottom:4,}}> 
+                    <Text style={{color:"#7892FB", fontWeight: '900',  fontSize:16,}}>Gender</Text>
+                    <RadioGroup radioButtons={this.state.data} 
+                    onPress={this.onPress} 
+                    flexDirection='row'/>
+                    </View>
+                  
+                    <View style= {{flexDirection: "row",  alignItems: 'center', marginLeft:45, marginBottom:24,}}> 
+                    <Text style={{color:"#7892FB", fontWeight: '900',  fontSize:16,}}>DOB</Text>
+                     <DatePicker
+                                style={{width: 250}}
+                                date={this.state.fromdate}
+                                mode="date"
+                                placeholder="select date"
+                                format="YYYY-MM-DD hh:ss"
+                                minDate="2019-06-01 00:00"
+                                maxDate={this.state.today}
+                                confirmBtnText="Confirm"
+                                cancelBtnText="Cancel"
+                                customStyles={{
+                                  dateIcon: {
+                                    position: 'absolute',
+                                    left: 0,
+                                    top: 4,
+                                    marginLeft: 0
+                                  },
+                                  dateInput: {
+                                    marginLeft: 36
+                                  }
+                                  // ... You can check the source to find the other keys.
+                                }}
+                                onDateChange={(date) => {this.setState({fromdate: date})}}
+                              />
+                        </View>
+               
 
            </KeyboardAvoidingView>    
            <View style={styles.Linkcontainer}>
                 <TouchableOpacity style={styles.buttonContainer} >
                     <Text style={styles.buttonText}
-                     onPress ={() => this.checkReg()} >SIGN UP</Text>
+                     onPress ={() => this.checkReg()} >Update</Text>
 
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.cancelContainer} >
@@ -151,14 +175,7 @@ export default class Register extends Component{
 
           </View>   
           <View style={styles.bottom}>
-          <TouchableOpacity style={styles.link} >
-          <Text  style={styles.linkText} >Alread have an account?</Text>
-          </TouchableOpacity>
-        <TouchableOpacity style={styles.link} 
-        onPress={() => this.props.navigation.navigate('Login')}>
-          <Text  style={styles.linkText} >Sign In</Text>
-          </TouchableOpacity>
-
+         
         </View>
       </ScrollView>
     );

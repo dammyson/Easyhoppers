@@ -8,7 +8,7 @@ export default class Checkout extends Component{
     static navigationOptions = {
         title: 'Update Status',
         headerStyle: {
-            backgroundColor: '#AFC1F2',
+            backgroundColor: '#7892FB',
           },
           headerTintColor: '#fff',
           headerTitleStyle: {
@@ -171,7 +171,7 @@ export default class Checkout extends Component{
                             source={require('../../images/sn.png')} />
                             <View style = {styles.details} >
                                 <View style = {styles.menudetailsTopchild}>
-                                      <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Flight</Text>
+                                      <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Flight</Text>
                                       <Text style={{marginTop:7, fontSize: 18, fontWeight: '600',  color: '#5b97dc',}}>{this.state.name.name}</Text>
                                       </View>
 
@@ -184,23 +184,23 @@ export default class Checkout extends Component{
                             <View style = {styles.menudetailsTop}>
 
                             <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Details</Text>
-                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#AFC1F2',}}>{this.state.name.description}</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Details</Text>
+                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#7892FB',}}>{this.state.name.description}</Text>
                         </View>
 
 
                          <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Depature</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Depature</Text>
                         <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{this.state.name.scheduled_departure_time}</Text>
                         </View>
 
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Arival</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Arival</Text>
                         <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{this.state.name.scheduled_arrival_time}</Text>
                         </View>
                 
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Status</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Status</Text>
                         <Text style={{marginTop:7, fontSize: 16, fontWeight: '500',  color: '#000',}}>{ this.state.name.status == 0 ? "Not Time" :"djdjd"}</Text>
                         </View>
 
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#a8bbf3',
+    backgroundColor: '#7892FB',
   },
   ariline: {
     flexDirection: "row",
@@ -321,7 +321,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer:{
         height:50,
-        backgroundColor: "#AFC1F2",
+        backgroundColor: "#7892FB",
         borderTopRightRadius: 30,
         justifyContent: 'center',
         borderBottomRightRadius: 30,
@@ -341,13 +341,13 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 30,
         width:100,
         elevation: 5,
-        borderColor:'#AFC1F2',
+        borderColor:'#7892FB',
         borderWidth: 2,
         marginTop: 10
       },
       cancleText:{
         textAlign:'center',
-        color: "#AFC1F2",
+        color: "#7892FB",
         fontWeight: '900',
         fontSize:18,
       },

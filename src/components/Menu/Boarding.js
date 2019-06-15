@@ -46,6 +46,13 @@ AsyncStorage.getItem('auth').then((value) => {
 })
 
 
+this.props.navigation.addListener(
+  'didFocus',
+  payload => {
+   this.makeRemoteRequest();
+  }
+);
+
 }
 
 makeRemoteRequest = () => {
@@ -96,7 +103,7 @@ checkAlert = () => {
     this.setState({ search });
     console.log(this.arrayholder);
     const newData = this.arrayholder.filter(item => {
-      const itemData = `${item.flight.toUpperCase()} ${item.route.toUpperCase()}`;
+      const itemData = `${item.name.toUpperCase()} ${item.departure_port.toUpperCase()} ${item.arrival_port.toUpperCase()}`;
 
       const textData = search.toUpperCase();
       return itemData.indexOf(textData) > -1;
@@ -105,6 +112,36 @@ checkAlert = () => {
       data: newData,
     });
   };
+  renderStatusSwitch(param) {
+    switch(param) {
+        case 1:
+        return 'On Time Arrival';
+        case 2:
+        return 'On Time Departure';
+        case 3:
+        return 'Delayed Arrival';
+        case 4:
+        return ' Delayed Departure';
+        case 5:
+        return 'Cancelled';
+        case 6:
+        return 'Rescheduled';
+        case 7:
+        return 'On Ground';
+        case 8:
+        return 'Air Borne';
+        case 9:
+        return 'Taxiing';
+        case 10:
+        return 'Boarding ';
+        case 11:
+        return 'Early Arrival';
+        case 12:
+        return 'Early Departure';
+      default:
+        return 'ON TIME';
+    }
+  }
 
   
   renderHeader = () => {
@@ -113,7 +150,7 @@ checkAlert = () => {
       <TextInput
         style = {styles.input}
         placeholder="Type Here..."
-        placeholderTextColor= '#fff'
+        placeholderTextColor= '#4286f4'
         round
         value={this.state.search}
         onChangeText={this.searchFilterFunction}
@@ -154,7 +191,7 @@ checkAlert = () => {
                      }
                     >
 
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2', marginBottom:10}}>Sub</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB', marginBottom:10}}>Sub</Text>
                       
                      
                             <Animated.Image
@@ -171,21 +208,21 @@ checkAlert = () => {
                         <View style = {styles.menudetailsTop}>
                 
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Airline</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Airline</Text>
                         <Text style={{marginTop:7, fontSize: 13, fontWeight: '500',  color: '#000',}}>{item.name}</Text>
                         </View>
 
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Flight Number</Text>
-                        <Text style={{marginTop:7, fontSize: 13, fontWeight: '500',  color: '#AFC1F2',}}>{item.description }</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Flight Number</Text>
+                        <Text style={{marginTop:7, fontSize: 13, fontWeight: '500',  color: '#7892FB',}}>{item.description }</Text>
                         </View>
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Depature</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Depature</Text>
                         <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.scheduled_departure_time}</Text>
                         </View>
 
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Arival</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Arival</Text>
                         <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.scheduled_arrival_time}</Text>
                         </View>
                     
@@ -196,15 +233,18 @@ checkAlert = () => {
 
                        
                        <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Route</Text>
-                        <Text style={{marginTop:7, fontSize: 15, fontWeight: '500',  color: '#AFC1F2',}}>{item.departure_port + " - " + item.arrival_port}</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Route</Text>
+                        <Text style={{marginTop:7, fontSize: 15, fontWeight: '500',  color: '#7892FB',}}>{item.departure_port + " - " + item.arrival_port}</Text>
                         </View>
 
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Date</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Date</Text>
                         <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.scheduled_arrival_date}</Text>
                         </View>
-
+                        <View style = {styles.menudetailsTopchild}>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Status</Text>
+                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{this.renderStatusSwitch(item.status)}</Text>
+                        </View>
                 
                     </View>
                 
@@ -272,7 +312,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#a8bbf3',
+    backgroundColor: '#7892FB',
   },
   main: {
     flex: 1,
@@ -322,7 +362,7 @@ const styles = StyleSheet.create({
     height:40,
     backgroundColor: '#eff3fd',
     marginBottom:15,
-    color: '#a8bbf3',
+    color: '#7892FB',
     paddingHorizontal: 40,
     borderRadius: 25,
     marginLeft:40,

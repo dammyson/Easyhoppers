@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import {Image, ActivityIndicator, StyleSheet, Text, Alert, View,TouchableOpacity, AsyncStorage} from 'react-native';
 const URL = require("../../components/server");
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
 
 
 export default class UserLanding extends Component{
@@ -76,6 +77,19 @@ export default class UserLanding extends Component{
 
 
 
+  _menu = null;
+ 
+   setMenuRef = ref => {
+     this._menu = ref;
+   };
+  
+   hideMenu = () => {
+     this._menu.hide();
+   };
+  
+   showMenu = () => {
+     this._menu.show();
+   };
 
 
 
@@ -99,13 +113,20 @@ export default class UserLanding extends Component{
                
                 <View style={styles.header}> 
                 
-                <Text style={styles.headTextWt}>Log Out</Text>
+                <TouchableOpacity style={styles.button} onPress={this.showDialog}> 
+                <Icon
+                    name="lock"
+                    size={20}
+                    color="white"
+                    type="font-awesome"
+                    />
+                </TouchableOpacity> 
                 <Text style={styles.headTextW}>{this.state.name}</Text>
 
                 <TouchableOpacity style={styles.button} onPress={this.showDialog}> 
                 <Icon
                     name="pencil"
-                    size={15}
+                    size={20}
                     color="white"
                     />
                 </TouchableOpacity> 
@@ -121,12 +142,20 @@ export default class UserLanding extends Component{
                 <View style={styles.body}>
                     
                     <View style={styles.menu}> 
-                    <Icon
-                    name="bars"
-                    style={{marginRight:10}} name="bars" size={20}
-                    color="#d0e1fe"
-                    />
-                    <Text style={styles.headText}>Menu</Text>
+                    <Menu
+     ref={this.setMenuRef}
+     button={<TouchableOpacity style={styles.circle } onPress={this.showMenu} >
+
+     <Icon
+       name="bars"
+       style={{marginRight:10}} name="bars" size={20}
+       type="font-awesome"
+       color="#000"
+       />
+</TouchableOpacity>}
+   >
+     <MenuItem>Feed back</MenuItem>
+   </Menu>
                     </View>
                  
                 <View style={styles.scrollView}>
@@ -285,7 +314,6 @@ const styles = StyleSheet.create({
   },
   menu:{
     height:30,
-    flexDirection: "row",
     marginLeft:20,
     marginTop:10
   },
@@ -311,4 +339,19 @@ const styles = StyleSheet.create({
 body:{
     flex:1,
   }
+  ,
+    circle: {
+     width: 40,
+     height: 40,
+     backgroundColor: '#fff',
+     borderRadius: 10,
+     justifyContent: 'center',
+     alignItems: 'center',
+     shadowColor: '#000',
+     shadowOffset: { width: 0, height: 2 },
+     shadowOpacity: 0.5,
+     shadowRadius: 2,
+     elevation: 2,
+     marginRight:30
+  },
 });

@@ -8,12 +8,7 @@ const URL = require("../../components/server");
 
 
 
-const list = [
-	{Id: 1, Name: 'Food', Value: 'Food'},
-	{Id: 2, Name: 'Hotel', Value: 'Hotel'},
-	{Id: 3, Name: 'House Kepping', Value: 'House Kepping'},
-	{Id: 4, Name: 'Parking', Value: 'Parking'}
-]
+
 
 export default class LiveUpdate extends Component{
 
@@ -106,56 +101,80 @@ export default class LiveUpdate extends Component{
   };
 
   
+  renderStatusSwitch(param) {
+    switch(param) {
+        case 1:
+        return 'On Time Arrival';
+        case 2:
+        return 'On Time Departure';
+        case 3:
+        return 'Delayed Arrival';
+        case 4:
+        return ' Delayed Departure';
+        case 5:
+        return 'Cancelled';
+        case 6:
+        return 'Rescheduled';
+        case 7:
+        return 'On Ground';
+        case 8:
+        return 'Air Borne';
+        case 9:
+        return 'Taxiing';
+        case 10:
+        return 'Boarding ';
+        case 11:
+        return 'Early Arrival';
+        case 12:
+        return 'Early Departure';
+      default:
+        return 'ON TIME';
+    }
+  }
+
+
+  renderImgSwitch(param) {
+    switch(param) {
+        case 1:
+        return 'On Time Arrival';
+        case 2:
+        return 'On Time Departure';
+        case 3:
+        return 'Delayed Arrival';
+        case 4:
+        return ' Delayed Departure';
+        case 5:
+        return 'Cancelled';
+        case 6:
+        return 'Rescheduled';
+        case 7:
+        return 'On Ground';
+        case 8:
+        return 'Air Borne';
+        case 9:
+        return 'Taxiing';
+        case 10:
+        return 'Boarding ';
+        case 11:
+        return 'Early Arrival';
+        case 12:
+        return 'Early Departure';
+      default:
+        return 'ON TIME';
+    }
+  }
+
   renderHeader = () => {
     return (
-      <View style={{ flexDirection: "row",  justifyContent: 'center', alignItems: 'center', marginLeft:10, marginRight:10}} 
-     >
-
-     <View style={styles.searchcontainer}>
-     <PickerModal
-                    onSelected={(selected) => this.setState({cat: selected.Value})}
-                    onRequestClosed={()=> console.warn('closed...')}
-                    onBackRequest={()=> console.warn('back key pressed')}
-                    items={list}
-                    sortingLanguage={'tr'}
-                    showToTopButton={true}
-                    defaultSelected={this.state.selectedItem}
-                    autoCorrect={false}
-                    autoGenerateAlphabet={true}
-                    chooseText={'Airline'}
-                    searchText={'Search...'} 
-                    selectPlaceholderText={'LOVe'}
-                    forceSelect={false}
-                    autoSort={true}
-                    style={styles.buttonContainer} 
-	                	/>
-     </View>
-
-
       
-
-
-       <View style={styles.searchcontainer}>
-     <PickerModal
-                    onSelected={(selected) => this.setState({cat: selected.Value})}
-                    onRequestClosed={()=> console.warn('closed...')}
-                    onBackRequest={()=> console.warn('back key pressed')}
-                    items={list}
-                    sortingLanguage={'tr'}
-                    showToTopButton={true}
-                    defaultSelected={this.state.selectedItem}
-                    autoCorrect={false}
-                    autoGenerateAlphabet={true}
-                    chooseText={'Airline'}
-                    searchText={'Search...'} 
-                    forceSelect={false}
-                    autoSort={true}
-                    style={styles.buttonContainer} 
-	                	/>
-     </View>
-
-                  </View>
-
+      <TextInput
+        style = {styles.input}
+        placeholder="Search..."
+        placeholderTextColor= '#4286f4'
+        round
+        value={this.state.search}
+        onChangeText={this.searchFilterFunction}
+      />
     );
   };
   renderItem=({ item , index}) => 
@@ -177,22 +196,22 @@ export default class LiveUpdate extends Component{
                         <View style = {styles.menudetailsTop}>
                 
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>AirLine</Text>
-                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#AFC1F2',}}>{item.name}</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>AirLine</Text>
+                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#7892FB',}}>{item.name}</Text>
                         </View>
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Flight Number</Text>
-                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#AFC1F2',}}>{item.description }</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Flight Number</Text>
+                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#7892FB',}}>{item.description }</Text>
                         </View>
 
                     
                     <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Depature</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Depature</Text>
                         <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.scheduled_departure_time}</Text>
                         </View>
 
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Arival</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Arival</Text>
                         <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.scheduled_arrival_time}</Text>
                         </View>
                 
@@ -200,13 +219,13 @@ export default class LiveUpdate extends Component{
                     <View style = {styles.menudetailsBottom}> 
                 
                     <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Route</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Route</Text>
                         <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.departure_port + " - " + item.arrival_port }</Text>
                         </View>
 
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Status</Text>
-                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{ item.status == 0 ? "On Time" :"djdjd"}</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Status</Text>
+                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{this.renderStatusSwitch(item.status)}</Text>
                         </View>
 
                          <View style = {styles.menudetailsTopchild}>
@@ -215,9 +234,9 @@ export default class LiveUpdate extends Component{
                         <View style = {styles.menudetailsTopchild}>
                        
                         <Image
-                                
-                                resizeMode='contain'
-                                source={  item.status == 0 ? require('../../images/cancel.png') : item.sta == 1 ? require('../../images/inactivebell.png') : require('../../images/activeball.png')     } />
+                          resizeMode='contain'
+                          source={ item.status == 0 ? require('../../images/flight.png') : item.sta == 1 ? require('../../images/aeroplane 2.png') :  item.sta == 2 ? require('../../images/flight.png') :  item.sta == 3 ? require('../../images/flight.png') :  item.sta == 4 ? require('../../images/inactivebell.png') : item.sta == 5 ? require('../../images/cancel.png') :  item.sta == 6 ? require('../../images/cancel.png') : item.sta == 7 ? require('../../images/plane.png') : item.sta == 8 ? require('../../images/plane.png') :  item.sta == 9 ? require('../../images/ticket.png') :  item.sta == 10 ? require('../../images/plane.png') :  item.sta == 11 ? require('../../images/flight.png') :  item.sta == 12 ? require('../../images/flight.png') : require('../../images/flight.png')} 
+                          />
                         </View>
 
                 
@@ -238,7 +257,7 @@ export default class LiveUpdate extends Component{
 
     if (this.state.loading) {
       return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',  backgroundColor: '#a8bbf3', }}>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',  backgroundColor: '#7892FB', }}>
         <PacmanIndicator color='white' />
         <Text style={{ color: '#fff' }}>Processing</Text>
     </View>
@@ -271,7 +290,7 @@ export default class LiveUpdate extends Component{
                 keyExtractor={item => item.description}
                 ItemSeparatorComponent={this.renderSeparator}
                 ListHeaderComponent={this.renderHeader}
-             />
+          />
             
             </View>
             </View>
@@ -286,7 +305,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#a8bbf3',
+    backgroundColor: '#7892FB',
     paddingTop:10,
   },
   searchcontainer:{
@@ -341,7 +360,7 @@ const styles = StyleSheet.create({
     height:40,
     backgroundColor: '#eff3fd',
     marginBottom:15,
-    color: '#a8bbf3',
+    color: '#7892FB',
     paddingHorizontal: 40,
     borderRadius: 25,
     marginLeft:40,

@@ -48,6 +48,12 @@ export default class AgentSheduleListing extends Component{
           this.makeRemoteRequest();
         })
         
+        this.props.navigation.addListener(
+          'didFocus',
+          payload => {
+           this.makeRemoteRequest();
+          }
+        );
     
       }
     
@@ -102,14 +108,44 @@ export default class AgentSheduleListing extends Component{
           data: newData,
         });
       };
-  
+      renderStatusSwitch(param) {
+        switch(param) {
+            case 1:
+            return 'On Time Arrival';
+            case 2:
+            return 'On Time Departure';
+            case 3:
+            return 'Delayed Arrival';
+            case 4:
+            return ' Delayed Departure';
+            case 5:
+            return 'Cancelled';
+            case 6:
+            return 'Rescheduled';
+            case 7:
+            return 'On Ground';
+            case 8:
+            return 'Air Borne';
+            case 9:
+            return 'Taxiing';
+            case 10:
+            return 'Boarding ';
+            case 11:
+            return 'Early Arrival';
+            case 12:
+            return 'Early Departure';
+          default:
+            return 'ON TIME';
+        }
+      }
+    
   renderHeader = () => {
     return (
       
       <TextInput
         style = {styles.input}
-        placeholder="Type Here..."
-        placeholderTextColor= '#fff'
+        placeholder="Search..."
+        placeholderTextColor= '#4286f4'
         round
         value={this.state.search}
         onChangeText={this.searchFilterFunction}
@@ -176,7 +212,7 @@ export default class AgentSheduleListing extends Component{
 
                         <View style = {styles.menudetailsTopchild}>
                         <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Status</Text>
-                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{ item.status == 0 ? "Not Time" :"djdjd"}</Text>
+                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{this.renderStatusSwitch(item.status)}</Text>
                         </View>
 
                         <View style = {styles.menudetailsTopchild}>
@@ -259,7 +295,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#a8bbf3',
+    backgroundColor: '#7892FB',
   },
   main: {
     flex: 1,
@@ -320,7 +356,7 @@ const styles = StyleSheet.create({
     height:40,
     backgroundColor: '#eff3fd',
     marginBottom:15,
-    color: '#a8bbf3',
+    color: '#7892FB',
     paddingHorizontal: 40,
     borderRadius: 25,
     marginLeft:40,

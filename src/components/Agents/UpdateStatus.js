@@ -2,6 +2,24 @@
 import React, {Component} from 'react';
 import {ActivityIndicator, Picker,AsyncStorage, StyleSheet, Text, View,Image, Alert, TouchableOpacity} from 'react-native';
 const URL = require("../../components/server");
+import DatePicker from 'react-native-datepicker'
+import PickerModal from 'react-native-picker-modal-view';
+
+const list = [
+  {Id: 8, Name: 'Air Borne', Value: '8'},
+  {Id: 10, Name: 'Boarding', Value: '10'},
+  {Id: 5, Name: 'Cancelled', Value: '5'},
+  {Id: 3, Name: 'Delayed Arrival', Value: '3'},
+  {Id: 4, Name: 'Delayed Departure', Value: '4'},
+	{Id: 11, Name: 'Early Arrival', Value: '11'},
+	{Id: 12, Name: 'Early Departure', Value: '12'},
+	{Id: 7, Name: 'On Ground', Value: '7'},
+  {Id: 1, Name: 'On Time Arrival', Value: '1'},
+	{Id: 2, Name: 'On Time Departure', Value: '2'},
+  {Id: 6, Name: 'Rescheduled', Value: '6'},
+  {Id: 9, Name: 'Taxiing', Value: '9'},
+
+]
 
 export default class UpdateStatus extends Component{
 
@@ -27,8 +45,10 @@ export default class UpdateStatus extends Component{
           transaction_id:'',
           id:0, 
           auth:"",
-
           name:"",
+          sta:"",
+          fromdate:"2019-05-29 00:00",
+          today:""
         };
     
        this.arrayholder = [];
@@ -47,6 +67,16 @@ export default class UpdateStatus extends Component{
     clearTimeout(this.timeout);
   }
   componentDidMount() {
+
+
+    var date = new Date().getDate();
+    var month = new Date().getMonth() + 1;
+    var year = new Date().getFullYear();
+    this.setState({
+      today: year + '-' + month + '-' + date,
+      
+    });
+   
 
     this.setState({
       id:this.props.navigation.getParam("s_id", "defaultValue")
@@ -95,26 +125,48 @@ export default class UpdateStatus extends Component{
   checkUpdate()
   {
     
-        const {id, auth} = this.state
-         if(id == ""){
+        const {id,sta, fromdate, auth} = this.state
+
+         if(sta == "" || fromdate == "" ){
             Alert.alert('Process failed', 'Select a statuse', [{text: 'Okay'}])
             return
           }
-        this.setState({ loading: true})
+          var date = fromdate.slice(0, 10);
+          var time = fromdate.slice(11, 16)+ ":00";
+          var formdata ="" ;
+           if(sta == "1" || sta == "3" ||sta == "11"  ){
+            formdata = JSON.stringify({
+              status: sta,
+              actual_arrival_time: time,
+              actual_arrival_date: date
+            });
+           }else if(sta == "2" || sta == "4" ||sta == "5" || sta == "6" || sta == "12"){
+            formdata = JSON.stringify({
+              status: sta,
+              actual_departure_time: time,
+              actual_adeparture_date: date
+            });
+          }else{
+            formdata = JSON.stringify({
+              status: sta,
+            });
+          }
+
+      this.setState({ loading: true})
         fetch(URL.url+'/api/schedule/update/'+id, { method: 'PUT',  headers: {
           Accept: 'application/json',
           'Authorization': 'Bearer ' + auth,
           'Content-Type': 'application/json',
         }, body: JSON.stringify({
-          status: id,
+          status: sta,
         }), 
        })
         .then(res => res.json())
         .then(res => {
 
           if(res.status){ 
-          this.setState({ loading: false})
-          Alert.alert('Operation Successful', res.message, [{text: 'Okay'}])
+          this.setState({sta: sta, loading: false})
+          Alert.alert('Operation Successful', "Update"+ res.message, [{text: 'Okay'}])
 
           }else{
 
@@ -125,8 +177,39 @@ export default class UpdateStatus extends Component{
           console.log("Api call error");
           alert(error.message);
           this.setState({ loading: false})
-       });
+       }); 
        
+}
+
+renderStatusSwitch(param) {
+  switch(param) {
+      case 1:
+      return 'On Time Arrival';
+      case 2:
+      return 'On Time Departure';
+      case 3:
+      return 'Delayed Arrival';
+      case 4:
+      return ' Delayed Departure';
+      case 5:
+      return 'Cancelled';
+      case 6:
+      return 'Rescheduled';
+      case 7:
+      return 'On Ground';
+      case 8:
+      return 'Air Borne';
+      case 9:
+      return 'Taxiing';
+      case 10:
+      return 'Boarding ';
+      case 11:
+      return 'Early Arrival';
+      case 12:
+      return 'Early Departure';
+    default:
+      return 'ON TIME';
+  }
 }
 
   render() {
@@ -190,7 +273,7 @@ export default class UpdateStatus extends Component{
                 
                         <View style = {styles.menudetailsTopchild}>
                         <Text style={{fontSize: 10, fontWeight: '200',  color: '#AFC1F2',}}>Status</Text>
-                        <Text style={{marginTop:7, fontSize: 16, fontWeight: '500',  color: '#000',}}>{ this.state.name.status == 0 ? "Not Time" :"djdjd"}</Text>
+                        <Text style={{marginTop:7, fontSize: 16, fontWeight: '500',  color: '#000',}}>{this.renderStatusSwitch(this.state.name.status)}</Text>
                         </View>
 
                     
@@ -198,21 +281,48 @@ export default class UpdateStatus extends Component{
                         </View>
 
                <View style = {styles.maintwo}>
-             <Picker
-              selectedValue={(this.state && this.state.pickerValue) || 3}
-                    style = {styles.inputpicker}
-                    onValueChange={(itemValue) =>
-                      this.setState({id: itemValue})
-                      
-                    }
-                    selectedValue={this.state.id}>
-                    <Picker.Item label="Arrived" value="1" />
-                    <Picker.Item label="Boarding" value="2" />
-                    <Picker.Item label="Cargo" value="3" />
-                    <Picker.Item label="Taking off" value="4" />
-                   
-                  </Picker>
-             
+               <Text style={{fontSize: 13, fontWeight: '500',  color: '#AFC1F2',}}>Select a flight status  and Time to update {this.state.sta} </Text>
+               <PickerModal
+                    onSelected={(selected) => this.setState({sta: selected.Value})}
+                    onRequestClosed={()=> console.warn('closed...')}
+                    onBackRequest={()=> console.warn('back key pressed')}
+                    items={list}
+                    sortingLanguage={'tr'}
+                    showToTopButton={true}
+                    defaultSelected={this.state.selectedItem}
+                    autoCorrect={false}
+                    autoGenerateAlphabet={true}
+                    chooseText={'Airline'}
+                    searchText={'Search...'} 
+                    selectPlaceholderText={'Status'}
+                    forceSelect={false}
+                    autoSort={true}
+                    style={styles.buttonContainer} 
+	                	/>
+          <DatePicker
+        style={{width: 250}}
+        date={this.state.fromdate}
+        mode="datetime"
+        placeholder="select date"
+        format="YYYY-MM-DD hh:ss"
+        minDate="2019-06-01 00:00"
+        maxDate={this.state.today}
+        confirmBtnText="Confirm"
+        cancelBtnText="Cancel"
+        customStyles={{
+          dateIcon: {
+            position: 'absolute',
+            left: 0,
+            top: 4,
+            marginLeft: 0
+          },
+          dateInput: {
+            marginLeft: 36
+          }
+          // ... You can check the source to find the other keys.
+        }}
+        onDateChange={(date) => {this.setState({fromdate: date})}}
+      />
                   </View>
              </View>
 
@@ -225,8 +335,11 @@ export default class UpdateStatus extends Component{
                     > UPDATE</Text>
 
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.cancelContainer} >
+                <TouchableOpacity style={styles.cancelContainer} 
+                 onPress={() => this.props.navigation.navigate('AgentSheduleListing')}
+                >
                      <Text style={styles.cancleText}
+                     
                      >X</Text>
 
                 </TouchableOpacity>
@@ -250,7 +363,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#a8bbf3',
+    backgroundColor: '#7892FB',
   },
   ariline: {
     flexDirection: "row",
@@ -283,11 +396,14 @@ const styles = StyleSheet.create({
 
   submaintwo: {
     flex: 1,
+   
   },
 
   maintwo: {
     justifyContent: 'center',
-    alignItems: 'center',
+    borderColor:'#AFC1F2',
+    marginLeft:20,
+    marginRight:20,
   },
   input:{
     height:50,

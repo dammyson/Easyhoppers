@@ -2,19 +2,15 @@ import React, {Component} from 'react';
 import {ActivityIndicator, Animated, AsyncStorage, TextInput, StyleSheet, Text, View,Alert, Dimensions, TouchableOpacity} from 'react-native';  
 import { Pie } from 'react-native-pathjs-charts'
 import { MaterialDialog } from 'react-native-material-dialog';
+import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
+import { Card, Icon,SocialIcon} from 'react-native-elements'
+import { PacmanIndicator,} from 'react-native-indicators';
+import ProgressBarAnimated from 'react-native-progress-bar-animated';
 
-import {
-  BallIndicator,
-  BarIndicator,
-  DotIndicator,
-  MaterialIndicator,
-  PacmanIndicator,
-  PulseIndicator,
-  SkypeIndicator,
-  UIActivityIndicator,
-  WaveIndicator,
-} from 'react-native-indicators';
-
+let ta = [{
+  "name": "Empty",
+  "population": 7694980
+}]
 
 const URL = require("../../components/server");
 export default class Expense extends Component{
@@ -32,6 +28,8 @@ export default class Expense extends Component{
           ammount:'',
           name:'',
           progressStatus: 0,  
+          eid:'1',
+          budget_data:""
         };
     
        this.arrayholder = [];
@@ -42,7 +40,17 @@ export default class Expense extends Component{
     clearTimeout(this.timeout);
   }
   componentDidMount() {
-
+    AsyncStorage.getItem('eid').then((value) => this.setState({'eid': value.toString()}))
+    AsyncStorage.getItem('eid').then((value) => {
+      if(value==''){
+      }else{
+        
+        this.setState({eid: value})
+       
+      }
+     
+    })
+   
     AsyncStorage.getItem('auth').then((value) => this.setState({ 'auth': value.toString()}))
     AsyncStorage.getItem('auth').then((value) => {
       if(value==''){
@@ -52,6 +60,13 @@ export default class Expense extends Component{
       }
       this.makeRemoteRequest();
     })
+    this.props.navigation.addListener(
+      'didFocus',
+      payload => {
+       this.makeRemoteRequest();
+      }
+    );
+
 
 
      }
@@ -78,9 +93,10 @@ export default class Expense extends Component{
            .then(res => {
    
              if(res.status){ 
+              AsyncStorage.setItem('eid', res.expense_id.toString());
              this.setState({ loading: false})
              Alert.alert('Operation Successful', res.message, [{text: 'Okay'}])
-   
+            
              }else{
    
            Alert.alert('Operation failed', res.message, [{text: 'Okay'}])
@@ -95,13 +111,61 @@ export default class Expense extends Component{
    }
 
 
+   endExpense()
+   {
+    this.setState({visible: false})
+         const {eid, auth} = this.state
+          if(eid == "" ){
+             Alert.alert('Process failed', 'Select a statuse', [{text: 'Okay'}])
+             return
+           }
+         this.setState({loading: true})
+         fetch(URL.url+'/api/expense/close/'+eid, { method: 'GET',  headers: {
+           Accept: 'application/json',
+           'Authorization': 'Bearer ' + auth,
+           'Content-Type': 'application/json',
+         }
+        })
+         .then(res => res.json())
+         .then(res => {
+ 
+           if(res.status){ 
+           this.setState({ loading: false})
+           Alert.alert('Operation Successful', res.message, [{text: 'Okay'}])
+ 
+           }else{
+ 
+         Alert.alert('Operation failed', res.message, [{text: 'Okay'}])
+         this.setState({ loading: false})
+           }
+         }).catch((error)=>{
+           console.log("Api call error");
+           alert(error.message);
+           this.setState({ loading: false})
+        });
+        
+ }
+
+   _menu = null;
+ 
+   setMenuRef = ref => {
+     this._menu = ref;
+   };
+  
+   hideMenu = () => {
+     this._menu.hide();
+   };
+  
+   showMenu = () => {
+     this._menu.show();
+   };
 
 
    makeRemoteRequest = () => {
-    const {auth, e_id} = this.state
+    const {auth,eid, e_id} = this.state
 
     this.setState({ loading: true });
-    fetch(URL.url+'/api/expense/'+1 , { method: 'GET',  headers: {
+    fetch(URL.url+'/api/expense/'+eid , { method: 'GET',  headers: {
       Accept: 'application/json',
       'Authorization': 'Bearer ' + auth,
       'Content-Type': 'application/json',
@@ -110,13 +174,21 @@ export default class Expense extends Component{
 
       .then(res => res.json())
       .then(res => {
+        if(res.status){
         this.setState({
           data: res.pie_data,
           loading: false,
           status: res.status,
-          
+          budget_data: res.budget_data[0],
+        
         });
-        this.arrayholder = res.data;
+      }else{
+        this.setState({
+          loading: false,
+          data:ta,
+        
+        });
+      }
       })
       .catch(error => {
         alert(error.message);
@@ -130,8 +202,8 @@ export default class Expense extends Component{
   render() {
     
     let options = {
-      width: 300,
-      height: 300,
+      width: 350,
+      height: 350,
       color: '#2980B9',
       r: 50,
       R: 50,
@@ -144,7 +216,7 @@ export default class Expense extends Component{
       },
       label: {
         fontFamily: 'Arial',
-        fontSize: 8,
+        fontSize: 5,
         fontWeight: true,
         color: '#ECF0F1'
       }
@@ -152,7 +224,7 @@ export default class Expense extends Component{
 
     if (this.state.loading) {
       return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',  backgroundColor: '#a8bbf3', }}>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',  backgroundColor: '#7892FB', }}>
             <PacmanIndicator color='white' />
             <Text style={{ color: '#fff' }}>Processing</Text>
         </View>
@@ -172,8 +244,43 @@ export default class Expense extends Component{
                   <TouchableOpacity style={styles.buttonContainer} 
                     onPress={ () => this.setState({visible:true})}>
                     <Text style={styles.buttonText} >Start Expense</Text>
+                   
+
+
                 </TouchableOpacity>
+
             </View>
+
+
+
+
+
+
+ 
+ <View style = {styles.submain2}>
+
+            <Menu
+     ref={this.setMenuRef}
+     button={<TouchableOpacity style={styles.circle } onPress={this.showMenu} >
+
+     <Icon
+       name="bars"
+       style={{marginRight:10}} name="bars" size={20}
+       type="font-awesome"
+       color="#000"
+       />
+</TouchableOpacity>}
+   >
+     <MenuItem  onPress={() => this.props.navigation.navigate('AddBudget',
+     
+     {
+      expense_id: this.state.expense_id,
+    } 
+     )}>Add Expense</MenuItem>
+     <MenuDivider />
+     <MenuItem onPress={() => this.props.navigation.navigate('ExpensesSum')}>Achirve</MenuItem>
+   </Menu>
+       </View>
 
 
              <View style = {styles.submaintwo}>
@@ -186,43 +293,37 @@ export default class Expense extends Component{
                     legendPosition="topLeft"
                     label={{
                       fontFamily: 'Arial',
-                      fontSize: 12,
+                      fontSize: 9,
                       fontWeight: true,
                       color: '#ECF0F1'
                     }}
                   />
 
-              </View>
+                      <ProgressBarAnimated
+            width={300}
+            value={this.state.budget_data == "" ? 100 :this.state.budget_data.percentage}
+            height={30}
+            backgroundColorOnComplete="#6CC644"
+          />
+             
+             <Text style={{color:"#6CC644", fontWeight: '900',  fontSize:16, marginBottom:20}}>{ this.state.budget_data == "" ? "Expens is Empty" : "N"+this.state.budget_data.budget +" / N"+ this.state.budget_data.amount_spent }</Text>
+
+
+           </View>
 
 
                 <View style = {styles.submain}>
              
-                  <TouchableOpacity  style = {{width:200}} >
-
-
-                   
-                  </TouchableOpacity>
+            
             </View>
 
-
-   <View style = {styles.headerform}>
-             
-             <TouchableOpacity style={{ height:40,width:150, backgroundColor: "#42f4a7", justifyContent: 'center',borderRadius: 10, margin:5,}} 
-              onPress={() => this.props.navigation.navigate('AddBudget')}>
-               <Text style={styles.buttonText} >Add Expense</Text>
-           </TouchableOpacity>   
-           <TouchableOpacity style={{ height:40,width:150, backgroundColor: "#b042f4", justifyContent: 'center',borderRadius: 10, margin:5,}}
-             onPress={() => this.props.navigation.navigate('ExpensesSum')}> 
-               <Text style={styles.buttonText} > Expense Achirve</Text>
-           </TouchableOpacity> 
-       </View>
 
 
 
                <View style = {styles.submain}>
              
                <TouchableOpacity style={{ height:40,width:150, backgroundColor: "#f44242", justifyContent: 'center',borderRadius: 10, margin:5,}}
-                 onPress={() => this.props.navigation.navigate('Expense')} >
+                 onPress={() => this.endExpense()} >
                <Text style={styles.buttonText} > End Expense</Text>
            </TouchableOpacity> 
        </View>
@@ -263,7 +364,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#a8bbf3',
+    backgroundColor: '#7892FB',
   },
   ariline: {
     flexDirection: "row",
@@ -315,6 +416,11 @@ const styles = StyleSheet.create({
   submain: {
     justifyContent: 'center',
     alignItems: 'center',
+  },
+
+  submain2: {
+    justifyContent: 'flex-start',
+    alignItems: 'flex-end',
   },
   submainone: {
     flex: 1,
@@ -377,7 +483,7 @@ const styles = StyleSheet.create({
     buttonContainer:{
       height:40,
       width:150,
-      backgroundColor: "#AFC1F2",
+      backgroundColor: "#7892FB",
       justifyContent: 'center',
       borderRadius: 10,
       marginBottom:10,
@@ -402,7 +508,22 @@ const styles = StyleSheet.create({
       position: "absolute",  
       zIndex: 1,  
       alignSelf: "center",  
-    }  
+    }  ,
+    circle: {
+     width: 40,
+     height: 40,
+     backgroundColor: '#7892FB',
+     borderRadius: 10,
+     justifyContent: 'center',
+     alignItems: 'center',
+     shadowColor: '#000',
+     shadowOffset: { width: 0, height: 2 },
+     shadowOpacity: 0.5,
+     shadowRadius: 2,
+     elevation: 2,
+     marginRight:30
+  },
     
 });
+
 

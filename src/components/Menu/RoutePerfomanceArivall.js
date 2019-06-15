@@ -1,88 +1,25 @@
 import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, Text, View,Image, Dimensions, TouchableOpacity} from 'react-native';
+import {ActivityIndicator,AsyncStorage,FlatList, StyleSheet, Text, View,Image, Dimensions, TouchableOpacity} from 'react-native';
 import { MultiLineChart } from 'react-native-d3multiline-chart';
-   
+import DatePicker from 'react-native-datepicker'
+import { Card, Icon,SocialIcon} from 'react-native-elements'
+const URL = require("../../components/server");
+
 const deviceWidth = Dimensions.get ('window').width - 20;
 const deviceHeight = Dimensions.get ('window').height;
-var dat = [
-  [
-    {
-      y: 0,
-      x: 0,
-    },
-    {
-      y: 0,
-      x: 2,
-    },
-    {
-      y: 4,
-      x: 4,
-    },
-    {
-      y: 10,
-      x: 6,
-    },
-    
-    
-  ],
-  
 
-  [{
-    y: 0,
-    x: 0,
-  },
-    {
-      y: 4,
-      x: 8,
-    },
-    {
-      y: 6,
-      x: 10,
-    },
-    {
-      y: 10,
-      x: 12.4,
-    },
-    
-    
-  ],
-
-
-  [
-
-    {
-      y: 0,
-      x: 0,
-    },
-    {
-      y: 8,
-      x: 8,
-    },
-    {
-      y: 6,
-      x: 10,
-    },
-    {
-      y: 10,
-      x: 12.4,
-    },
-    
-    
-  ],
-];
-
-let leftAxis = [2, 4, 6, 8, 10, 12,];
-let bottomAxisData = [2, 4, 6, 8, 10, 12,];
+let leftAxis = [2, 4, 6, 8, 10, 12,14, 16 ,18, 20, 22, 24,];
+let bottomAxisData = [2, 4, 6, 8, 10, 12,14, 16 ,18, 20, 22, 24,];
 let legendColor = ['#0000FF', 'green', '#FFBF00'];
 let legendText = ['Early','OnTime', 'Late'];
-let minX = 0, maxX = 12;
-let minY = 0, maxY = 12;
+let minX = 0, maxX = 24;
+let minY = 0, maxY = 24;
 
 //since there are only two lines
 var Color = ['#0000FF', 'green', '#FFBF00'];
 //general data to represent ticks in y-axis and it doesn't take part in calculation
-let bottomAxisDataToShow = [2, 4, 6, 8, 10, 12,14,16];
-let leftAxisDataToShow = [2, 4, 6, 8, 10, 12, 14, 16];
+let bottomAxisDataToShow = [2, 4, 6, 8, 10, 12,14, 16 ,18, 20, 22, 24,];
+let leftAxisDataToShow = [2, 4, 6, 8, 10, 12,14, 16 ,18, 20, 22, 24,];
 //general data to represent ticks in y-axis and it doesn't take part in calculation
 
 
@@ -91,14 +28,22 @@ export default class RoutePerfomanceArivall extends Component{
   
       constructor(props) {
         super(props);
-    
         this.state = {
-          loading: false,
+          loading: true,
           status: false,
-          data: dat,
+          data: [],
           search: '',
           transaction_id:'',
+          selectedStartDate: null,
+          fromdate:"2019-05-29",
+          todate:"2019-06-11",
+          today:"",
+          airline: "",
+          rout:"",
+          airlinename: "",
+          route:"",
         };
+        this.onDateChange = this.onDateChange.bind(this);
     
        this.arrayholder = [];
 
@@ -109,29 +54,102 @@ export default class RoutePerfomanceArivall extends Component{
         
         //since there are only two lines
        
-         
+        onDateChange(date) {
+        console.warn(date);
+
+          this.setState({
+            selectedStartDate: date,
+          });
+        }    
   componentWillUnmount() {
     clearTimeout(this.timeout);
+    
+
   }
   componentDidMount() {
-    this.makeRemoteRequest();
+
+    var date = new Date().getDate();
+    var month = new Date().getMonth() + 1;
+    var year = new Date().getFullYear();
+    this.setState({
+      today: year + '-' + month + '-' + date,
+      
+    });
+   
+    this.setState({
+      airlinename: this.props.navigation.getParam("airlinename", "defaultValue"),
+  route:this.props.navigation.getParam("route", "defaultValue"),
+  airline:this.props.navigation.getParam("airline", "defaultValue"),
+  rout:this.props.navigation.getParam("rout", "defaultValue")
+    })
+    AsyncStorage.getItem('auth').then((value) => this.setState({ 'auth': value.toString()}))
+    AsyncStorage.getItem('auth').then((value) => {
+      if(value==''){
+       
+      }else{
+        this.setState({auth: value})
+      }
+      this.makeRemoteRequest();
+    })
+
+
      }
 
   makeRemoteRequest = () => {
-    const url = 'http://192.168.43.230/may/inde.php';
-    this.setState({ loading: false });
+            const {auth, airline, rout, fromdate, today,todate} = this.state
+        this.setState({ loading: true });
+        fetch(URL.url+'/api/graph', { method: 'POST',  headers: {
+          Accept: 'application/json',
+          'Authorization': 'Bearer ' + auth,
+          'Content-Type': 'application/json',
+        },body: JSON.stringify({
+             airline_code: airline,
+             route_id:rout,
+             type:"day",
+             from: today,
+             to: today,
+            }), 
+          
+          })
+              .then(res => res.json())
+              .then(res => {
+                this.setState({
+                  loading: false,
+                  status: res.status,
+                  data: res.data.departure,
+                  
+                });
+                this.arrayholder = res.data;
+              })
+              .catch(error => {
+                this.setState({ error, loading: false });
+              });
+  };
 
-    fetch(url, { method: 'GET',  headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    } }
-    
-    )
+
+
+  RemakeRemoteRequest = () => {
+     const {auth, airline, rout,fromdate, todate} = this.state
+      this.setState({ loading: true });
+      fetch(URL.url+'/api/graph', { method: 'POST',  headers: {
+        Accept: 'application/json',
+        'Authorization': 'Bearer ' + auth,
+        'Content-Type': 'application/json',
+      },body: JSON.stringify({
+          airline_code: airline,
+          route_id:rout,
+          type:"day",
+          from: fromdate,
+          to: todate,
+          }), 
+        
+        })
       .then(res => res.json())
       .then(res => {
         this.setState({
           loading: false,
           status: res.status,
+          data: res.data.departure,
           
         });
         this.arrayholder = res.data;
@@ -139,9 +157,23 @@ export default class RoutePerfomanceArivall extends Component{
       .catch(error => {
         this.setState({ error, loading: false });
       });
+};
+
+  startFilter = () => {
+    const {fromdate, todate, auth} = this.state
+    if(fromdate == "" || todate == "" ){
+    alert('Select start and end date')
+      return
+    }
+    var diff =  Math.floor(( Date.parse(todate) - Date.parse(fromdate) ) / 86400000); 
+       if(diff > 7){
+         alert("Select Interval of Seven (7) days")
+         return
+       }else{
+        this.RemakeRemoteRequest();
+       }
+    
   };
-
-
 
   //
  
@@ -179,8 +211,8 @@ export default class RoutePerfomanceArivall extends Component{
                             source={require('../../images/sn.png')} />
                             <View style = {styles.details} >
                                 <View style = {styles.menudetailsTopchild}>
-                                      <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Airline</Text>
-                                      <Text style={{marginTop:7, fontSize: 18, fontWeight: '600',  color: '#5b97dc',}}>Arik Air</Text>
+                                      <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Airline</Text>
+                                      <Text style={{marginTop:7, fontSize: 18, fontWeight: '600',  color: '#5b97dc',}}>{this.state.airlinename}</Text>
                                       </View>
 
                               </View>
@@ -188,15 +220,94 @@ export default class RoutePerfomanceArivall extends Component{
              
                           <Text style={{margin:10, fontSize: 20, fontWeight: '300',  color: '#000',}}>Trend Performance</Text>
                           <TouchableOpacity style={styles.listItemWhite }  >
-                                        <Text style={{margin:10, fontSize: 18, fontWeight: '600',  color: '#5b97dc',}}>LAG - ABD (Arivall) </Text>
+                                        <Text style={{margin:10, fontSize: 18, fontWeight: '600',  color: '#5b97dc',}}>{this.state.route} (Arivall) </Text>
                          </TouchableOpacity>
+
+
+<Text style={{fontSize: 12,  margin:10, fontWeight: '200',  color: '#7892FB',}}>Filter</Text> 
+ <View style = {styles.headerform}>
+             
+ <DatePicker
+        style={{width: 120}}
+        date={this.state.fromdate}
+        mode="date"
+        placeholder="select date"
+        format="YYYY-MM-DD"
+        minDate="2019-05-01"
+        maxDate={this.state.today}
+        confirmBtnText="Confirm"
+        cancelBtnText="Cancel"
+        customStyles={{
+          dateIcon: {
+            position: 'absolute',
+            left: 0,
+            top: 4,
+            marginLeft: 0
+          },
+          dateInput: {
+            marginLeft: 36
+          }
+          // ... You can check the source to find the other keys.
+        }}
+        onDateChange={(date) => {this.setState({fromdate: date})}}
+      />
+          
+
+ <Text style={{fontSize: 12,   margin:10,fontWeight: '600',  color: '#000',}}>TO</Text> 
+            <DatePicker
+        style={{width: 120}}
+        date={this.state.todate}
+        mode="date"
+        placeholder="select date"
+        format="YYYY-MM-DD"
+        minDate="2019-05-01"
+        maxDate={this.state.today}
+        confirmBtnText="Confirm"
+        cancelBtnText="Cancel"
+        customStyles={{
+          dateIcon: {
+            position: 'absolute',
+            left: 0,
+            top: 4,
+            marginLeft: 0
+          },
+          dateInput: {
+            marginLeft: 36
+          }
+          // ... You can check the source to find the other keys.
+        }}
+        onDateChange={(date) => {this.setState({todate: date})}}
+      />
+
+
+
+      <TouchableOpacity style={styles.circle } onPress={() => this.startFilter()} >
+
+<Icon
+  name="bars"
+  style={{marginRight:10}} name="search" size={20}
+  type="font-awesome"
+  color="#000"
+  />
+</TouchableOpacity>
+       </View>
+
+
+
+
+
+
+
+
+
              </View>
 
                 <View style = {styles.submaintwo}>
                 <View>
-                <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Actual</Text> 
+                <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Actual</Text> 
                 </View>
               
+
                 <MultiLineChart
                 style={{ alignItems: 'center',}}
           data={data}
@@ -258,7 +369,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#a8bbf3',
+    backgroundColor: '#7892FB',
   },
   ariline: {
     flexDirection: "row",
@@ -322,6 +433,30 @@ const styles = StyleSheet.create({
       backgroundColor: '#fff',
       padding:9,
     },
+    headerform:{
+      height:40,
+      flexDirection: "row",
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom:10,
+      marginRight:15,
+      marginLeft:15, 
+       marginTop:10,
+    },
+    circle: {
+     width: 40,
+     height: 40,
+     backgroundColor: '#7892FB',
+     borderRadius: 10,
+     justifyContent: 'center',
+     alignItems: 'center',
+     shadowColor: '#000',
+     shadowOffset: { width: 0, height: 2 },
+     shadowOpacity: 0.5,
+     shadowRadius: 2,
+     elevation: 2,
+     marginLeft:20
+  },
     
 });
 

@@ -54,6 +54,7 @@ export default class ExpensesSum extends Component{
 
       .then(res => res.json())
       .then(res => {
+        console.warn(res)
         this.setState({
           data: res.data,
           loading: false,
@@ -128,10 +129,10 @@ export default class ExpensesSum extends Component{
                         <View style = {styles.menudetailsTop}>
                 
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Name</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Name</Text>
                         <Text style={{marginTop:7, fontSize: 15, fontWeight: '500',  color: '#000',}}>{item.name}</Text>
                         </View>
-                        <TouchableOpacity style={{ height:40,width:150, backgroundColor: "#AFC1F2", justifyContent: 'center',borderRadius: 10, margin:5,}} 
+                        <TouchableOpacity style={{ height:40,width:150, backgroundColor: "#7892FB", justifyContent: 'center',borderRadius: 10, margin:5,}} 
                                   onPress={() => this.props.navigation.navigate('Reciept', 
                                   {
                                     e_id: item.id,
@@ -147,12 +148,12 @@ export default class ExpensesSum extends Component{
                     <View style = {styles.menudetailsBottom}> 
                 
                     <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Budget</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Budget</Text>
                         <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#000',}}>{item.budget}</Text>
                         </View>
 
                           <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#AFC1F2',}}>Amount Spent</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Amount Spent</Text>
                         <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#000',}}>{item.amount_spent}</Text>
                         </View>
 
@@ -225,7 +226,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#a8bbf3',
+    backgroundColor: '#7892FB',
     paddingTop:10,
   },
   main: {
@@ -276,7 +277,7 @@ const styles = StyleSheet.create({
     height:40,
     backgroundColor: '#eff3fd',
     marginBottom:15,
-    color: '#a8bbf3',
+    color: '#7892FB',
     paddingHorizontal: 40,
     borderRadius: 25,
     marginLeft:40,
