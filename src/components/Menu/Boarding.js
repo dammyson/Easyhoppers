@@ -191,7 +191,7 @@ checkAlert = () => {
                      }
                     >
 
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB', marginBottom:10}}>Sub</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: URL.bgcolor, marginBottom:10}}>Sub</Text>
                       
                      
                             <Animated.Image
@@ -208,21 +208,21 @@ checkAlert = () => {
                         <View style = {styles.menudetailsTop}>
                 
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Airline</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: URL.bgcolor,}}>Airline</Text>
                         <Text style={{marginTop:7, fontSize: 13, fontWeight: '500',  color: '#000',}}>{item.name}</Text>
                         </View>
 
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Flight Number</Text>
-                        <Text style={{marginTop:7, fontSize: 13, fontWeight: '500',  color: '#7892FB',}}>{item.description }</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: URL.bgcolor,}}>Flight Number</Text>
+                        <Text style={{marginTop:7, fontSize: 13, fontWeight: '500',  color: URL.bgcolor,}}>{item.description }</Text>
                         </View>
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Depature</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: URL.bgcolor,}}>Depature</Text>
                         <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.scheduled_departure_time}</Text>
                         </View>
 
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Arival</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: URL.bgcolor,}}>Arival</Text>
                         <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.scheduled_arrival_time}</Text>
                         </View>
                     
@@ -233,16 +233,16 @@ checkAlert = () => {
 
                        
                        <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Route</Text>
-                        <Text style={{marginTop:7, fontSize: 15, fontWeight: '500',  color: '#7892FB',}}>{item.departure_port + " - " + item.arrival_port}</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: URL.bgcolor,}}>Route</Text>
+                        <Text style={{marginTop:7, fontSize: 15, fontWeight: '500',  color: URL.bgcolor,}}>{item.departure_port + " - " + item.arrival_port}</Text>
                         </View>
 
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Date</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: URL.bgcolor,}}>Date</Text>
                         <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.scheduled_arrival_date}</Text>
                         </View>
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Status</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>Status</Text>
                         <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{this.renderStatusSwitch(item.status)}</Text>
                         </View>
                 
@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#7892FB',
+    backgroundColor: URL.bgcolor,
   },
   main: {
     flex: 1,
@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
     height:40,
     backgroundColor: '#eff3fd',
     marginBottom:15,
-    color: '#7892FB',
+    color: URL.bgcolor,
     paddingHorizontal: 40,
     borderRadius: 25,
     marginLeft:40,

@@ -37,12 +37,6 @@ const AppNavigator = createStackNavigator({
      navigationOptions: {
       header:null 
     }}, 
-
-    Edit: {screen: Edit,
-        navigationOptions: {
-          header:null 
-        }}, 
-
     ForgotPassword: {screen: ForgotPassword,
     navigationOptions: {
       header:null 
@@ -51,6 +45,10 @@ const AppNavigator = createStackNavigator({
       navigationOptions: {
         header:null 
       }}, 
+      Edit: {screen: Edit,
+        navigationOptions: {
+          header:null 
+        }}, */
     LiveUpdate: {screen: LiveUpdate,
       navigationOptions: {
         header:null 
@@ -97,7 +95,7 @@ const AppNavigator = createStackNavigator({
     RoutePerfomanceDeparture: {screen: RoutePerfomanceDeparture,
       navigationOptions: {
         header:null 
-      }},   */  
+      }},    
     Expense: {screen: Expense,
     navigationOptions: {
       header:null 

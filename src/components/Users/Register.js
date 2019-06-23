@@ -22,7 +22,7 @@ export default class Register extends Component{
     
         const {email,phone, fname, lname,password} = this.state
 
-          if(email == "" || password == "" || name == "" || phone == "" ){
+          if(email == "" || password == "" || phone == "" ){
             Alert.alert('Validation failed', 'field(s) cannot be empty', [{text: 'Okay'}])
             return
           }
@@ -31,9 +31,11 @@ export default class Register extends Component{
           Accept: 'application/json',
           'Content-Type': 'application/json',
         }, body: JSON.stringify({
-          first_name: fname,
-          last_name: lname,
+          firstname: fname,
+          name: fname,
+          lastname: lname,
           email: email,
+          phone:phone,
           password: password,
           state: "Nig",
           city: "Nig"
@@ -46,11 +48,11 @@ export default class Register extends Component{
           this.props.navigation.navigate('Login')
 
           }else{
-        Alert.alert('Login failed', "Check your email and password", [{text: 'Okay'}])
+        Alert.alert('Registration failed', res.message, [{text: 'Okay'}])
         this.setState({ loading: false})
           }
         }).catch((error)=>{
-          console.log("Api call error");
+          console.warn(error);
           alert(error.message);
        });
    }
@@ -192,7 +194,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer:{
         height:50,
-        backgroundColor: "#7892FB",
+        backgroundColor: URL.bgcolor,
         borderTopRightRadius: 30,
         justifyContent: 'center',
         borderBottomRightRadius: 30,

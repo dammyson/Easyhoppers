@@ -31,7 +31,12 @@ export default class UserLanding extends Component{
       }
       this.makeRemoteRequest();
     })
-    
+    this.props.navigation.addListener(
+      'didFocus',
+      payload => {
+       this.makeRemoteRequest();
+      }
+    );
 
   }
 
@@ -50,11 +55,11 @@ export default class UserLanding extends Component{
 
       .then(res => res.json())
       .then(res => {
+        console.warn(res)
         if(res.status){
           AsyncStorage.setItem('email', res.user.email);
         this.setState({
           name: res.user.name,
-
           loading: false,
           
           
@@ -123,7 +128,7 @@ export default class UserLanding extends Component{
                 </TouchableOpacity> 
                 <Text style={styles.headTextW}>{this.state.name}</Text>
 
-                <TouchableOpacity style={styles.button} onPress={this.showDialog}> 
+                <TouchableOpacity style={styles.button}  onPress={() => this.props.navigation.navigate('Edit')}> 
                 <Icon
                     name="pencil"
                     size={20}
@@ -250,7 +255,7 @@ const styles = StyleSheet.create({
   },
   Headercontainer: {
     flex: 3,
-    backgroundColor: '#8694f4',
+    backgroundColor: URL.bgcolor,
     alignItems: 'center',
     justifyContent: 'center',
    
@@ -270,7 +275,7 @@ const styles = StyleSheet.create({
     marginTop:10
   },
   headText:{
-    color: "#000",
+    color: URL.bgcolor,
     fontWeight: '900',
     fontSize:15,
     textAlign:'left',
@@ -282,7 +287,7 @@ const styles = StyleSheet.create({
     textAlign:'left',
   },
   headlink:{
-    color: "#8694f4",
+    color: URL.homelinkcolor,
     fontWeight: '500',
     fontSize:12,
     textAlign:'left',

@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#7892FB',
+    backgroundColor: URL.bgcolor,
   },
   main: {
     flex: 1,
@@ -356,7 +356,7 @@ const styles = StyleSheet.create({
     height:40,
     backgroundColor: '#eff3fd',
     marginBottom:15,
-    color: '#7892FB',
+    color: URL.bgcolor,
     paddingHorizontal: 40,
     borderRadius: 25,
     marginLeft:40,

@@ -4,17 +4,20 @@ import {TextInput, StyleSheet,ScrollView, Text, View,TouchableOpacity, KeyboardA
 const URL = require("../../components/server");
 import RadioGroup from 'react-native-radio-buttons-group';
 import DatePicker from 'react-native-datepicker'
+let selectedButton = "";
 export default class Edit extends Component{
+  
   constructor(props) 
   {
       super(props);
       this.state = {
         loading: false,
-        email: "", 
-        phone: "", 
-        name: "", 
-        password: "",
-
+        dob: "1990-06-01", 
+        occupation: "", 
+        fname: "", 
+        lname: "", 
+        gender: "",
+        auth:"",
         data: [
             
             {
@@ -29,45 +32,69 @@ export default class Edit extends Component{
                   }
 
   }
+  onPress = data => this.setState({ genders:data });
 
-  checkReg()
+  componentDidMount() {
+  
+    AsyncStorage.getItem('auth').then((value) => this.setState({ 'auth': value.toString()}))
+    AsyncStorage.getItem('auth').then((value) => {
+      if(value==''){
+       
+      }else{
+        this.setState({auth: value})
+      }
+
+    })
+   
+
+  }
+
+
+
+  checkUpdate()
     {
     
-        const {email,phone, name, password} = this.state
+        const {dob, occupation, auth, fname, lname} = this.state
 
-          if(email == "" || password == "" || name == "" || phone == "" ){
-            Alert.alert('Validation failed', 'field(s) cannot be empty', [{text: 'Okay'}])
-            return
-          }
+        console.warn(dob+occupation +fname+ lname+ selectedButton)  
         this.setState({ loading: true})
-        fetch(URL.url+'/api/register', { method: 'POST',  headers: {
+        fetch(URL.url+'/api/user/update', { method: 'PUT',  headers: {
           Accept: 'application/json',
+          'Authorization': 'Bearer ' + auth,
           'Content-Type': 'application/json',
         }, body: JSON.stringify({
-          name: name,
-          email: email,
-          password: password,
-          state: "Nig",
-          city: "Nig"
+          firstname: fname,
+          lastname: lname,
+           DOB: dob,
+          occupation: occupation,
+          gender: selectedButton
         }),  })
         .then(res => res.json())
         .then(res => {
           console.warn(res);
           if(res.status){
           this.setState({ loading: false})
-          this.props.navigation.navigate('Login')
+          this.props.navigation.navigate('UserLanding')
 
           }else{
-        Alert.alert('Login failed', "Check your email and password", [{text: 'Okay'}])
+        Alert.alert('Login failed', "Check your details", [{text: 'Okay'}])
         this.setState({ loading: false})
           }
         }).catch((error)=>{
           console.log("Api call error");
           alert(error.message);
        });
-   }
 
+    
+   }
+   onPress = data => this.setState({ data });
   render() {
+
+     selectedButton = this.state.data.find(e => e.selected == true);
+    selectedButton = selectedButton
+        ? selectedButton.value
+        : this.state.data[0].label;
+        
     if (this.state.loading) {
       return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -125,22 +152,22 @@ export default class Edit extends Component{
                
                  />
                     <View style= {{flexDirection: "row",  alignItems: 'center', marginLeft:45, marginBottom:4,}}> 
-                    <Text style={{color:"#7892FB", fontWeight: '900',  fontSize:16,}}>Gender</Text>
+                    <Text style={{color:URL.bgcolor, fontWeight: '900',  fontSize:16,}}>Gender</Text>
                     <RadioGroup radioButtons={this.state.data} 
-                    onPress={this.onPress} 
+                    onPress={this.onPress}
                     flexDirection='row'/>
                     </View>
                   
                     <View style= {{flexDirection: "row",  alignItems: 'center', marginLeft:45, marginBottom:24,}}> 
-                    <Text style={{color:"#7892FB", fontWeight: '900',  fontSize:16,}}>DOB</Text>
+                    <Text style={{color:URL.bgcolor, fontWeight: '900',  fontSize:16,}}>DOB</Text>
                      <DatePicker
                                 style={{width: 250}}
-                                date={this.state.fromdate}
+                                date={this.state.dob}
                                 mode="date"
                                 placeholder="select date"
-                                format="YYYY-MM-DD hh:ss"
-                                minDate="2019-06-01 00:00"
-                                maxDate={this.state.today}
+                                format="YYYY-MM-DD"
+                                minDate="1950-06-01"
+                                maxDate="2019-11-11"
                                 confirmBtnText="Confirm"
                                 cancelBtnText="Cancel"
                                 customStyles={{
@@ -155,7 +182,7 @@ export default class Edit extends Component{
                                   }
                                   // ... You can check the source to find the other keys.
                                 }}
-                                onDateChange={(date) => {this.setState({fromdate: date})}}
+                                onDateChange={(date) => {this.setState({dob: date})}}
                               />
                         </View>
                
@@ -164,12 +191,12 @@ export default class Edit extends Component{
            <View style={styles.Linkcontainer}>
                 <TouchableOpacity style={styles.buttonContainer} >
                     <Text style={styles.buttonText}
-                     onPress ={() => this.checkReg()} >Update</Text>
+                     onPress ={() => this.checkUpdate()} >Update</Text>
 
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.cancelContainer} >
                      <Text style={styles.cancleText}
-                        onPress ={() => this.checkLogin()} >X</Text>
+                       onPress={() => this.props.navigation.navigate('UserLanding')}>X</Text>
 
                 </TouchableOpacity>
 
@@ -209,7 +236,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer:{
         height:50,
-        backgroundColor: "#7892FB",
+        backgroundColor: URL.bgcolor,
         borderTopRightRadius: 30,
         justifyContent: 'center',
         borderBottomRightRadius: 30,

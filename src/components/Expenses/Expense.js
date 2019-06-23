@@ -29,7 +29,8 @@ export default class Expense extends Component{
           name:'',
           progressStatus: 0,  
           eid:'1',
-          budget_data:""
+          budget_data:"",
+          curr: "NGN",
         };
     
        this.arrayholder = [];
@@ -41,15 +42,7 @@ export default class Expense extends Component{
   }
   componentDidMount() {
     AsyncStorage.getItem('eid').then((value) => this.setState({'eid': value.toString()}))
-    AsyncStorage.getItem('eid').then((value) => {
-      if(value==''){
-      }else{
-        
-        this.setState({eid: value})
-       
-      }
-     
-    })
+
    
     AsyncStorage.getItem('auth').then((value) => this.setState({ 'auth': value.toString()}))
     AsyncStorage.getItem('auth').then((value) => {
@@ -71,10 +64,30 @@ export default class Expense extends Component{
 
      }
 
+     _menu = null;
+ 
+     setMenuRef = ref => {
+       this._menu = ref;
+     };
+    
+     hideMenu = () => {
+       this._menu.hide();
+     };
+    
+     showMenu = () => {
+       this._menu.show();
+     };
+
+     setCurren(curr){
+      this.setState({curr: curr}),  
+      this.hideMenu()
+    }
+
+
      newExpense()
      {
       this.setState({visible: false})
-           const {name, ammount, auth} = this.state
+           const {name, ammount, curr, auth} = this.state
             if(name == "" || ammount == ""){
                Alert.alert('Process failed', 'Select a statuse', [{text: 'Okay'}])
                return
@@ -86,7 +99,8 @@ export default class Expense extends Component{
              'Content-Type': 'application/json',
            }, body: JSON.stringify({
              name: name,
-             budget:ammount
+             budget:ammount,
+             currency: curr
            }), 
           })
            .then(res => res.json())
@@ -146,26 +160,26 @@ export default class Expense extends Component{
         
  }
 
-   _menu = null;
+   _men = null;
  
-   setMenuRef = ref => {
-     this._menu = ref;
+   setMenRef = ref => {
+     this._men = ref;
    };
   
-   hideMenu = () => {
-     this._menu.hide();
+   hideMen = () => {
+     this._men.hide();
    };
   
-   showMenu = () => {
-     this._menu.show();
+   showMen = () => {
+     this._men.show();
    };
 
 
    makeRemoteRequest = () => {
     const {auth,eid, e_id} = this.state
-
+     console.warn(eid)
     this.setState({ loading: true });
-    fetch(URL.url+'/api/expense/'+eid , { method: 'GET',  headers: {
+    fetch(URL.url+'/api/expense/'+eid, { method: 'GET',  headers: {
       Accept: 'application/json',
       'Authorization': 'Bearer ' + auth,
       'Content-Type': 'application/json',
@@ -224,7 +238,7 @@ export default class Expense extends Component{
 
     if (this.state.loading) {
       return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',  backgroundColor: '#7892FB', }}>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',  backgroundColor: URL.bgcolor, }}>
             <PacmanIndicator color='white' />
             <Text style={{ color: '#fff' }}>Processing</Text>
         </View>
@@ -260,14 +274,14 @@ export default class Expense extends Component{
  <View style = {styles.submain2}>
 
             <Menu
-     ref={this.setMenuRef}
-     button={<TouchableOpacity style={styles.circle } onPress={this.showMenu} >
+     ref={this.setMenRef}
+     button={<TouchableOpacity style={styles.circle } onPress={this.showMen} >
 
      <Icon
        name="bars"
        style={{marginRight:10}} name="bars" size={20}
        type="font-awesome"
-       color="#000"
+       color="#fff"
        />
 </TouchableOpacity>}
    >
@@ -275,10 +289,12 @@ export default class Expense extends Component{
      
      {
       expense_id: this.state.expense_id,
-    } 
+    },  this.hideMen()
      )}>Add Expense</MenuItem>
      <MenuDivider />
-     <MenuItem onPress={() => this.props.navigation.navigate('ExpensesSum')}>Achirve</MenuItem>
+     <MenuItem onPress={() => this.props.navigation.navigate('ExpensesSum',{
+      expense_id: this.state.expense_id,
+    },  this.hideMen())}>Achirve</MenuItem>
    </Menu>
        </View>
 
@@ -298,6 +314,16 @@ export default class Expense extends Component{
                       color: '#ECF0F1'
                     }}
                   />
+                    <TouchableOpacity style={styles.buttonContainer} 
+                    onPress={() => this.props.navigation.navigate('Reciept', 
+                    {
+                      e_id: this.state.eid,
+                      name:"Current",
+                    })
+                    
+                  }>
+                    <Text style={styles.buttonText} >Details</Text>
+                   </TouchableOpacity>
 
                       <ProgressBarAnimated
             width={300}
@@ -342,6 +368,7 @@ export default class Expense extends Component{
                         round
                         onChangeText = {text => this.setState({name: text})}
                         />
+                        
                          <TextInput
                         style = {styles.input}
                         placeholder="Budget"
@@ -350,6 +377,21 @@ export default class Expense extends Component{
                         round
                         onChangeText = {text => this.setState({ammount: text})}
                         />
+                          <View style= {{flexDirection: "row", alignItems: 'center', justifyContent: 'center',marginBottom:4, marginLeft:10, marginRight:10,}}> 
+                          <Menu
+                                ref={this.setMenuRef}
+                                button={<TouchableOpacity style={styles.circlet } onPress={this.showMenu} >
+                                <Text>{this.state.curr}</Text>
+                              </TouchableOpacity>}
+                                >
+                                  <MenuItem  onPress={() =>  this.setCurren("NGN")}>NGN</MenuItem>
+                                  <MenuDivider />
+                                  <MenuItem  onPress={() =>  this.setCurren("USD")}>USD</MenuItem>
+                                  <MenuDivider />
+                                  <MenuItem  onPress={() =>  this.setCurren("GBP")}>GBP</MenuItem>
+                              </Menu>
+                       
+                              </View>
                         </View>
               </MaterialDialog>
      </View>
@@ -364,7 +406,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#7892FB',
+    backgroundColor: URL.bgcolor,
   },
   ariline: {
     flexDirection: "row",
@@ -450,10 +492,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#eff3fd',
     marginBottom:15,
     color: '#000',
-    paddingHorizontal: 40,
-    borderRadius: 25,
-    marginLeft:40,
-    marginRight:40,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+    marginLeft:10,
+    marginRight:10,
     textAlign: 'center',
     fontWeight: '700',
     
@@ -483,7 +525,7 @@ const styles = StyleSheet.create({
     buttonContainer:{
       height:40,
       width:150,
-      backgroundColor: "#7892FB",
+      backgroundColor: URL.bgcolor,
       justifyContent: 'center',
       borderRadius: 10,
       marginBottom:10,
@@ -512,7 +554,7 @@ const styles = StyleSheet.create({
     circle: {
      width: 40,
      height: 40,
-     backgroundColor: '#7892FB',
+     backgroundColor: URL.bgcolor,
      borderRadius: 10,
      justifyContent: 'center',
      alignItems: 'center',
@@ -523,6 +565,20 @@ const styles = StyleSheet.create({
      elevation: 2,
      marginRight:30
   },
+  circlet: {
+    width: 40,
+    height: 40,
+    backgroundColor: URL.bgcolor,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    elevation: 2,
+   
+ },
     
 });
 

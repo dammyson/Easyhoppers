@@ -212,7 +212,7 @@ Accept: 'application/json',
                             source={require('../../images/sn.png')} />
                             <View style = {styles.details} >
                                 <View style = {styles.menudetailsTopchild}>
-                                      <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Airline</Text>
+                                      <Text style={{fontSize: 12, fontWeight: '200',  color: URL.bgcolor,}}>Airline</Text>
                                       <Text style={{marginTop:7, fontSize: 18, fontWeight: '600',  color: '#5b97dc',}}>{this.state.airlinename}</Text>
                                       </View>
 
@@ -228,7 +228,7 @@ Accept: 'application/json',
 
 
 
-<Text style={{fontSize: 12,  margin:10, fontWeight: '200',  color: '#7892FB',}}>Filter</Text> 
+<Text style={{fontSize: 12,  margin:10, fontWeight: '200',  color: URL.bgcolor,}}>Filter</Text> 
  <View style = {styles.headerform}>
              
  <DatePicker
@@ -301,7 +301,7 @@ Accept: 'application/json',
 
                 <View style = {styles.submaintwo}>
                 <View>
-                <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Actual</Text> 
+                <Text style={{fontSize: 12, fontWeight: '200',  color: URL.bgcolor,}}>Actual</Text> 
                 </View>
               
                 <MultiLineChart
@@ -365,7 +365,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#7892FB',
+    backgroundColor: URL.bgcolor,
   },
   ariline: {
     flexDirection: "row",
@@ -432,7 +432,7 @@ const styles = StyleSheet.create({
     circle: {
      width: 40,
      height: 40,
-     backgroundColor: '#7892FB',
+     backgroundColor: URL.bgcolor,
      borderRadius: 10,
      justifyContent: 'center',
      alignItems: 'center',

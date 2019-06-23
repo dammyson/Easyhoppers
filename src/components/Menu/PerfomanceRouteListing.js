@@ -233,7 +233,7 @@ RemakeRemoteRequest = () => {
   name="bars"
   style={{marginRight:10}} name="search" size={20}
   type="font-awesome"
-  color="#000"
+  color="#fff"
   />
 </TouchableOpacity>
        </View>
@@ -264,15 +264,15 @@ RemakeRemoteRequest = () => {
 
 
                             <View style = {styles.menudetailsTopchild}>
-                            <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Airline</Text>
-                                <Text style={{marginTop:7, fontSize: 15, fontWeight: '500',  color: '#7892FB',}}>{item.flight}</Text>
+                            <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>Airline</Text>
+                                <Text style={{marginTop:7, fontSize: 15, fontWeight: '500',  color: URL.bgcolor,}}>{item.flight}</Text>
                                             
                                     </View>
                     
 
 
                              <View style = {styles.menudetailsTopchild}>
-                                    <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Route</Text>
+                                    <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>Route</Text>
                                     <Text style={{marginTop:7, fontSize: 15, fontWeight: '500',  color: '#000',}}>{item.route}</Text>
                                     </View>
                     
@@ -284,23 +284,23 @@ RemakeRemoteRequest = () => {
                    
 
                     <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Early </Text>
-                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#7892FB',}}>{item.percentageEarlyDepartures}%</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>Early </Text>
+                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: URL.bgcolor,}}>{item.percentageEarlyDepartures}%</Text>
                         </View>
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>On Time</Text>
-                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#7892FB',}}>{item.percentageOnTimeDepartures}%</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>On Time</Text>
+                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: URL.bgcolor,}}>{item.percentageOnTimeDepartures}%</Text>
                         </View>
                           
 
                            <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Late</Text>
-                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#7892FB',}}>{item.percentageDelayedDepartures}%</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>Late</Text>
+                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: URL.bgcolor,}}>{item.percentageDelayedDepartures}%</Text>
                         </View>
                     
                     <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Cancellation</Text>
-                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#7892FB',}}>{item.percentageCancellations}%</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>Cancellation</Text>
+                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: URL.bgcolor,}}>{item.percentageCancellations}%</Text>
                         </View>
 
                         <View style = {styles.menudetailsTopchild}>
@@ -329,20 +329,20 @@ RemakeRemoteRequest = () => {
 
                        <View style = {styles.menudetailsBottom}> 
                        <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Early</Text>
-                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#7892FB',}}>{item.percentageEarlyArrival}%</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>Early</Text>
+                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: URL.bgcolor,}}>{item.percentageEarlyArrival}%</Text>
                         </View>
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>On Time</Text>
-                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: '#7892FB',}}>{item.percentageOnTimeArrivals}%</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>On Time</Text>
+                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: URL.bgcolor,}}>{item.percentageOnTimeArrivals}%</Text>
                         </View>
 
                        
 
                     
                     <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Late</Text>
-                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#7892FB',}}>{item.percentageDelayedArrivals}%</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>Late</Text>
+                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: URL.bgcolor,}}>{item.percentageDelayedArrivals}%</Text>
                         </View>
                         <View style = {styles.menudetailsTopchild}>
                        </View>
@@ -429,7 +429,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#7892FB',
+    backgroundColor: URL.bgcolor,
   },
   main: {
     flex: 1,
@@ -490,7 +490,7 @@ const styles = StyleSheet.create({
     height:40,
     backgroundColor: '#eff3fd',
     marginBottom:15,
-    color: '#7892FB',
+    color: URL.bgcolor,
     paddingHorizontal: 40,
     borderRadius: 25,
     marginLeft:40,
@@ -528,7 +528,7 @@ const styles = StyleSheet.create({
      },
      buttonContainer:{
         height:30,
-        backgroundColor: "#7892FB",
+        backgroundColor: URL.bgcolor,
         justifyContent: 'center',
         borderRadius: 20,
       },
@@ -552,7 +552,7 @@ const styles = StyleSheet.create({
       circle: {
        width: 40,
        height: 40,
-       backgroundColor: '#7892FB',
+       backgroundColor: URL.bgcolor,
        borderRadius: 10,
        justifyContent: 'center',
        alignItems: 'center',

@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   },
   Headercontainer: {
     flex: 4,
-    backgroundColor: '#7892FB',
+    backgroundColor: URL.bgcolor,
     alignItems: 'center',
     justifyContent: 'center',
    
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     textAlign:'left',
   },
   headlink:{
-    color: "#7892FB",
+    color: URL.bgcolor,
     fontWeight: '500',
     fontSize:12,
     textAlign:'left',

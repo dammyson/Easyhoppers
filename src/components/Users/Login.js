@@ -2,6 +2,7 @@
 import React, {Component} from 'react';
 import {TextInput, StyleSheet,ScrollView, Text, View,TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, Alert, AsyncStorage} from 'react-native';
 const URL = require("../../components/server");
+import RadioGroup from 'react-native-radio-buttons-group';
 export default class Login extends Component{
 
   constructor(props) 
@@ -12,6 +13,15 @@ export default class Login extends Component{
         email: "", 
         password: "",
         demail: "", 
+        data: [
+            
+          {
+              label: 'Remember Me',
+              size: 22,
+              color: '#01215B',
+              
+          }
+      ],
 
                   }
 
@@ -70,7 +80,15 @@ export default class Login extends Component{
        });
 }
 
+onPress = data => this.setState({ data });
   render() {
+
+    selectedButton = this.state.data.find(e => e.selected == true);
+    selectedButton = selectedButton
+        ? selectedButton.value
+        : this.state.data[0].label;
+
+
     if (this.state.loading) {
       return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
@@ -113,6 +131,14 @@ export default class Login extends Component{
                         ref={(input)=> this.passwordInput = input}
                         onChangeText = {text => this.setState({password: text})}
                 />
+
+                   <View style= {{flexDirection: "row",  alignItems: 'center', marginLeft:45, marginBottom:4,}}> 
+                    <RadioGroup radioButtons={this.state.data} 
+                    onPress={this.onPress}
+                    flexDirection='row'/>
+                    </View>
+
+
 
            </KeyboardAvoidingView>    
            <View style={styles.Linkcontainer}>
@@ -172,7 +198,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer:{
         height:50,
-        backgroundColor: "#7892FB",
+        backgroundColor: URL.bgcolor,
         borderTopRightRadius: 30,
         justifyContent: 'center',
         borderBottomRightRadius: 30,

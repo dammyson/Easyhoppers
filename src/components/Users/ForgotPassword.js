@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer:{
         height:50,
-        backgroundColor: "#7892FB",
+        backgroundColor: URL.bgcolor,
         borderTopRightRadius: 30,
         justifyContent: 'center',
         borderBottomRightRadius: 30,

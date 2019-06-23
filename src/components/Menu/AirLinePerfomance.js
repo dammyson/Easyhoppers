@@ -119,7 +119,7 @@ export default class AirLinePerfomance extends Component{
                       
                 
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: '#7892FB',}}>Flight</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: URL.bgcolor,}}>Flight</Text>
                         <Text style={{marginTop:7, fontSize: 18, fontWeight: '600',  color: '#5b97dc',}}>{item.flight}</Text>
                         </View>
 

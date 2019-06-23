@@ -196,22 +196,22 @@ export default class LiveUpdate extends Component{
                         <View style = {styles.menudetailsTop}>
                 
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>AirLine</Text>
-                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#7892FB',}}>{item.name}</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>AirLine</Text>
+                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: URL.bgcolor,}}>{item.name}</Text>
                         </View>
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Flight Number</Text>
-                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#7892FB',}}>{item.description }</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>Flight Number</Text>
+                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: URL.bgcolor,}}>{item.description }</Text>
                         </View>
 
                     
                     <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Depature</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>Depature</Text>
                         <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.scheduled_departure_time}</Text>
                         </View>
 
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Arival</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>Arival</Text>
                         <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.scheduled_arrival_time}</Text>
                         </View>
                 
@@ -219,12 +219,12 @@ export default class LiveUpdate extends Component{
                     <View style = {styles.menudetailsBottom}> 
                 
                     <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Route</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>Route</Text>
                         <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.departure_port + " - " + item.arrival_port }</Text>
                         </View>
 
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 10, fontWeight: '200',  color: '#7892FB',}}>Status</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>Status</Text>
                         <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{this.renderStatusSwitch(item.status)}</Text>
                         </View>
 
@@ -257,7 +257,7 @@ export default class LiveUpdate extends Component{
 
     if (this.state.loading) {
       return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',  backgroundColor: '#7892FB', }}>
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center',  backgroundColor: URL.bgcolor, }}>
         <PacmanIndicator color='white' />
         <Text style={{ color: '#fff' }}>Processing</Text>
     </View>
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#7892FB',
+    backgroundColor: URL.bgcolor,
     paddingTop:10,
   },
   searchcontainer:{
@@ -360,7 +360,7 @@ const styles = StyleSheet.create({
     height:40,
     backgroundColor: '#eff3fd',
     marginBottom:15,
-    color: '#7892FB',
+    color: URL.bgcolor,
     paddingHorizontal: 40,
     borderRadius: 25,
     marginLeft:40,

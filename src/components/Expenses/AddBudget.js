@@ -38,7 +38,7 @@ export default class AddBudget extends Component{
           des:"",
           ammount:"",
           expense_id:1,
-          curr: "NGN",
+          eid:"",
           fromdate:"2019-05-29 00:00",
           today:""
         };
@@ -59,15 +59,8 @@ export default class AddBudget extends Component{
 
 
   componentDidMount() {
-    AsyncStorage.getItem('eid').then((value) => {
-      if(value==''){
-      }else{
-        
-        this.setState({expense_id: value})
-       
-      }
-     
-    })
+    AsyncStorage.getItem('eid').then((value) => this.setState({'eid': value.toString()}))
+   
     var date = new Date().getDate();
     var month = new Date().getMonth() + 1;
     var year = new Date().getFullYear();
@@ -94,42 +87,29 @@ export default class AddBudget extends Component{
 
      newExpenseDetails()
      {
-                const {cat, ammount, auth, des, textcat,expense_id} = this.state
+                const {cat, ammount, auth,  fromdate, des, textcat, eid, expense_id} = this.state
+              if(ammount == ""){
+              Alert.alert('Process failed', 'Select a statuse', [{text: 'Okay'}])
+              return
+             }
                 if(cat !== ""){
-                 this.newExpenseDetailsProcess(cat, ammount, auth, des, expense_id)
+                 this.newExpenseDetailsProcess(cat, ammount, auth, des, eid, fromdate)
                 }else if(textcat !== ""){
 
-                  this.newExpenseDetailsProcess(textcat, ammount, auth, des, expense_id)
+                  this.newExpenseDetailsProcess(textcat, ammount, auth, des, eid, fromdate)
                 
                 }else{
                   Alert.alert('Process failed', 'Select or type a category', [{text: 'Okay'}])
                   return
                 }
-
-             if(ammount == ""){
-               Alert.alert('Process failed', 'Select a statuse', [{text: 'Okay'}])
-               return
-              }
    }
 
 
-   _menu = null;
- 
-   setMenuRef = ref => {
-     this._menu = ref;
-   };
-  
-   hideMenu = () => {
-     this._menu.hide();
-   };
-  
-   showMenu = () => {
-     this._menu.show();
-   };
+   
 
 
 
-   newExpenseDetailsProcess(cat, ammount, auth, des, expense_id)
+   newExpenseDetailsProcess(cat, ammount, auth, des, eid, fromdate)
    {
     
            this.setState({loading: true})
@@ -141,7 +121,8 @@ export default class AddBudget extends Component{
                     category: cat,
                     amount:ammount,
                     description: des,
-                    expense_id: expense_id
+                    expense_id: eid,
+                    date_of_expense:fromdate
                   }), 
           })
            .then(res => res.json())
@@ -163,7 +144,7 @@ export default class AddBudget extends Component{
           });
           
    }
-setCurren( curr){
+setCurren(curr){
   this.setState({curr: curr}),  
   this.hideMenu()
 }
@@ -266,19 +247,6 @@ setCurren( curr){
                                 onDateChange={(date) => {this.setState({fromdate: date})}}
                               />
                               
-                              <Menu
-                                ref={this.setMenuRef}
-                                button={<TouchableOpacity style={styles.circle } onPress={this.showMenu} >
-                              <Text>{this.state.curr}</Text>
-                            </TouchableOpacity>}
-                              >
-                                <MenuItem  onPress={() =>  this.setCurren("NGN")}>NGN</MenuItem>
-                                <MenuDivider />
-                                <MenuItem  onPress={() =>  this.setCurren("USD")}>USD</MenuItem>
-                                <MenuDivider />
-                                <MenuItem  onPress={() =>  this.setCurren("GBP")}>GBP</MenuItem>
-                              </Menu>
-                              
                         </View>  
 
     
@@ -325,7 +293,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#7892FB',
+    backgroundColor: URL.bgcolor,
   },
   ariline: {
     flexDirection: "row",
@@ -435,7 +403,7 @@ const styles = StyleSheet.create({
       height:40,
       width:150,
       marginBottom:10,
-      backgroundColor: "#7892FB",
+      backgroundColor: URL.bgcolor,
       justifyContent: 'center',
       borderRadius: 10,
       margin:10,
@@ -449,7 +417,7 @@ const styles = StyleSheet.create({
     circle: {
       width: 40,
       height: 40,
-      backgroundColor: '#7892FB',
+      backgroundColor: URL.bgcolor,
       borderRadius: 10,
       justifyContent: 'center',
       alignItems: 'center',
