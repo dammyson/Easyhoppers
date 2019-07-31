@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import {ActivityIndicator, AsyncStorage,FlatList, StyleSheet, Text, View,TouchableOpacity, Image, TextInput} from 'react-native';
+import {ActivityIndicator, AsyncStorage,FlatList, Platform, StyleSheet, Text, View,TouchableOpacity, Image, TextInput} from 'react-native';
 const URL = require("../../components/server");
 import DatePicker from 'react-native-datepicker'
 import { Card, Icon,SocialIcon} from 'react-native-elements'
@@ -430,6 +430,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: URL.bgcolor,
+    paddingTop:Platform.OS === 'ios' ? 25 : 10,
   },
   main: {
     flex: 1,

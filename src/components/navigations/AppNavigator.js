@@ -5,12 +5,15 @@ import Login from '../Users/Login';
 import Register from '../Users/Register';
 import Edit from '../Users/Edit';
 import ForgotPassword from '../Users/ForgotPassword';
+import ChangePassword from '../Users/ChangePassword';
 import UserLanding from '../Menu/UserLanding';
 import LiveUpdate from '../Menu/LiveUpdate';
 import RoutePerfomanceArivall from '../Menu/RoutePerfomanceArivall';
 import AirLinePerfomance from '../Menu/AirLinePerfomance';
 import Boarding from '../Menu/Boarding';
 import Checkout from '../Menu/Checkout';
+import Pay from '../Menu/Pay';
+import Confirm from '../Menu/Confirm';
 import RoutePerfomanceDeparture from '../Menu/RoutePerfomanceDeparture';
 import PerfomanceRouteListing from '../Menu/PerfomanceRouteListing';
 import Expense from '../Expenses/Expense';
@@ -24,11 +27,13 @@ import UpdateStatus from '../Agents/UpdateStatus';
 
 
 const AppNavigator = createStackNavigator({
- /* 
-    Splash: {screen: Splash,
+  /*  */
+  
+  
+  Splash: {screen: Splash,
     navigationOptions: {
       header:null 
-    }}, 
+    }},   
     Login: {screen: Login,
       navigationOptions: {
         header:null 
@@ -36,11 +41,16 @@ const AppNavigator = createStackNavigator({
      Register: {screen: Register,
      navigationOptions: {
       header:null 
-    }}, 
+    }},
     ForgotPassword: {screen: ForgotPassword,
     navigationOptions: {
       header:null 
-    }}, 
+    }},
+      ChangePassword: {screen: ChangePassword,
+    navigationOptions: {
+      header:null 
+    }},  
+
     UserLanding: {screen: UserLanding,
       navigationOptions: {
         header:null 
@@ -48,7 +58,7 @@ const AppNavigator = createStackNavigator({
       Edit: {screen: Edit,
         navigationOptions: {
           header:null 
-        }}, */
+        }}, 
     LiveUpdate: {screen: LiveUpdate,
       navigationOptions: {
         header:null 
@@ -68,6 +78,15 @@ const AppNavigator = createStackNavigator({
         header:null 
       }},
 
+      Pay: {screen: Pay,
+        navigationOptions: {
+          header:null 
+        }},
+
+        Confirm: {screen: Confirm,
+          navigationOptions: {
+            header:null 
+          }},
     AirLinePerfomance: {screen: AirLinePerfomance,
       navigationOptions: {
         header:null 
@@ -75,7 +94,7 @@ const AppNavigator = createStackNavigator({
     PerfomanceRouteListing: {screen: PerfomanceRouteListing,
     navigationOptions: {
       header:null 
-    }}, 
+    }},
     AgentSheduleListing: {screen: AgentSheduleListing,
       navigationOptions: {
         header:null 

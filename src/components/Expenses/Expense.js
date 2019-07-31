@@ -28,7 +28,7 @@ export default class Expense extends Component{
           ammount:'',
           name:'',
           progressStatus: 0,  
-          eid:'1',
+          eid:'0',
           budget_data:"",
           curr: "NGN",
         };
@@ -41,7 +41,14 @@ export default class Expense extends Component{
     clearTimeout(this.timeout);
   }
   componentDidMount() {
-    AsyncStorage.getItem('eid').then((value) => this.setState({'eid': value.toString()}))
+    AsyncStorage.getItem('eid').then((value) => {
+      if(value==''){
+        this.setState({eid: 0})
+      }else{
+        this.setState({eid: value})
+      }
+      this.makeRemoteRequest();
+    })
 
    
     AsyncStorage.getItem('auth').then((value) => this.setState({ 'auth': value.toString()}))
@@ -86,8 +93,10 @@ export default class Expense extends Component{
 
      newExpense()
      {
+
       this.setState({visible: false})
            const {name, ammount, curr, auth} = this.state
+
             if(name == "" || ammount == ""){
                Alert.alert('Process failed', 'Select a statuse', [{text: 'Okay'}])
                return
@@ -108,9 +117,12 @@ export default class Expense extends Component{
    
              if(res.status){ 
               AsyncStorage.setItem('eid', res.expense_id.toString());
-             this.setState({ loading: false})
+             this.setState({ 
+               loading: false,
+               eid:res.expense_id.toString()
+              })
              Alert.alert('Operation Successful', res.message, [{text: 'Okay'}])
-            
+             this.makeRemoteRequest();
              }else{
    
            Alert.alert('Operation failed', res.message, [{text: 'Okay'}])
@@ -128,9 +140,11 @@ export default class Expense extends Component{
    endExpense()
    {
     this.setState({visible: false})
+
+  
          const {eid, auth} = this.state
-          if(eid == "" ){
-             Alert.alert('Process failed', 'Select a statuse', [{text: 'Okay'}])
+          if(eid == "" || eid == "0"|| eid == 0){
+             Alert.alert('Process failed', "You do not have current expense", [{text: 'Okay'}])
              return
            }
          this.setState({loading: true})
@@ -144,9 +158,13 @@ export default class Expense extends Component{
          .then(res => {
  
            if(res.status){ 
-           this.setState({ loading: false})
+           this.setState({ 
+             loading: false,
+             eid: "0"
+            })
+           AsyncStorage.setItem('eid', "0");
            Alert.alert('Operation Successful', res.message, [{text: 'Okay'}])
- 
+           this.makeRemoteRequest();
            }else{
  
          Alert.alert('Operation failed', res.message, [{text: 'Okay'}])
@@ -381,7 +399,7 @@ export default class Expense extends Component{
                           <Menu
                                 ref={this.setMenuRef}
                                 button={<TouchableOpacity style={styles.circlet } onPress={this.showMenu} >
-                                <Text>{this.state.curr}</Text>
+                                <Text style= {{color:'#fff',}}>{this.state.curr}</Text>
                               </TouchableOpacity>}
                                 >
                                   <MenuItem  onPress={() =>  this.setCurren("NGN")}>NGN</MenuItem>

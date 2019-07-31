@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import {ActivityIndicator, Picker,AsyncStorage, StyleSheet, Text, View,Image, Alert, TouchableOpacity} from 'react-native';
+import {ActivityIndicator, Platform,AsyncStorage, StyleSheet, Text, View,Image, Alert, TouchableOpacity} from 'react-native';
 const URL = require("../../components/server");
 import DatePicker from 'react-native-datepicker'
 import PickerModal from 'react-native-picker-modal-view';
@@ -81,6 +81,8 @@ export default class UpdateStatus extends Component{
     this.setState({
       id:this.props.navigation.getParam("s_id", "defaultValue")
     })
+
+   
     AsyncStorage.getItem('auth').then((value) => this.setState({ 'auth': value.toString()}))
     AsyncStorage.getItem('auth').then((value) => {
       if(value==''){
@@ -98,6 +100,7 @@ export default class UpdateStatus extends Component{
      }
      makeRemoteRequest = () => {
       const {auth, id} = this.state
+      console.warn(id);
       this.setState({ loading: true });
       fetch(URL.url+'/api/getSchedule/'+id, { method: 'GET',  headers: {
         Accept: 'application/json',
@@ -364,6 +367,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: URL.bgcolor,
+    paddingTop:Platform.OS === 'ios' ? 25 : 10,
   },
   ariline: {
     flexDirection: "row",

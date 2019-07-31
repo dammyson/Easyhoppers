@@ -16,6 +16,7 @@ export default class Edit extends Component{
         occupation: "", 
         fname: "", 
         lname: "", 
+        phone:"",
         gender: "",
         auth:"",
         data: [
@@ -54,7 +55,7 @@ export default class Edit extends Component{
   checkUpdate()
     {
     
-        const {dob, occupation, auth, fname, lname} = this.state
+        const {dob, occupation, auth, phone, fname, lname} = this.state
 
         console.warn(dob+occupation +fname+ lname+ selectedButton)  
         this.setState({ loading: true})
@@ -65,6 +66,7 @@ export default class Edit extends Component{
         }, body: JSON.stringify({
           firstname: fname,
           lastname: lname,
+          phone: phone,
            DOB: dob,
           occupation: occupation,
           gender: selectedButton
@@ -139,6 +141,18 @@ export default class Edit extends Component{
                         onChangeText = {text => this.setState({lname: text})}
                        
                 /> 
+                 <TextInput
+                        placeholder= "Phone"
+                        placeholderTextColor= '#55575b'
+                        returnKeyType = "next"
+                        onSubmitEditing = {() => this.passwordInput.focus()}
+                        keyboardType = "numeric"
+                        autoCapitalize= "none"
+                        autoCorrect = {false}
+                        style = {styles.input}
+                        onChangeText = {text => this.setState({phone: text})}
+                       
+                />
                 <TextInput
                     placeholder= "Occupation"
                     placeholderTextColor= '#55575b'
@@ -194,11 +208,17 @@ export default class Edit extends Component{
                      onPress ={() => this.checkUpdate()} >Update</Text>
 
                 </TouchableOpacity>
+                <TouchableOpacity style={styles.chancelContainer} >
+                     <Text style={styles.cancleText}
+                       onPress={() => this.props.navigation.navigate('ChangePassword')}>Update Password</Text>
+
+                </TouchableOpacity>
                 <TouchableOpacity style={styles.cancelContainer} >
                      <Text style={styles.cancleText}
                        onPress={() => this.props.navigation.navigate('UserLanding')}>X</Text>
 
                 </TouchableOpacity>
+               
 
           </View>   
           <View style={styles.bottom}>
@@ -235,7 +255,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     },
     buttonContainer:{
-        height:50,
+      height:45,
         backgroundColor: URL.bgcolor,
         borderTopRightRadius: 30,
         justifyContent: 'center',
@@ -249,7 +269,7 @@ const styles = StyleSheet.create({
         fontSize:18,
       },
       cancelContainer:{
-        height:50,
+        height:45,
         backgroundColor: "#FFFFFF",
         borderTopRightRadius: 30,
         justifyContent: 'center',
@@ -295,5 +315,25 @@ const styles = StyleSheet.create({
         fontSize:15,
         textAlign:'center',
         marginLeft: 10
+      },
+
+      chancelContainer:{
+        height:45,
+        backgroundColor: "#FFFFFF",
+        borderTopRightRadius: 30,
+        justifyContent: 'center',
+        borderBottomRightRadius: 30,
+        width:200,
+        elevation: 5,
+        borderColor:'#AFC1F2',
+        borderWidth: 2,
+        marginTop: 10,
+        marginBottom:10
+      },
+      chancleText:{
+        textAlign:'center',
+        color: "#AFC1F2",
+        fontWeight: '900',
+        fontSize:18,
       },
 });

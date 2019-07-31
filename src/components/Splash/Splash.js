@@ -1,7 +1,8 @@
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Image} from 'react-native';
+import {Platform, StyleSheet, AsyncStorage, View, Image} from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
+
 
 
 
@@ -18,10 +19,24 @@ export default class Splash extends Component{
 
   async componentDidMount(){
     const data = await this.performinTimeConsumingTask();
-    if(data !== null){
-     this.props.navigation.navigate('Login');
-    }
+   
+    AsyncStorage.getItem('rem').then((value) => {
+      if(value=='yes'){
+        this.props.navigation.navigate('UserLanding');
+      }else if(value==null){
+          this.props.navigation.navigate('Login');
+    
+      }else if(value=="no"){
+        this.props.navigation.navigate('Login');
+      }
+       
+        
+    })
+   
   }
+
+
+  
 
   render() {
     return (

@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import {ActivityIndicator, Picker,AsyncStorage, StyleSheet, Text, View,Image, Alert, TouchableOpacity} from 'react-native';
+import {ActivityIndicator, Platform,AsyncStorage, StyleSheet, Text, View,Image, Alert, TouchableOpacity} from 'react-native';
 const URL = require("../../components/server");
 
 export default class Checkout extends Component{
@@ -28,7 +28,7 @@ export default class Checkout extends Component{
           id:0, 
           auth:"",
           email:"",
-
+          first:"",
           name:"",
         };
     
@@ -48,7 +48,8 @@ export default class Checkout extends Component{
     clearTimeout(this.timeout);
   }
   componentDidMount() {
-
+  AsyncStorage.getItem('first').then((value) => this.setState({first: value.toString()}))
+    
     this.setState({
       id:this.props.navigation.getParam("s_id", "defaultValue")
     })
@@ -62,21 +63,15 @@ export default class Checkout extends Component{
       this.makeRemoteRequest();
     })
 
-    AsyncStorage.getItem('email').then((value) => this.setState({ 'email': value.toString()}))
-    AsyncStorage.getItem('email').then((value) => {
-      if(value==''){
-       
-      }else{
-        this.setState({email: value})
-      }
-     
-    })
+   
 
+    
+   
 
 
      }
      makeRemoteRequest = () => {
-      const {auth, id} = this.state
+      const {auth, first, id} = this.state
       this.setState({ loading: true });
       fetch(URL.url+'/api/getSchedule/'+id, { method: 'GET',  headers: {
         Accept: 'application/json',
@@ -91,7 +86,7 @@ export default class Checkout extends Component{
             data: res.message,
             loading: false,
             status: res.status,
-            name: res.message[0],
+             name: res.message[0],
             
           });
         })
@@ -101,45 +96,7 @@ export default class Checkout extends Component{
         }); 
     };
 
-  checkUpdate()
-  {
-    
-        const {id, auth, email} = this.state
-       
-         if(id == ""){
-            Alert.alert('Process failed', 'Select a statuse', [{text: 'Okay'}])
-            return
-          }
-        this.setState({ loading: true})
-        fetch(URL.url+'/api/subscribe', { method: 'POST',  headers: {
-          Accept: 'application/json',
-          'Authorization': 'Bearer ' + auth,
-          'Content-Type': 'application/json',
-        }, body: JSON.stringify({
-          email:email,  
-          schedule_id: id,
-        }), 
-       })
-        .then(res => res.json())
-        .then(res => {
-
-          if(res.status){ 
-          this.setState({ loading: false})
-          Alert.alert('Operation Successful', res.message, [{text: 'Okay'}])
-
-          }else{
-
-        Alert.alert('Operation failed', res.message, [{text: 'Okay'}])
-        this.setState({ loading: false})
-          }
-        }).catch((error)=>{
-          console.log("Api call error");
-          alert(error.message);
-          this.setState({ loading: false})
-       });
-       
-}
-
+  
   render() {
 
 
@@ -221,12 +178,16 @@ export default class Checkout extends Component{
                  <View style={styles.Linkcontainer}>
                 <TouchableOpacity style={styles.buttonContainer} >
                     <Text style={styles.buttonText}
-                     onPress ={() => this.checkUpdate()}
+                     onPress={() => this.props.navigation.navigate('Pay', 
+                     {
+                       s_id: this.state.id,
+                     
+                     })}
                     > PAY</Text>
 
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.cancelContainer} 
-              onPress={() => this.props.navigation.navigate('Boarding')}>
+                   onPress={() => this.props.navigation.navigate('Boarding')}>
 
                 
                      <Text style={styles.cancleText}
@@ -254,6 +215,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: URL.bgcolor,
+    paddingTop:Platform.OS === 'ios' ? 25 : 10,
   },
   ariline: {
     flexDirection: "row",

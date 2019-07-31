@@ -58,6 +58,9 @@ export default class UserLanding extends Component{
         console.warn(res)
         if(res.status){
           AsyncStorage.setItem('email', res.user.email);
+          AsyncStorage.setItem('first', res.user.firstname);
+          AsyncStorage.setItem('last', res.user.lastname);
+          AsyncStorage.setItem('eid', "233");
         this.setState({
           name: res.user.name,
           loading: false,
@@ -79,7 +82,11 @@ export default class UserLanding extends Component{
 
   };
 
-
+  logout = () => {
+    AsyncStorage.setItem('rem', "no");  
+    AsyncStorage.setItem('auth', "null");
+    this.props.navigation.navigate('Login')
+  }
 
 
   _menu = null;
@@ -117,24 +124,37 @@ export default class UserLanding extends Component{
            <View style={styles.Headercontainer}>
                
                 <View style={styles.header}> 
-                
-                <TouchableOpacity style={styles.button} onPress={this.showDialog}> 
-                <Icon
-                    name="lock"
-                    size={20}
-                    color="white"
-                    type="font-awesome"
-                    />
-                </TouchableOpacity> 
-                <Text style={styles.headTextW}>{this.state.name}</Text>
+                      
+                      <TouchableOpacity
+                      style={styles.button} 
+                      
+                      onPress={() => Alert.alert(
+                        'Login Out',
+                        'Are you sure you want to log out',
+                        [
+                          {text: 'Cancel', onPress: () => console.log('Cancel Pressed!')},
+                          {text: 'OK', onPress: () => this.logout()},
+                        ],
+                        { cancelable: false }
+                      )}
+                      
+                      > 
+                      <Icon
+                          name="lock"
+                          size={20}
+                          color="white"
+                          type="font-awesome"
+                          />
+                      </TouchableOpacity> 
+                      <Text style={styles.headTextW}>{this.state.name}</Text>
 
-                <TouchableOpacity style={styles.button}  onPress={() => this.props.navigation.navigate('Edit')}> 
-                <Icon
-                    name="pencil"
-                    size={20}
-                    color="white"
-                    />
-                </TouchableOpacity> 
+                      <TouchableOpacity style={styles.button}  onPress={() => this.props.navigation.navigate('Edit')}> 
+                      <Icon
+                          name="pencil"
+                          size={20}
+                          color="white"
+                          />
+                      </TouchableOpacity> 
                 </View>
 
 
@@ -142,7 +162,7 @@ export default class UserLanding extends Component{
           style={styles.headimage}
           source={require('../../images/user.png')} />
           </View>   
-          <View style={styles.foother}>
+            <View style={styles.foother}>
 
                 <View style={styles.body}>
                     

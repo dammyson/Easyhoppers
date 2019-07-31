@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, AsyncStorage, StyleSheet, Text, View,Image, Dimensions, TouchableOpacity} from 'react-native';
+import {ActivityIndicator, FlatList, Platform, AsyncStorage, StyleSheet, Text, View,Image, Dimensions, TouchableOpacity} from 'react-native';
 import { MultiLineChart } from 'react-native-d3multiline-chart';
 import DatePicker from 'react-native-datepicker'  
 import { Card, Icon,SocialIcon} from 'react-native-elements' 
@@ -366,6 +366,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: URL.bgcolor,
+    paddingTop:Platform.OS === 'ios' ? 25 : 10,
   },
   ariline: {
     flexDirection: "row",

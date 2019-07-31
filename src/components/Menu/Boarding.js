@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import {ActivityIndicator,  Easing, FlatList, Animated, StyleSheet, AsyncStorage, Text, View,TouchableOpacity, Image, TextInput} from 'react-native';
+import {ActivityIndicator, Platform, Easing, FlatList, Animated, StyleSheet, AsyncStorage, Text, View,TouchableOpacity, Image, TextInput} from 'react-native';
 const URL = require("../../components/server");
 export default class Boarding extends Component{
 
@@ -103,7 +103,8 @@ checkAlert = () => {
     this.setState({ search });
     console.log(this.arrayholder);
     const newData = this.arrayholder.filter(item => {
-      const itemData = `${item.name.toUpperCase()} ${item.departure_port.toUpperCase()} ${item.arrival_port.toUpperCase()}`;
+      const itemData = `${item.name.toUpperCase()} ${item.departure_port.toUpperCase()} ${item.departure_port_name.toUpperCase()}${item.arrival_port.toUpperCase()} ${item.arrival_port_name.toUpperCase()}`;
+
 
       const textData = search.toUpperCase();
       return itemData.indexOf(textData) > -1;
@@ -213,7 +214,7 @@ checkAlert = () => {
                         </View>
 
                         <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: URL.bgcolor,}}>Flight Number</Text>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: URL.bgcolor,}}>Flight No</Text>
                         <Text style={{marginTop:7, fontSize: 13, fontWeight: '500',  color: URL.bgcolor,}}>{item.description }</Text>
                         </View>
                         <View style = {styles.menudetailsTopchild}>
@@ -294,7 +295,7 @@ checkAlert = () => {
                 style={{paddingBottom:10}}
                 data={this.state.data}
                 renderItem={this.renderItem}
-                keyExtractor={item => item.description}
+                keyExtractor={item => item.description+item.id}
                 ItemSeparatorComponent={this.renderSeparator}
                 ListHeaderComponent={this.renderHeader}
              />
@@ -313,6 +314,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: URL.bgcolor,
+    paddingTop:Platform.OS === 'ios' ? 25 : 10,
   },
   main: {
     flex: 1,

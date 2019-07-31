@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, Text, View,TouchableOpacity, Image, TextInput} from 'react-native';
+import {ActivityIndicator, Platform, FlatList, StyleSheet, Text, View,TouchableOpacity, Image, TextInput} from 'react-native';
 
 
 export default class AirLinePerfomance extends Component{
@@ -185,6 +185,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: '#a8bbf3',
+    paddingTop:Platform.OS === 'ios' ? 25 : 10,
   },
   main: {
     flex: 1,

@@ -1,26 +1,102 @@
 
 import React, {Component} from 'react';
-import {TextInput, StyleSheet, Text, View,TouchableOpacity, KeyboardAvoidingView} from 'react-native';
-
+import {TextInput, StyleSheet, Alert, Text, ActivityIndicator, View,TouchableOpacity, KeyboardAvoidingView} from 'react-native';
+const URL = require("../../components/server");
 export default class ForgotPassword extends Component{
+
+  constructor(props) 
+  {
+      super(props);
+      this.emailRef = React.createRef();
+      this.state = {
+        loading: false,
+        email: "", 
+
+
+       }
+
+  }
+
+
+  performinTimeConsumingTask = async()=> {
+    return new Promise((resolve) => {
+        setTimeout(
+          ()=> {resolve('result')},
+          3000
+        )
+      })
+  }
+
+  checkForgotpassword(){
+   
+  
+          const {email} = this.state
+ 
+           if(email == "" ){
+            Alert.alert('Validation failed', 'Email field cannot be empty', [{text: 'Okay'}])
+            return
+           }
+
+         this.setState({ loading: true})
+         fetch(URL.url+'/api/reset_password', { method: 'POST',  headers: {
+           Accept: 'application/json',
+           'Content-Type': 'application/json',
+         }, body: JSON.stringify({
+           email: email,
+         }),  })
+         .then(res => res.json())
+         .then(res => {
+           if(res.status){
+           this.setState({ loading: false})
+           Alert.alert('Success', "Check your mail for the new password", [{text: 'Okay'}])
+            this.props.navigation.navigate('Login');
+          
+           }else{
+ 
+         Alert.alert('Operation failed', res.message, [{text: 'Okay'}])
+         this.setState({ loading: false})
+           }
+         }).catch((error)=>{
+           console.log("Api call error");
+           alert(error.message);
+           this.setState({ loading: false})
+        }); 
+    }
+
+
+
+
+
+
+
+
   render() {
+    if (this.state.loading) {
+      return (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+          <ActivityIndicator />
+          <Text>Login in</Text>
+        </View>
+      );
+    }
     return (
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
 
         <View>
         <Text style={styles.headText}
-                        >Sign In</Text>
+                        >Forgot Password </Text>
         </View>
          <View style={styles.textInputcontainer}>
                       
                     <TextInput
-                        placeholder= "Email / Phone"
+                        placeholder= "Email"
                         placeholderTextColor= '#55575b'
                         returnKeyType = "next"
                         onSubmitEditing = {() => this.passwordInput.focus()}
                         keyboardType = "email-address"
                         autoCapitalize= "none"
                         autoCorrect = {false}
+                        onChangeText = {text => this.setState({email: text})}
                         style = {styles.input}
                        
                 />
@@ -29,7 +105,7 @@ export default class ForgotPassword extends Component{
            <View style={styles.Linkcontainer}>
                 <TouchableOpacity style={styles.buttonContainer} >
                     <Text style={styles.buttonText}
-                     onPress ={() => this.checkLogin()} >Update</Text>
+                     onPress ={() => this.checkForgotpassword()} >Update</Text>
 
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.cancelContainer}
@@ -71,12 +147,12 @@ const styles = StyleSheet.create({
     marginLeft:40,
     },
     buttonContainer:{
-        height:50,
-        backgroundColor: URL.bgcolor,
-        borderTopRightRadius: 30,
-        justifyContent: 'center',
-        borderBottomRightRadius: 30,
-        width:150,
+      height:50,
+      backgroundColor: URL.bgcolor,
+      borderTopRightRadius: 30,
+      justifyContent: 'center',
+      borderBottomRightRadius: 30,
+      width:150,
       },
       buttonText:{
         textAlign:'center',

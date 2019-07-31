@@ -1,11 +1,18 @@
 
 import React, {Component} from 'react';
-import {Image, ScrollView, StyleSheet, Text, View,TouchableOpacity, KeyboardAvoidingView} from 'react-native';
-
+import {Image, Alert, StyleSheet, Text, View,TouchableOpacity, KeyboardAvoidingView} from 'react-native';
+const URL = require("../../components/server");
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 export default class AgentLanding extends Component{
+
+
+  logout = () => {
+    AsyncStorage.setItem('rem', "no");  
+    AsyncStorage.setItem('auth', "null");
+    this.props.navigation.navigate('Login')
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -13,11 +20,41 @@ export default class AgentLanding extends Component{
    
            <View style={styles.Headercontainer}>
                
-                <View style={styles.header}> 
-                <Text style={styles.headTextW}>Agent</Text>
+           <View style={styles.header}> 
+                      
+                      <TouchableOpacity
+                      style={styles.button} 
+                      
+                      onPress={() => Alert.alert(
+                        'Login Out',
+                        'Are you sure you want to log out',
+                        [
+                          {text: 'Cancel', onPress: () => console.log('Cancel Pressed!')},
+                          {text: 'OK', onPress: () => this.logout()},
+                        ],
+                        { cancelable: false }
+                      )}
+                      
+                      > 
+                      <Icon
+                          name="lock"
+                          size={20}
+                          color="white"
+                          type="font-awesome"
+                          />
+                      </TouchableOpacity> 
+                      <Text style={styles.headTextW}>Agents</Text>
 
-               
+                      <TouchableOpacity style={styles.button}> 
+                      <Icon
+                          name="pencil"
+                          size={20}
+                          color={URL.bgcolor}
+                          />
+                      </TouchableOpacity> 
                 </View>
+
+
                  <Image
           style={styles.headimage}
           source={require('../../images/user.png')} />
@@ -52,7 +89,7 @@ export default class AgentLanding extends Component{
                      <View style={styles.row}>
                      <View style={styles.rowchild}>
                      <TouchableOpacity style={styles.items}
-                             onPress={() => this.props.navigation.navigate('LiveUpdate')}>
+                             onPress={() => this.props.navigation.navigate('AgentSheduleListing')}>
                                     <Image
                                     style={styles.image}
                                     source={require('../../images/live.png')} />
@@ -119,14 +156,6 @@ const styles = StyleSheet.create({
     flex: 5,
     padding:2
   },
-  header:{
-    height:30,
-    flexDirection: "row",
-    marginBottom:10,
-    marginRight:15,
-    marginLeft:15,
-    marginTop:2
-  },
   headText:{
     color: "#000",
     fontWeight: '900',
@@ -189,5 +218,52 @@ const styles = StyleSheet.create({
   },
 body:{
     flex:1,
-  }
+  },
+  header:{
+    height:40,
+    flexDirection: "row",
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom:10,
+    marginRight:15,
+    marginLeft:15,
+    marginTop:10
+  },
+  headText:{
+    color: URL.bgcolor,
+    fontWeight: '900',
+    fontSize:15,
+    textAlign:'left',
+  },
+  headText:{
+    color: "#000",
+    fontWeight: '700',
+    fontSize:14,
+    textAlign:'left',
+  },
+  headlink:{
+    color: URL.homelinkcolor,
+    fontWeight: '500',
+    fontSize:12,
+    textAlign:'left',
+  },
+  items: {
+    marginLeft: 20,
+    marginRight: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headimage: {
+    alignItems: 'center',
+    marginBottom: 25,
+  },
+  headTextW:{
+    color: "#FFF",
+    flex:1,
+    fontWeight: '900',
+    fontSize:15,
+    textAlign:'center',
+    alignItems: 'center',
+  },
+
 });

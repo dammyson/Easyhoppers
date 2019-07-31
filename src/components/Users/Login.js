@@ -3,16 +3,24 @@ import React, {Component} from 'react';
 import {TextInput, StyleSheet,ScrollView, Text, View,TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, Alert, AsyncStorage} from 'react-native';
 const URL = require("../../components/server");
 import RadioGroup from 'react-native-radio-buttons-group';
+import CheckBox from 'react-native-check-box'
+import firebase from 'react-native-firebase';
+
+
 export default class Login extends Component{
 
   constructor(props) 
   {
       super(props);
+      this.emailRef = React.createRef();
       this.state = {
         loading: false,
         email: "", 
         password: "",
         demail: "", 
+        token: "", 
+        isChecked:false,
+
         data: [
             
           {
@@ -26,21 +34,41 @@ export default class Login extends Component{
                   }
 
   }
-
-
   componentDidMount() {
-  
-    AsyncStorage.getItem('email').then((value) => this.setState({ 'demail': value.toString()}))
+        this.checkPermission();   
+        AsyncStorage.getItem('email').then((value) => {
+          if(value.toString()==''){
+            this.setState({ 'demail': ""})
+          }else{
+
+            this.setState({ 'demail': value.toString()})
+          }
+        
+        })
+
+
   }
 
 
-  checkLogin()
-  {
-    
-        const {email, password} = this.state
+  checkLogin(){
+   
+   let mail = "";
+         const {email, demail,isChecked, token, password} = this.state
+          if(email == "" ){
+          
+          if(demail == "" ){
+            Alert.alert('Validation failed', 'Email field cannot be empty', [{text: 'Okay'}])
+            return
+          }else{
+            mail = demail;
+          }
+         
+        }else{
+          mail = email;
+        }
 
-          if(email == "" || password == "" ){
-            Alert.alert('Validation failed', 'Email and password field cannot be empty', [{text: 'Okay'}])
+          if(password == "" ){
+            Alert.alert('Validation failed', 'Password field cannot be empty', [{text: 'Okay'}])
             return
           }
         this.setState({ loading: true})
@@ -48,16 +76,21 @@ export default class Login extends Component{
           Accept: 'application/json',
           'Content-Type': 'application/json',
         }, body: JSON.stringify({
-          email: email,
+          email: mail,
+          mobile_token: token,
           password: password,
         }),  })
         .then(res => res.json())
         .then(res => {
-
           if(res.status){
           AsyncStorage.setItem('auth', res.token.toString());
           AsyncStorage.setItem('role', res.Role);
           AsyncStorage.setItem('email', email);
+          if(isChecked){
+            AsyncStorage.setItem('rem', "yes");
+          }else{
+            AsyncStorage.setItem('rem', "no");
+          }
           this.setState({ loading: false})
 
               if(res.Role=="customer"){
@@ -77,10 +110,49 @@ export default class Login extends Component{
           console.log("Api call error");
           alert(error.message);
           this.setState({ loading: false})
-       });
+       }); 
+   }
+
+
+//1
+async checkPermission() {
+  const enabled = await firebase.messaging().hasPermission();
+  if (enabled) {
+      this.getToken();
+  } else {
+      this.requestPermission();
+  }
+  firebase.messaging().subscribeToTopic("global");
+}
+async getToken() {
+  let fcmToken = await AsyncStorage.getItem('fcmToken');
+   console.warn(fcmToken);
+  this.setState({token: fcmToken})
+  if (!fcmToken) {
+      fcmToken = await firebase.messaging().getToken();
+      console.warn(fcmToken);
+      if (fcmToken) {
+          // user has a device token
+          console.warn(fcmToken);
+          await AsyncStorage.setItem('fcmToken', fcmToken);
+          this.setState({token: fcmToken})
+      }
+  }
 }
 
-onPress = data => this.setState({ data });
+  //2
+async requestPermission() {
+  try {
+      await firebase.messaging().requestPermission();
+      // User has authorised
+      this.getToken();
+  } catch (error) {
+      // User has rejected permissions
+      console.warn('permission rejected');
+  }
+}
+
+
   render() {
 
     selectedButton = this.state.data.find(e => e.selected == true);
@@ -93,7 +165,7 @@ onPress = data => this.setState({ data });
       return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <ActivityIndicator />
-          <Text>Processing</Text>
+          <Text>Login in</Text>
         </View>
       );
     }
@@ -109,6 +181,7 @@ onPress = data => this.setState({ data });
                     <TextInput
                         placeholder= "Email"
                         placeholderTextColor= '#55575b'
+                        defaultValue={this.state.demail}
                         returnKeyType = "next"
                         text= {this.state.demail}
                         onSubmitEditing = {() => this.passwordInput.focus()}
@@ -133,9 +206,17 @@ onPress = data => this.setState({ data });
                 />
 
                    <View style= {{flexDirection: "row",  alignItems: 'center', marginLeft:45, marginBottom:4,}}> 
-                    <RadioGroup radioButtons={this.state.data} 
-                    onPress={this.onPress}
-                    flexDirection='row'/>
+
+                   <CheckBox
+                      style={{flex: 1, padding: 10, marginRight:40}}
+                      onClick={()=>{
+                        this.setState({
+                            isChecked:!this.state.isChecked
+                        })
+                      }}
+                      isChecked={this.state.isChecked}
+                      leftText={"Remember Me"}
+                  />
                     </View>
 
 
@@ -147,7 +228,8 @@ onPress = data => this.setState({ data });
                      onPress ={() => this.checkLogin()}  >SIGN IN</Text>
 
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.cancelContainer} >
+                <TouchableOpacity style={styles.cancelContainer} 
+                onPress= {() => this._onLoginPress()}>
                      <Text style={styles.cancleText}
                      >X</Text>
 

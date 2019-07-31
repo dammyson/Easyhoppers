@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, Text, View,AsyncStorage, Image, TextInput} from 'react-native';
+import {ActivityIndicator, Platform, FlatList, StyleSheet, Text, View,AsyncStorage, Image, TextInput} from 'react-native';
 import { List, ListItem, SearchBar} from 'react-native-elements';
 import { PacmanIndicator} from 'react-native-indicators';
 import PickerModal from 'react-native-picker-modal-view';
@@ -59,7 +59,8 @@ export default class LiveUpdate extends Component{
      })
 
       .then(res => res.json())
-      .then(res => {
+      .then(res => { 
+        console.warn(res)
         this.setState({
           data: res.data,
           loading: false,
@@ -88,9 +89,10 @@ export default class LiveUpdate extends Component{
 
   searchFilterFunction = search => {
     this.setState({ search });
-    console.log(this.arrayholder);
+   
+   
     const newData = this.arrayholder.filter(item => {
-      const itemData = `${item.name.toUpperCase()} ${item.departure_port.toUpperCase()} ${item.arrival_port.toUpperCase()}`;
+      const itemData = `${item.name.toUpperCase()} ${item.departure_port.toUpperCase()} ${item.departure_port_name.toUpperCase()}${item.arrival_port.toUpperCase()} ${item.arrival_port_name.toUpperCase()}`;
 
       const textData = search.toUpperCase();
       return itemData.indexOf(textData) > -1;
@@ -287,7 +289,7 @@ export default class LiveUpdate extends Component{
                 style={{paddingBottom:5}}
                 data={this.state.data}
                 renderItem={this.renderItem}
-                keyExtractor={item => item.description}
+                keyExtractor={item => item.description+item.id}
                 ItemSeparatorComponent={this.renderSeparator}
                 ListHeaderComponent={this.renderHeader}
           />
@@ -306,7 +308,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: URL.bgcolor,
-    paddingTop:10,
+    paddingTop:Platform.OS === 'ios' ? 25 : 10,
   },
   searchcontainer:{
     flex: 1,

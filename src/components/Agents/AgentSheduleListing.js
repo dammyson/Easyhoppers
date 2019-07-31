@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import {ActivityIndicator, FlatList, AsyncStorage , StyleSheet, Text, View,TouchableOpacity, Image, TextInput} from 'react-native';
+import {ActivityIndicator, Platform, FlatList, AsyncStorage , StyleSheet, Text, View,TouchableOpacity, Image, TextInput} from 'react-native';
 const URL = require("../../components/server");
 
 export default class AgentSheduleListing extends Component{
@@ -296,6 +296,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: URL.bgcolor,
+    paddingTop:Platform.OS === 'ios' ? 25 : 10,
   },
   main: {
     flex: 1,
