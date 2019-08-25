@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import {ActivityIndicator, Platform, FlatList, StyleSheet, Text, View,AsyncStorage, Image, TextInput} from 'react-native';
+import {Alert, Platform, FlatList, StyleSheet, Text, View,AsyncStorage, Image, TextInput} from 'react-native';
 import { List, ListItem, SearchBar} from 'react-native-elements';
 import { PacmanIndicator} from 'react-native-indicators';
 import PickerModal from 'react-native-picker-modal-view';
@@ -60,7 +60,9 @@ export default class LiveUpdate extends Component{
 
       .then(res => res.json())
       .then(res => { 
-        console.warn(res)
+        if(!res.data){
+          Alert.alert('Operation failed', res.message, [{text: 'Okay'}])
+      }
         this.setState({
           data: res.data,
           loading: false,
@@ -92,7 +94,7 @@ export default class LiveUpdate extends Component{
    
    
     const newData = this.arrayholder.filter(item => {
-      const itemData = `${item.name.toUpperCase()} ${item.departure_port.toUpperCase()} ${item.departure_port_name.toUpperCase()}${item.arrival_port.toUpperCase()} ${item.arrival_port_name.toUpperCase()}`;
+      const itemData = `${item.name.toUpperCase()} ${item.description.toUpperCase()} ${item.departure_port.toUpperCase()} ${item.departure_port_name.toUpperCase()}${item.arrival_port.toUpperCase()} ${item.arrival_port_name.toUpperCase()}`;
 
       const textData = search.toUpperCase();
       return itemData.indexOf(textData) > -1;
@@ -230,7 +232,9 @@ export default class LiveUpdate extends Component{
                         <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{this.renderStatusSwitch(item.status)}</Text>
                         </View>
 
-                         <View style = {styles.menudetailsTopchild}>
+                          <View style = {styles.menudetailsTopchild}>
+                        <Text style={{fontSize: 12, fontWeight: '200',  color: URL.bgcolor,}}>Date</Text>
+                        <Text style={{marginTop:7, fontSize: 10, fontWeight: '500',  color: '#000',}}>{item.scheduled_arrival_date}</Text>
                         </View>
 
                         <View style = {styles.menudetailsTopchild}>

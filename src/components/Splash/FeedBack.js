@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 import {TextInput, StyleSheet, Alert, Text, Dimensions, ImageBackground, ActivityIndicator, View,TouchableOpacity, KeyboardAvoidingView} from 'react-native';
 const URL = require("../../components/server");
-export default class ForgotPassword extends Component{
+export default class FeedBack extends Component{
 
   constructor(props) 
   {
@@ -75,7 +75,7 @@ export default class ForgotPassword extends Component{
       return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <ActivityIndicator />
-          <Text>Login in</Text>
+          <Text>Proccesing</Text>
         </View>
       );
     }
@@ -89,18 +89,18 @@ export default class ForgotPassword extends Component{
 
         <View>
         <Text style={styles.headText}
-                        >Forgot Password </Text>
+                        >FeedBack</Text>
         </View>
          <View style={styles.textInputcontainer}>
                       
                     <TextInput
-                        placeholder= "Email"
+                        placeholder= "Feedback"
                         placeholderTextColor= '#55575b'
                         returnKeyType = "next"
                         onSubmitEditing = {() => this.passwordInput.focus()}
                         keyboardType = "email-address"
                         autoCapitalize= "none"
-                        autoCorrect = {false}
+                        multiline={true}
                         onChangeText = {text => this.setState({email: text})}
                         style = {styles.input}
                        
@@ -110,11 +110,11 @@ export default class ForgotPassword extends Component{
            <View style={styles.Linkcontainer}>
                 <TouchableOpacity style={styles.buttonContainer} >
                     <Text style={styles.buttonText}
-                     onPress ={() => this.checkForgotpassword()} >Update</Text>
+                     onPress ={() => this.checkForgotpassword()} >Send</Text>
 
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.cancelContainer}
-                 onPress={() => this.props.navigation.navigate('Login')}
+                 onPress={() => this.props.navigation.navigate('UserLanding')}
                 >
                      <Text style={styles.cancleText}>X</Text>
 
@@ -148,14 +148,15 @@ const styles = StyleSheet.create({
     flex: 3,
   },
   input:{
-    height:50,
+    height:100,
     backgroundColor: '#d2e0f7',
     marginBottom:15,
+    textAlignVertical:'top',
     color: '#000000',
-    paddingHorizontal: 10,
-    borderTopLeftRadius: 25,
-    borderBottomLeftRadius: 25,
-    marginLeft:40,
+    padding: 20,
+    borderRadius: 5,
+    marginLeft:20,
+    marginRight:20,
     },
     buttonContainer:{
       height:50,

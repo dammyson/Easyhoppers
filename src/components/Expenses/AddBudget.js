@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ActivityIndicator, AsyncStorage, TextInput, StyleSheet, Text, View,Alert, Dimensions, TouchableOpacity} from 'react-native';
+import {ActivityIndicator, Platform,AsyncStorage, TextInput, StyleSheet, Text, View,Alert, Dimensions, TouchableOpacity} from 'react-native';
 import PickerModal from 'react-native-picker-modal-view';
 const URL = require("../../components/server");
 import DatePicker from 'react-native-datepicker'
@@ -294,6 +294,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: URL.bgcolor,
+    paddingTop:Platform.OS === 'ios' ? 25 : 10,
   },
   ariline: {
     flexDirection: "row",

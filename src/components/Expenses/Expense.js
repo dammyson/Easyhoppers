@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ActivityIndicator, Animated, AsyncStorage, TextInput, StyleSheet, Text, View,Alert, Dimensions, TouchableOpacity} from 'react-native';  
+import {ActivityIndicator,Platform, Animated, AsyncStorage, TextInput, StyleSheet, Text, View,Alert, Dimensions, TouchableOpacity} from 'react-native';  
 import { Pie } from 'react-native-pathjs-charts'
 import { MaterialDialog } from 'react-native-material-dialog';
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
@@ -411,7 +411,8 @@ export default class Expense extends Component{
                        
                               </View>
                         </View>
-              </MaterialDialog>
+            </MaterialDialog>
+    
      </View>
     );
 
@@ -425,6 +426,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: URL.bgcolor,
+    paddingTop:Platform.OS === 'ios' ? 25 : 10,
   },
   ariline: {
     flexDirection: "row",

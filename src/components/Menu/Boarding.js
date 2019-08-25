@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import {ActivityIndicator, Platform, Easing, FlatList, Animated, StyleSheet, AsyncStorage, Text, View,TouchableOpacity, Image, TextInput} from 'react-native';
+import {ActivityIndicator, Alert, Platform, Easing, FlatList, Animated, StyleSheet, AsyncStorage, Text, View,TouchableOpacity, Image, TextInput} from 'react-native';
 const URL = require("../../components/server");
 export default class Boarding extends Component{
 
@@ -67,6 +67,9 @@ makeRemoteRequest = () => {
 
       .then(res => res.json())
       .then(res => {
+        if(!res.data){
+          Alert.alert('Operation failed', res.message, [{text: 'Okay'}])
+      }
         this.setState({
           data: res.data,
           loading: false,

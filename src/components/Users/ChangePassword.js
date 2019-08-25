@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import {TextInput, StyleSheet, ActivityIndicator, Alert, Text,AsyncStorage, View,TouchableOpacity, KeyboardAvoidingView} from 'react-native';
+import {TextInput, StyleSheet, ActivityIndicator,Dimensions, ImageBackground,  Alert, Text,AsyncStorage, View,TouchableOpacity, KeyboardAvoidingView} from 'react-native';
 const URL = require("../../components/server");
 
 export default class ChangePassword extends Component{
@@ -94,6 +94,11 @@ export default class ChangePassword extends Component{
       );
     }
     return (
+      <ImageBackground
+      source={require('../../images/ezbg.png')}
+      style={styles.backgroundImage}
+      resizeMode="cover"
+      >
       <KeyboardAvoidingView behavior="padding" style={styles.container}>
 
         <View>
@@ -160,15 +165,19 @@ export default class ChangePassword extends Component{
 
           </View>   
       </KeyboardAvoidingView>
+      </ImageBackground>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#FFF',
     paddingTop:100
   },
   textInputcontainer: {
@@ -177,7 +186,6 @@ const styles = StyleSheet.create({
   },
   Linkcontainer: {
     flex: 3,
-    justifyContent: 'center',
   },
   input:{
     height:50,

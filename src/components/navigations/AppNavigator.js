@@ -1,6 +1,8 @@
 import  {createStackNavigator, createAppContainer} from 'react-navigation';
 
 import Splash from '../Splash/Splash';
+import Welcome from '../Splash/Welcome';
+import FeedBack from '../Splash/FeedBack';
 import Login from '../Users/Login';
 import Register from '../Users/Register';
 import Edit from '../Users/Edit';
@@ -23,21 +25,23 @@ import Reciept from '../Expenses/Reciept';
 import AgentLanding from '../Agents/AgentLanding';
 import AgentSheduleListing from '../Agents/AgentSheduleListing';
 import UpdateStatus from '../Agents/UpdateStatus';
-
-
+import Criteria from '../Menu/Criteria';
 
 const AppNavigator = createStackNavigator({
-  /*  */
-  
-  
+  /* */
   Splash: {screen: Splash,
     navigationOptions: {
       header:null 
-    }},   
+    }},  
+     Welcome: {screen: Welcome,
+    navigationOptions: {
+      header:null 
+    }}, 
     Login: {screen: Login,
       navigationOptions: {
         header:null 
       }},
+
      Register: {screen: Register,
      navigationOptions: {
       header:null 
@@ -59,6 +63,10 @@ const AppNavigator = createStackNavigator({
         navigationOptions: {
           header:null 
         }}, 
+        FeedBack: {screen: FeedBack,
+          navigationOptions: {
+            header:null 
+          }},
     LiveUpdate: {screen: LiveUpdate,
       navigationOptions: {
         header:null 
@@ -87,14 +95,16 @@ const AppNavigator = createStackNavigator({
           navigationOptions: {
             header:null 
           }},
+
+          Criteria: {screen: Criteria,
+            navigationOptions: {
+              header:null 
+            }},
+
     AirLinePerfomance: {screen: AirLinePerfomance,
       navigationOptions: {
         header:null 
       }},
-    PerfomanceRouteListing: {screen: PerfomanceRouteListing,
-    navigationOptions: {
-      header:null 
-    }},
     AgentSheduleListing: {screen: AgentSheduleListing,
       navigationOptions: {
         header:null 
@@ -102,7 +112,7 @@ const AppNavigator = createStackNavigator({
     UpdateStatus: {screen: UpdateStatus,
     navigationOptions: {
       header:null 
-    }},
+    }}, 
     PerfomanceRouteListing: {screen: PerfomanceRouteListing,
     navigationOptions: {
       header:null 
@@ -122,7 +132,7 @@ const AppNavigator = createStackNavigator({
     AddBudget: {screen: AddBudget,
     navigationOptions: {
       header:null 
-    }},
+    }}, 
     ExpensesSum: {screen: ExpensesSum,
     navigationOptions: {
       header:null 

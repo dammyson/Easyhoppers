@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import {ActivityIndicator, TouchableOpacity, FlatList, StyleSheet, Text, View,AsyncStorage, Image, TextInput} from 'react-native';
+import {ActivityIndicator,Platform, Alert, TouchableOpacity, FlatList, StyleSheet, Text, View,AsyncStorage, Image, TextInput} from 'react-native';
 import { List, ListItem, SearchBar} from 'react-native-elements';
 const URL = require("../../components/server");
 
@@ -54,7 +54,10 @@ export default class ExpensesSum extends Component{
 
       .then(res => res.json())
       .then(res => {
-        console.warn(res)
+     console.warn(res);
+        if(!res.data){
+          Alert.alert('Operation failed', res.message, [{text: 'Okay'}])
+      }
         this.setState({
           data: res.data,
           loading: false,
@@ -227,7 +230,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: URL.bgcolor,
-    paddingTop:10,
+    paddingTop:Platform.OS === 'ios' ? 25 : 10,
   },
   main: {
     flex: 1,

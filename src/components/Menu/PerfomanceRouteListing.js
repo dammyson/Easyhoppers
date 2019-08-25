@@ -1,9 +1,11 @@
 
 import React, {Component} from 'react';
-import {ActivityIndicator, AsyncStorage,FlatList, Platform, StyleSheet, Text, View,TouchableOpacity, Image, TextInput} from 'react-native';
+import {ActivityIndicator, AsyncStorage,FlatList, Alert, Platform, StyleSheet, Text, View,TouchableOpacity, Image, TextInput} from 'react-native';
 const URL = require("../../components/server");
 import DatePicker from 'react-native-datepicker'
 import { Card, Icon,SocialIcon} from 'react-native-elements'
+import { MaterialDialog } from 'react-native-material-dialog';
+import RadioGroup from 'react-native-radio-buttons-group';
 
 export default class PerfomanceRouteListing extends Component{
   
@@ -19,7 +21,29 @@ export default class PerfomanceRouteListing extends Component{
       auth:"",
       fromdate:"2019-05-29",
       todate:"2019-06-11",
-      today:""
+      today:"",
+      dur:"",
+      visible: false,
+      dated: [
+         {
+            label: '1 week',
+            size: 30,
+            value: "1",
+            color: 'green',
+        },
+        {
+          label: '2 Weeks',
+          size: 30,
+          value: "2",
+          color: 'green',
+      },
+      {
+        label: '1 Month',
+        size: 30,
+        value: "4",
+        color: 'green',
+    },
+    ],
     };
 
    this.arrayholder = [];
@@ -55,37 +79,41 @@ AsyncStorage.getItem('auth').then((value) => {
 }
 
 makeRemoteRequest = () => {
-const {auth, today} = this.state
-this.setState({ loading: true });
-fetch(URL.url+'/api/performanceAggregation', { method: 'POST',  headers: {
-  Accept: 'application/json',
-  'Authorization': 'Bearer ' + auth,
-  'Content-Type': 'application/json',
- },body: JSON.stringify({
-  from: today,
-  to: today,
-}), 
- })
+    const {auth, today} = this.state
+    this.setState({ loading: true });
+    fetch(URL.url+'/api/performanceAggregation', { method: 'POST',  headers: {
+      Accept: 'application/json',
+      'Authorization': 'Bearer ' + auth,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: today,
+      to: today,
+    }), 
+    })
 
-  .then(res => res.json())
-  .then(res => {
-    console.log(res)
-    this.setState({
-      data: res.data,
-      loading: false,
-      status: res.status,
-      
-    });
-    this.arrayholder = res.data;
-  })
-  .catch(error => {
-    alert(error.message);
-      this.setState({ loading: false})
-  }); 
+      .then(res => res.json())
+      .then(res => {
+        if(!res.data){
+          Alert.alert('Operation failed', res.message, [{text: 'Okay'}])
+      }
+        this.setState({
+          data: res.data,
+          loading: false,
+          status: res.status,
+          
+        });
+        this.arrayholder = res.data;
+      })
+      .catch(error => {
+        alert(error.message);
+          this.setState({ loading: false})
+      }); 
 };
 
-RemakeRemoteRequest = () => {
-  const {auth, fromdate, todate} = this.state
+RemakeRemoteRequest = (fromdate, todate) => {
+  const {auth} = this.state
+
   this.setState({ loading: true });
   fetch(URL.url+'/api/performanceAggregation', { method: 'POST',  headers: {
     Accept: 'application/json',
@@ -112,10 +140,33 @@ RemakeRemoteRequest = () => {
       alert(error.message);
         this.setState({ loading: false})
     }); 
+
+  
   };
 
+
+  weekfilter()
+  {
+
+         this.setState({visible: false})
+        const {auth} = this.state
+        let selectedButton = this.state.dated.find(e => e.selected == true);
+        selectedButton = selectedButton ? selectedButton.value : this.state.dated[0].label;
+        var dateFormat = require('dateformat');
+        var firstDay = new Date();
+        var nextWeek = new Date(firstDay.getTime() + 7 * 24 * 60 * 60 * 1000 * selectedButton);
+        var fromdate = dateFormat(firstDay, "yyyy-mm-dd")
+        var todate = dateFormat(nextWeek, "yyyy-mm-dd")
+
+
+        this.RemakeRemoteRequest(fromdate, todate);
+
+       
+}
+
+
   startFilter = () => {
-    const {fromdate, todate, auth} = this.state
+    const {fromdate, todate} = this.state
     if(fromdate == "" || todate == "" ){
     alert('Select start and end date')
       return
@@ -125,7 +176,7 @@ RemakeRemoteRequest = () => {
          alert("Select Interval of Seven (7) days")
          return
        }else{
-        this.RemakeRemoteRequest();
+        this.RemakeRemoteRequest(fromdate, todate,);
        }
     
   };
@@ -170,16 +221,44 @@ RemakeRemoteRequest = () => {
         onChangeText={this.searchFilterFunction}
       />
    
+   <View>
+   <View style = {styles.headerform}>
+             
+            
+                
+      
+      
+      
+          <TouchableOpacity style={styles.buttonContainerone} 
+                  onPress={() => this.props.navigation.navigate('Criteria')}>
+                    <Text style={styles.buttonText}
+                   >Compare Airline</Text>
+                    
+                </TouchableOpacity>
+      
+        <TouchableOpacity style={styles.circle }   onPress={ () => this.setState({visible:true})} >
+      
+          <Icon
+            name="bars"
+            style={{marginRight:10}} name="calendar" size={20}
+            type="font-awesome"
+            color="#fff"
+            />
+      </TouchableOpacity>
+      
+      
+                </View>
+      
 
       <View style = {styles.headerform}>
              
- <DatePicker
+       <DatePicker
         style={{width: 120}}
         date={this.state.fromdate}
         mode="date"
         placeholder="select date"
         format="YYYY-MM-DD"
-        minDate="2019-05-01"
+        minDate="2019-08-10"
         maxDate={this.state.today}
         confirmBtnText="Confirm"
         cancelBtnText="Cancel"
@@ -199,14 +278,14 @@ RemakeRemoteRequest = () => {
       />
           
 
- <Text style={{fontSize: 12,   margin:10,fontWeight: '600',  color: '#000',}}>TO</Text> 
+        <Text style={{fontSize: 12, margin:10,fontWeight: '600',  color: '#000',}}>TO</Text> 
             <DatePicker
         style={{width: 120}}
         date={this.state.todate}
         mode="date"
         placeholder="select date"
         format="YYYY-MM-DD"
-        minDate="2019-05-01"
+        minDate="2019-08-10"
         maxDate={this.state.today}
         confirmBtnText="Confirm"
         cancelBtnText="Cancel"
@@ -236,9 +315,13 @@ RemakeRemoteRequest = () => {
   color="#fff"
   />
 </TouchableOpacity>
+
        </View>
 
           </View>
+
+
+     </View>
     );
   };
   renderItem=({ item , index}) => 
@@ -285,22 +368,22 @@ RemakeRemoteRequest = () => {
 
                     <View style = {styles.menudetailsTopchild}>
                         <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>Early </Text>
-                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: URL.bgcolor,}}>{item.percentageEarlyDepartures}%</Text>
+                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: URL.bgcolor,}}>{item.percentageEarlyDepartures.toFixed(1)}%</Text>
                         </View>
                         <View style = {styles.menudetailsTopchild}>
                         <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>On Time</Text>
-                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: URL.bgcolor,}}>{item.percentageOnTimeDepartures}%</Text>
+                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: URL.bgcolor,}}>{item.percentageOnTimeDepartures.toFixed(1)}%</Text>
                         </View>
                           
 
                            <View style = {styles.menudetailsTopchild}>
                         <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>Late</Text>
-                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: URL.bgcolor,}}>{item.percentageDelayedDepartures}%</Text>
+                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: URL.bgcolor,}}>{item.percentageDelayedDepartures.toFixed(1)}%</Text>
                         </View>
                     
                     <View style = {styles.menudetailsTopchild}>
                         <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>Cancellation</Text>
-                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: URL.bgcolor,}}>{item.percentageCancellations}%</Text>
+                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: URL.bgcolor,}}>{item.percentageCancellations.toFixed(1)}%</Text>
                         </View>
 
                         <View style = {styles.menudetailsTopchild}>
@@ -330,11 +413,11 @@ RemakeRemoteRequest = () => {
                        <View style = {styles.menudetailsBottom}> 
                        <View style = {styles.menudetailsTopchild}>
                         <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>Early</Text>
-                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: URL.bgcolor,}}>{item.percentageEarlyArrival}%</Text>
+                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: URL.bgcolor,}}>{item.percentageEarlyArrival.toFixed(1)}%</Text>
                         </View>
                         <View style = {styles.menudetailsTopchild}>
                         <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>On Time</Text>
-                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: URL.bgcolor,}}>{item.percentageOnTimeArrivals}%</Text>
+                        <Text style={{marginTop:7, fontSize: 14, fontWeight: '500',  color: URL.bgcolor,}}>{item.percentageOnTimeArrivals.toFixed(1)}%</Text>
                         </View>
 
                        
@@ -342,7 +425,7 @@ RemakeRemoteRequest = () => {
                     
                     <View style = {styles.menudetailsTopchild}>
                         <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>Late</Text>
-                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: URL.bgcolor,}}>{item.percentageDelayedArrivals}%</Text>
+                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: URL.bgcolor,}}>{item.percentageDelayedArrivals.toFixed(1)}%</Text>
                         </View>
                         <View style = {styles.menudetailsTopchild}>
                        </View>
@@ -372,10 +455,13 @@ RemakeRemoteRequest = () => {
 
 
             </View>
+
+
     
 </View>
         )}
 
+        onPress = dated => this.setState({ dated });
 
   render() {
 
@@ -398,9 +484,8 @@ RemakeRemoteRequest = () => {
       );
     }
 
- 
+   
     return (
-       
           <View style = {styles.container}>
            <View style={{alignItems: 'center', justifyContent: 'center',paddingTop:8, paddingBottom:10, color:"#fff", fontWeight: '900',  fontSize:13,}}>
           <Text style={{color:"#fff", fontWeight: '900',  fontSize:16,}}>Performance</Text>
@@ -417,6 +502,18 @@ RemakeRemoteRequest = () => {
              />
             
             </View>
+
+
+              <MaterialDialog
+            title="Select Duration"
+            visible={this.state.visible}
+            onOk={() => this.weekfilter()}
+            onCancel={() => this.setState({ visible: false })}>
+              <View style={{justifyContent: 'flex-end', alignItems: 'flex-start',}}>
+                <RadioGroup radioButtons={this.state.dated} onPress={this.onPress} />
+            
+                        </View>
+            </MaterialDialog>
             </View>
     );
 
@@ -562,6 +659,15 @@ const styles = StyleSheet.create({
        shadowOpacity: 0.5,
        shadowRadius: 2,
        elevation: 2,
-       marginLeft:20
+       marginLeft:10
+    },
+    buttonContainerone:{
+      height:40,
+      width:150,
+      marginBottom:10,
+      backgroundColor: URL.bgcolor,
+      justifyContent: 'center',
+      borderRadius: 10,
+      margin:10,
     },
 });

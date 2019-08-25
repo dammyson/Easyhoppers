@@ -21,13 +21,18 @@ export default class Splash extends Component{
     const data = await this.performinTimeConsumingTask();
    
     AsyncStorage.getItem('rem').then((value) => {
+      console.warn(value)
       if(value=='yes'){
         this.props.navigation.navigate('UserLanding');
       }else if(value==null){
-          this.props.navigation.navigate('Login');
-    
+        this.props.navigation.navigate('Welcome');
       }else if(value=="no"){
         this.props.navigation.navigate('Login');
+      }else if(value=="tin"){
+        this.props.navigation.navigate('Login');
+      }
+      else{
+        this.props.navigation.navigate('Welcome'); 
       }
        
         

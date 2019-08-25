@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import {TextInput,ScrollView, StyleSheet, Text, View,TouchableOpacity, KeyboardAvoidingView, ActivityIndicator,AsyncStorage, Alert} from 'react-native';
+import {TextInput, Button, ScrollView,Dimensions,Linking, StyleSheet,ImageBackground, Text, View,TouchableOpacity, KeyboardAvoidingView, ActivityIndicator,AsyncStorage, Alert} from 'react-native';
 const URL = require("../../components/server");
 export default class Register extends Component{
   constructor(props) 
@@ -68,8 +68,16 @@ export default class Register extends Component{
     }
   
     return (
+      <ImageBackground
+      source={require('../../images/ezbg.png')}
+      style={styles.backgroundImage}
+      resizeMode="cover"
+      >
       <ScrollView behavior="padding" style={styles.container}>
-
+      <View style={styles.welcomecontainer}> 
+          <Text style={styles.headText}
+                        >Getting started</Text>
+          </View>
        
          <KeyboardAvoidingView style={styles.textInputcontainer}>
                       <View>
@@ -156,21 +164,32 @@ export default class Register extends Component{
           <TouchableOpacity style={styles.link} >
           <Text  style={styles.linkText} >Alread have an account?</Text>
           </TouchableOpacity>
+         
         <TouchableOpacity style={styles.link} 
         onPress={() => this.props.navigation.navigate('Login')}>
           <Text  style={styles.linkText} >Sign In</Text>
           </TouchableOpacity>
 
         </View>
+        <TouchableOpacity style={styles.link} onPress={ ()=>{ Linking.openURL('https://easyhoppers.co/privacy-policy/')}} >
+          <Text  style={styles.linkText} >Privacy Policy</Text>
+          </TouchableOpacity>
       </ScrollView>
+      </ImageBackground >
     );
   }
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+  },
+  welcomecontainer:{
+    flex: 2,
+  },
   container: {
     flex: 1,
-    backgroundColor: '#FFF',
     paddingTop:70
   },
   textInputcontainer: {

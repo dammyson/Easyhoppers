@@ -1,9 +1,10 @@
 
 import React, {Component} from 'react';
-import {Image, ActivityIndicator, StyleSheet, Text, Alert, View,TouchableOpacity, AsyncStorage} from 'react-native';
+import {Image, ActivityIndicator, Platform,ImageBackground,  Dimensions, StyleSheet, Text, Alert, View,TouchableOpacity, AsyncStorage} from 'react-native';
 const URL = require("../../components/server");
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 
 export default class UserLanding extends Component{
@@ -15,7 +16,12 @@ export default class UserLanding extends Component{
       loading: true,
       status: false,
       auth:"",
-      name:""
+      name:"",
+      images: [
+        require('../../images/one.jpeg'),
+        require('../../images/two.jpeg'),
+        require('../../images/three.jpeg')
+      ],
 
     };
   }
@@ -60,7 +66,7 @@ export default class UserLanding extends Component{
           AsyncStorage.setItem('email', res.user.email);
           AsyncStorage.setItem('first', res.user.firstname);
           AsyncStorage.setItem('last', res.user.lastname);
-          AsyncStorage.setItem('eid', "233");
+          AsyncStorage.setItem('eid',res.expense_id.toString());
         this.setState({
           name: res.user.name,
           loading: false,
@@ -70,7 +76,7 @@ export default class UserLanding extends Component{
        
       }else{
 
-        Alert.alert('Login failed', "Check your email and password", [{text: 'Okay'}])
+        Alert.alert('Operation failed', "Please check your network and try again", [{text: 'Okay'}])
         this.setState({ loading: false})
           }
       })
@@ -105,7 +111,19 @@ export default class UserLanding extends Component{
 
 
 
-
+   _renderItem = ({ item, index }) => {
+    return (
+      <TouchableOpacity
+        key={index}
+      >
+        <Image
+          source={item} 
+          style={{ width: Dimensions.get('window').width, height: 350 }}
+          resizeMode="cover"
+        />
+      </TouchableOpacity>
+    );
+  }
 
   render() {
     if (this.state.loading) {
@@ -118,6 +136,12 @@ export default class UserLanding extends Component{
     }
 
     return (
+
+      <ImageBackground
+      source={require('../../images/ezbg.png')}
+      style={styles.backgroundImage}
+      resizeMode="cover"
+      >
       <View style={styles.container}>
 
    
@@ -157,11 +181,23 @@ export default class UserLanding extends Component{
                       </TouchableOpacity> 
                 </View>
 
+                <View style= {{flex: 1,}}>   
+                <Carousel
+            data={this.state.images}
+            renderItem={this._renderItem}
+            ref={(carousel) => { this._carousel = carousel; }}
+            sliderWidth={Dimensions.get('window').width}
+            itemWidth={Dimensions.get('window').width}
+            onSnapToItem={(index) => this.setState({ activeSlide: index })}
+            enableSnap={true}
+          />
+                  
+                  
+                </View>  
+                
 
-                 <Image
-          style={styles.headimage}
-          source={require('../../images/user.png')} />
-          </View>   
+          </View>  
+
             <View style={styles.foother}>
 
                 <View style={styles.body}>
@@ -179,7 +215,8 @@ export default class UserLanding extends Component{
        />
 </TouchableOpacity>}
    >
-     <MenuItem>Feed back</MenuItem>
+     <MenuItem   onPress={() => this.props.navigation.navigate('FeedBack', this.hideMenu()
+     )}>Feedback</MenuItem>
    </Menu>
                     </View>
                  
@@ -227,7 +264,7 @@ export default class UserLanding extends Component{
                                         style={styles.image}
                                         source={require('../../images/osci.png')} />
                                          <Text style={styles.headText}>Live</Text>
-                                      <Text style={styles.headText}>Performance</Text>
+                                      <Text style={styles.headText}>Analytics</Text>
                                     <Text style={styles.headlink}>Check Now</Text>
                             </TouchableOpacity>
                         </View>
@@ -262,19 +299,25 @@ export default class UserLanding extends Component{
       </View>
    
    </View>
+   </ImageBackground >
     );
   }
 }
 
+
+
 const styles = StyleSheet.create({
+  backgroundImage: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+  },
   container: {
     flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#FFF',
-    
+    justifyContent: 'center',  
   },
   Headercontainer: {
     flex: 3,
+    paddingTop:Platform.OS === 'ios' ? 25 : 10,
     backgroundColor: URL.bgcolor,
     alignItems: 'center',
     justifyContent: 'center',

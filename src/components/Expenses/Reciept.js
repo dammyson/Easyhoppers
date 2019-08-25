@@ -1,9 +1,10 @@
 
 import React, {Component} from 'react';
-import {ActivityIndicator, TouchableOpacity, FlatList, StyleSheet, Text, View,AsyncStorage, Image, TextInput} from 'react-native';
+import {ActivityIndicator,Platform, TouchableOpacity, Alert, FlatList, StyleSheet, Text, View,AsyncStorage, Image, TextInput} from 'react-native';
 import { List, ListItem, SearchBar} from 'react-native-elements';
 const URL = require("../../components/server");
-
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { MaterialDialog } from 'react-native-material-dialog';
 export default class Reciept extends Component{
 
       
@@ -15,9 +16,11 @@ export default class Reciept extends Component{
           status: false,
           data: [],
           search: '',
+          email:'',
           name:'',
           auth:"",
           e_id:"",
+          visible:false
         };
     
        this.arrayholder = [];
@@ -59,6 +62,9 @@ export default class Reciept extends Component{
 
       .then(res => res.json())
       .then(res => {
+        if(!res.data){
+            Alert.alert('Operation failed', res.message, [{text: 'Okay'}])
+        }
         this.setState({
           data: res.data,
           loading: false,
@@ -72,6 +78,51 @@ export default class Reciept extends Component{
           this.setState({ loading: false})
       }); 
   };
+
+   
+  newExpense()
+  {
+
+   this.setState({visible: false})
+        const {auth,email, e_id} = this.state
+     
+         if(email == ""){
+            Alert.alert('Process failed', 'Select a statuse', [{text: 'Okay'}])
+            return
+          }
+        this.setState({loading: true})
+        fetch(URL.url+'/api/expense/send_expense', { method: 'POST',  headers: {
+          Accept: 'application/json',
+          'Authorization': 'Bearer ' + auth,
+          'Content-Type': 'application/json',
+        }, body: JSON.stringify({
+          email: email,
+          expense_id:e_id,
+        }), 
+       })
+        .then(res => res.json())
+        .then(res => {
+
+          if(res.status){ 
+        
+          this.setState({ 
+            loading: false,
+           })
+          Alert.alert('Operation Successful', res.message, [{text: 'Okay'}])
+          }else{
+
+        Alert.alert('Operation failed', res.message, [{text: 'Okay'}])
+        this.setState({ loading: false})
+          }
+        }).catch((error)=>{
+          console.log("Api call error");
+          alert(error.message);
+          this.setState({ loading: false})
+       });
+       
+}
+
+
 
   renderSeparator = () => {
     return (
@@ -104,7 +155,7 @@ export default class Reciept extends Component{
     return (
       
       <TextInput
-        style = {styles.input}
+        style = {styles.inputsearch}
         placeholder="Type Here..."
         placeholderTextColor= '#fff'
         round
@@ -178,7 +229,7 @@ export default class Reciept extends Component{
       return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <ActivityIndicator />
-          <Text>Loading products</Text>
+          <Text>Loading...</Text>
         </View>
       );
     }
@@ -211,6 +262,37 @@ export default class Reciept extends Component{
                 ListHeaderComponent={this.renderHeader}
              />
             
+
+            <TouchableOpacity
+                  onPress={ () => this.setState({visible:true})}
+                  style={styles.TouchableOpacityStyle}>
+                    <Icon
+                    name="share-alt"
+                    style={{marginRight:10}} name="share-alt" size={25}
+                    type="font-awesome"
+                    color="#fff"
+                    />
+                  </TouchableOpacity>
+
+
+                    <MaterialDialog
+                        title="Share expenses"
+                        visible={this.state.visible}
+                        onOk={() => this.newExpense()}
+                        onCancel={() => this.setState({ visible: false })}>
+                          <View>
+                        <TextInput
+                        style = {styles.input}
+                        placeholder="email"
+                        placeholderTextColor= '#000'
+                        round
+                        onChangeText = {text => this.setState({email: text})}
+                        />
+                          <View style= {{flexDirection: "row", alignItems: 'center', justifyContent: 'center',marginBottom:4, marginLeft:10, marginRight:10,}}> 
+                              </View>
+                           </View>
+                        </MaterialDialog>
+    
             </View>
             </View>
     );
@@ -225,7 +307,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     backgroundColor: URL.bgcolor,
-    paddingTop:10,
+    paddingTop:Platform.OS === 'ios' ? 25 : 10,
   },
   main: {
     flex: 1,
@@ -237,6 +319,17 @@ const styles = StyleSheet.create({
     marginLeft:10,
     marginRight:10,
     backgroundColor: '#fff',
+  },
+  TouchableOpacityStyle: {
+    position: 'absolute',
+    backgroundColor: URL.bgcolor,
+    width: 50,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 25,
+    right: 30,
+    bottom: 100,
   },
   submain: {
     flex: 1,
@@ -276,14 +369,27 @@ const styles = StyleSheet.create({
     backgroundColor: '#eff3fd',
     marginBottom:15,
     color: URL.bgcolor,
-    paddingHorizontal: 40,
-    borderRadius: 25,
-    marginLeft:40,
-    marginRight:40,
-    textAlign: 'center',
-    fontWeight: '700',
+    paddingHorizontal: 10,
+    borderRadius: 20,
+    marginLeft:5,
+    marginRight:5,
+    fontWeight: '200',
     
     },
+
+    inputsearch:{
+      height:40,
+      backgroundColor: '#eff3fd',
+      marginBottom:15,
+      color: URL.bgcolor,
+      paddingHorizontal: 40,
+      borderRadius: 25,
+      marginLeft:10,
+      marginRight:10,
+      textAlign: 'center',
+      fontWeight: '700',
+      
+      },
     image:{
         flex: 2,
         margin:2,

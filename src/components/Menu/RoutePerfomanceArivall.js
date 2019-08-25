@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
-import {ActivityIndicator,AsyncStorage,FlatList, Platform, StyleSheet, Text, View,Image, Dimensions, TouchableOpacity} from 'react-native';
+import {ActivityIndicator,AsyncStorage,Alert, Platform, StyleSheet, Text, View,Image, Dimensions, TouchableOpacity} from 'react-native';
 import { MultiLineChart } from 'react-native-d3multiline-chart';
 import DatePicker from 'react-native-datepicker'
 import { Card, Icon,SocialIcon} from 'react-native-elements'
+import { MaterialDialog } from 'react-native-material-dialog';
+import RadioGroup from 'react-native-radio-buttons-group';
 const URL = require("../../components/server");
 
 const deviceWidth = Dimensions.get ('window').width - 20;
@@ -42,6 +44,28 @@ export default class RoutePerfomanceArivall extends Component{
           rout:"",
           airlinename: "",
           route:"",
+          dur:"",
+          visible: false,
+          dated: [
+             {
+                label: '1 week',
+                size: 30,
+                value: "1",
+                color: 'green',
+            },
+            {
+              label: '2 Weeks',
+              size: 30,
+              value: "2",
+              color: 'green',
+          },
+          {
+            label: '1 Month',
+            size: 30,
+            value: "4",
+            color: 'green',
+        },
+        ],
         };
         this.onDateChange = this.onDateChange.bind(this);
     
@@ -113,6 +137,9 @@ export default class RoutePerfomanceArivall extends Component{
           })
               .then(res => res.json())
               .then(res => {
+                if(!res.data){
+                  Alert.alert('Operation failed', res.message, [{text: 'Okay'}])
+              }
                 this.setState({
                   loading: false,
                   status: res.status,
@@ -128,8 +155,9 @@ export default class RoutePerfomanceArivall extends Component{
 
 
 
-  RemakeRemoteRequest = () => {
-     const {auth, airline, rout,fromdate, todate} = this.state
+  RemakeRemoteRequest = (fromdate, todate) => {
+   
+     const {auth, airline, rout} = this.state
       this.setState({ loading: true });
       fetch(URL.url+'/api/graph', { method: 'POST',  headers: {
         Accept: 'application/json',
@@ -157,10 +185,12 @@ export default class RoutePerfomanceArivall extends Component{
       .catch(error => {
         this.setState({ error, loading: false });
       });
+
+    
 };
 
   startFilter = () => {
-    const {fromdate, todate, auth} = this.state
+    const {fromdate, todate} = this.state
     if(fromdate == "" || todate == "" ){
     alert('Select start and end date')
       return
@@ -170,15 +200,35 @@ export default class RoutePerfomanceArivall extends Component{
          alert("Select Interval of Seven (7) days")
          return
        }else{
-        this.RemakeRemoteRequest();
+        this.RemakeRemoteRequest(fromdate, todate,);
        }
     
   };
 
   //
+
+  weekfilter()
+  {
+
+         this.setState({visible: false})
+        const {auth} = this.state
+        let selectedButton = this.state.dated.find(e => e.selected == true);
+        selectedButton = selectedButton ? selectedButton.value : this.state.dated[0].label;
+        var dateFormat = require('dateformat');
+        var firstDay = new Date();
+        var nextWeek = new Date(firstDay.getTime() + 7 * 24 * 60 * 60 * 1000 * selectedButton);
+        var fromdate = dateFormat(firstDay, "yyyy-mm-dd")
+        var todate = dateFormat(nextWeek, "yyyy-mm-dd")
+
+
+        this.RemakeRemoteRequest(fromdate, todate);
+
+       
+}
  
   
   //
+   onPress = dated => this.setState({ dated });
 
   render() {
     const {data} = this.state;
@@ -287,8 +337,18 @@ export default class RoutePerfomanceArivall extends Component{
   name="bars"
   style={{marginRight:10}} name="search" size={20}
   type="font-awesome"
-  color="#000"
+  color="#fff"
   />
+</TouchableOpacity>
+
+  <TouchableOpacity style={styles.circle }   onPress={ () => this.setState({visible:true})} >
+
+    <Icon
+      name="bars"
+      style={{marginRight:10}} name="calendar" size={20}
+      type="font-awesome"
+      color="#fff"
+      />
 </TouchableOpacity>
        </View>
 
@@ -309,46 +369,46 @@ export default class RoutePerfomanceArivall extends Component{
               
 
                 <MultiLineChart
-                style={{ alignItems: 'center',}}
-          data={data}
-          leftAxisData={leftAxis}
-          bottomAxisData={bottomAxisData}
-          legendColor={legendColor}
-          legendText={legendText}
-          minX={minX}
-          maxX={maxX}
-          minY={minY}
-          maxY={maxY}
-          scatterPlotEnable={false}
-          dataPointsVisible={true}
-          Color={Color}
-          legendStyle ={{
-            width: 10,
-            fillOpacity: 0.5,
-            height: 10,
-            legendFontSize: 10,
-            legentTextFill: 'black',
-          }}
-          bottomAxisDataToShow={bottomAxisDataToShow}
-          leftAxisDataToShow= {leftAxisDataToShow}
-          circleLegendType={false}
-          fillArea={true}
-          yAxisGrid={false}
-          xAxisGrid={false}
-          hideXAxis={false}
-          hideYAxis={false}
-          inclindTick={false}
-          pointDataToShowOnGraph=""
-          animation={true}
-          duration={1500}
-          delay={1000}
-          GraphHeight={230}
-          GraphWidth={deviceWidth}
-          chartWidth={deviceWidth - 40}
-          chartHeight={210}
-          staggerLength={220}
-          speed={50}
-        /> 
+                          style={{ alignItems: 'center',}}
+                    data={data}
+                    leftAxisData={leftAxis}
+                    bottomAxisData={bottomAxisData}
+                    legendColor={legendColor}
+                    legendText={legendText}
+                    minX={minX}
+                    maxX={maxX}
+                    minY={minY}
+                    maxY={maxY}
+                    scatterPlotEnable={false}
+                    dataPointsVisible={true}
+                    Color={Color}
+                    legendStyle ={{
+                      width: 10,
+                      fillOpacity: 0.5,
+                      height: 10,
+                      legendFontSize: 10,
+                      legentTextFill: 'black',
+                    }}
+                    bottomAxisDataToShow={bottomAxisDataToShow}
+                    leftAxisDataToShow= {leftAxisDataToShow}
+                    circleLegendType={false}
+                    fillArea={true}
+                    yAxisGrid={false}
+                    xAxisGrid={false}
+                    hideXAxis={false}
+                    hideYAxis={false}
+                    inclindTick={false}
+                    pointDataToShowOnGraph=""
+                    animation={true}
+                    duration={1500}
+                    delay={1000}
+                    GraphHeight={230}
+                    GraphWidth={deviceWidth}
+                    chartWidth={deviceWidth - 40}
+                    chartHeight={210}
+                    staggerLength={220}
+                    speed={50}
+                   /> 
         <Text style={{ marginLeft:10, fontSize: 12, fontWeight: '200',  color: '#000'}}>Schedule Time ()</Text> 
                
                 </View>
@@ -357,6 +417,16 @@ export default class RoutePerfomanceArivall extends Component{
             </View>
                 
           </View>
+          <MaterialDialog
+            title="Select Duration"
+            visible={this.state.visible}
+            onOk={() => this.weekfilter()}
+            onCancel={() => this.setState({ visible: false })}>
+              <View style={{justifyContent: 'flex-end', alignItems: 'flex-start',}}>
+                <RadioGroup radioButtons={this.state.dated} onPress={this.onPress} />
+            
+                        </View>
+            </MaterialDialog>
      </View>
     );
 
@@ -445,18 +515,18 @@ const styles = StyleSheet.create({
        marginTop:10,
     },
     circle: {
-     width: 40,
-     height: 40,
-     backgroundColor: URL.bgcolor,
-     borderRadius: 10,
-     justifyContent: 'center',
-     alignItems: 'center',
-     shadowColor: '#000',
-     shadowOffset: { width: 0, height: 2 },
-     shadowOpacity: 0.5,
-     shadowRadius: 2,
-     elevation: 2,
-     marginLeft:20
+      width: 40,
+      height: 40,
+      backgroundColor: URL.bgcolor,
+      borderRadius: 10,
+      justifyContent: 'center',
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.5,
+      shadowRadius: 2,
+      elevation: 2,
+      marginLeft:10
   },
     
 });

@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import {TextInput, StyleSheet,ScrollView, Text, View,TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, Alert, AsyncStorage} from 'react-native';
+import {TextInput, StyleSheet, ImageBackground,Dimensions, Text, View,TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, Alert, AsyncStorage} from 'react-native';
 const URL = require("../../components/server");
 import RadioGroup from 'react-native-radio-buttons-group';
 import CheckBox from 'react-native-check-box'
@@ -122,7 +122,7 @@ async checkPermission() {
   } else {
       this.requestPermission();
   }
-  firebase.messaging().subscribeToTopic("global");
+  //firebase.messaging().subscribeToTopic("global");
 }
 async getToken() {
   let fcmToken = await AsyncStorage.getItem('fcmToken');
@@ -170,15 +170,23 @@ async requestPermission() {
       );
     }
     return (
+      <ImageBackground
+      source={require('../../images/ezbg.png')}
+      style={styles.backgroundImage}
+      resizeMode="cover"
+      >
       <View behavior="padding" style={styles.container}>
-
+          <View style={styles.welcomecontainer}> 
+          <Text style={styles.headText}
+                        > Welcome back</Text>
+          </View>
        
          <KeyboardAvoidingView style={styles.textInputcontainer}>
          <View>
         <Text style={styles.headText}
                         >Sign In</Text>
         </View>
-                    <TextInput
+                      <TextInput
                         placeholder= "Email"
                         placeholderTextColor= '#55575b'
                         defaultValue={this.state.demail}
@@ -189,11 +197,10 @@ async requestPermission() {
                         autoCapitalize= "none"
                         autoCorrect = {false}
                         style = {styles.input}
-                        onChangeText = {text => this.setState({email: text})}
-                       
-                />
+                        onChangeText = {text => this.setState({email: text})}  
+                      />
 
-                <TextInput
+                      <TextInput
                         placeholder= "Password"
                         secureTextEntry
                         keyboardType = "default"
@@ -203,19 +210,18 @@ async requestPermission() {
                         style = {styles.input}
                         ref={(input)=> this.passwordInput = input}
                         onChangeText = {text => this.setState({password: text})}
-                />
+                       />
 
-                   <View style= {{flexDirection: "row",  alignItems: 'center', marginLeft:45, marginBottom:4,}}> 
-
+                   <View style= {{flexDirection: "row", alignItems:"center", marginLeft:45, marginBottom:4,}}> 
+                   <Text  style={styles.linkText} >Remember me</Text>
                    <CheckBox
-                      style={{flex: 1, padding: 10, marginRight:40}}
+                      style={{flex: 1, padding: 10, marginRight:10}}
                       onClick={()=>{
                         this.setState({
                             isChecked:!this.state.isChecked
                         })
                       }}
                       isChecked={this.state.isChecked}
-                      leftText={"Remember Me"}
                   />
                     </View>
 
@@ -243,21 +249,29 @@ async requestPermission() {
           </TouchableOpacity>
         <TouchableOpacity style={styles.link} 
             onPress={() => this.props.navigation.navigate('Register')}>
-          <Text  style={styles.linkText} >New User</Text>
+          <Text  style={styles.linkText}>New User</Text>
           </TouchableOpacity>
 
         </View>
       </View>
-    );
+    
+      </ImageBackground>
+      );
   }
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#FFF',
     paddingTop:100
+  },
+  welcomecontainer:{
+    flex: 2,
   },
   textInputcontainer: {
     flex: 2,
@@ -265,7 +279,6 @@ const styles = StyleSheet.create({
   },
   Linkcontainer: {
     flex: 3,
-    justifyContent: 'center',
   },
   input:{
     height:45,
@@ -323,7 +336,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom:1
+        marginBottom:70
       },
       linkText:{
         flex: 1,

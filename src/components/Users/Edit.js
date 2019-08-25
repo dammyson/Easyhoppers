@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import {TextInput, StyleSheet,ScrollView, Text, View,TouchableOpacity, KeyboardAvoidingView, ActivityIndicator,AsyncStorage, Alert} from 'react-native';
+import {TextInput, StyleSheet,ScrollView, Dimensions, ImageBackground,  Text, View,TouchableOpacity, KeyboardAvoidingView, ActivityIndicator,AsyncStorage, Alert} from 'react-native';
 const URL = require("../../components/server");
 import RadioGroup from 'react-native-radio-buttons-group';
 import DatePicker from 'react-native-datepicker'
@@ -12,7 +12,7 @@ export default class Edit extends Component{
       super(props);
       this.state = {
         loading: false,
-        dob: "1990-06-01", 
+        dob: "", 
         occupation: "", 
         fname: "", 
         lname: "", 
@@ -107,6 +107,11 @@ export default class Edit extends Component{
     }
   
     return (
+      <ImageBackground
+      source={require('../../images/ezbg.png')}
+      style={styles.backgroundImage}
+      resizeMode="cover"
+      >
       <ScrollView behavior="padding" style={styles.container}>
 
        
@@ -225,14 +230,18 @@ export default class Edit extends Component{
          
         </View>
       </ScrollView>
+      </ImageBackground>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    width: Dimensions.get('window').width,
+    height: Dimensions.get('window').height,
+  },
   container: {
     flex: 1,
-    backgroundColor: '#FFF',
     paddingTop:70
   },
   textInputcontainer: {

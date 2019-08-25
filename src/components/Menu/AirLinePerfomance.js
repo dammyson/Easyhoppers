@@ -1,63 +1,119 @@
 
 import React, {Component} from 'react';
-import {ActivityIndicator, Platform, FlatList, StyleSheet, Text, View,TouchableOpacity, Image, TextInput} from 'react-native';
-
+import {ActivityIndicator, AsyncStorage,FlatList, Alert, Platform, StyleSheet, Text, View,TouchableOpacity, Image, TextInput} from 'react-native';
+const URL = require("../../components/server");
+import DatePicker from 'react-native-datepicker'
+import { Card, Icon,SocialIcon} from 'react-native-elements'
+import { MaterialDialog } from 'react-native-material-dialog';
+import RadioGroup from 'react-native-radio-buttons-group';
 
 export default class AirLinePerfomance extends Component{
       
-      constructor(props) {
-        super(props);
-    
-        this.state = {
-          loading: false,
-          status: false,
-          data: [],
-          search: '',
-          transaction_id:'',
-        };
-    
-       this.arrayholder = [];
-    
-    
-       const actions = [{
-        text: 'Accessibility',
-        name: 'bt_accessibility',
-        position: 2
-      }];
-    
-      }      
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loading: true,
+      status: false,
+      data: [],
+      search: '',
+      transaction_id:'',
+      auth:"",
+      fromdate:"2019-05-29",
+      todate:"2019-06-11",
+      today:"",
+      body:"",
+      sta:"",
+      visible: false,
+    };
+
+   this.arrayholder = [];
+
+  }       
 
        
-  componentWillUnmount() {
-    clearTimeout(this.timeout);
-  }
-  componentDidMount() {
-    this.makeRemoteRequest();
-     }
+      componentWillUnmount() {
+        clearTimeout(this.timeout);
+        }
 
-  makeRemoteRequest = () => {
-    const url = 'http://192.168.10.165/may/inde.php';
-    this.setState({ loading: false });
+        componentDidMount() {
+         
+          const responseJson = this.props.navigation.getParam("myJSON");
+          this.setState({body: responseJson });
+          const on = this.props.navigation.getParam("sta");
+          this.setState({sta: on});
 
-    fetch(url, { method: 'GET',  headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    } }
-    
-    )
-      .then(res => res.json())
-      .then(res => {
-        this.setState({
-          data: res.data,
-          loading: false,
-          status: res.status,
-          
-        });
-        this.arrayholder = res.data;
+        AsyncStorage.getItem('auth').then((value) => this.setState({ 'auth': value.toString()}))
+        AsyncStorage.getItem('auth').then((value) => {
+          if(value==''){
+           
+          }else{
+            this.setState({auth: value})
+          }
+         this.makeRemoteRequest();
+        })
+        
+        
+        }
+        renderStatusSwitch(param) {
+          switch(param) {
+              case 1:
+              return 'On Time Arrival';
+              case 2:
+              return 'On Time Departure';
+              case 3:
+              return 'Delayed Arrival';
+              case 4:
+              return ' Delayed Departure';
+              case 5:
+              return 'Cancelled';
+              case 6:
+              return 'Rescheduled';
+              case 7:
+              return 'On Ground';
+              case 8:
+              return 'Air Borne';
+              case 9:
+              return 'Taxiing';
+              case 10:
+              return 'Boarding ';
+              case 11:
+              return 'Early Arrival';
+              case 12:
+              return 'Early Departure';
+            default:
+              return 'ON TIME';
+          }
+        }
+     makeRemoteRequest = () => {
+      const {auth, body} = this.state
+      this.setState({ loading: true });
+      fetch(URL.url+'/api/getAirlinePerformanceComparism', { method: 'POST',  headers: {
+        Accept: 'application/json',
+        'Authorization': 'Bearer ' + auth,
+        'Content-Type': 'application/json',
+      },
+      body: body, 
       })
-      .catch(error => {
-        this.setState({ error, loading: false });
-      });
+  
+        .then(res => res.json())
+        .then(res => {
+          console.warn(res);
+          if(!res.data){
+            Alert.alert('Operation failed', res.message, [{text: 'Okay'}])
+        }
+          this.setState({
+            data: res.data,
+            loading: false,
+            status: res.status,
+            
+          });
+          this.arrayholder = res.data;
+        })
+        .catch(error => {
+          alert(error.message);
+            this.setState({ loading: false})
+        }); 
   };
 
   renderSeparator = () => {
@@ -100,37 +156,41 @@ export default class AirLinePerfomance extends Component{
       />
     );
   };
-  renderItem=({ item , index}) => 
-  {
-    return (
-    <TouchableOpacity style={
-        index % 2 == 0 ? styles.listItemWhite : styles.listItemBlack
-      }  onPress={() => this.props.navigation.navigate('Perfomance')}>
-           
-           <View style = {styles.submain}>
-
-
-             <Image
-               style={styles.image}
-               resizeMode='contain'
-              source={require('../../images/sn.png')} />
-
-                    <View style = {styles.details} >
-                      
-                
-                        <View style = {styles.menudetailsTopchild}>
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: URL.bgcolor,}}>Flight</Text>
-                        <Text style={{marginTop:7, fontSize: 18, fontWeight: '600',  color: '#5b97dc',}}>{item.flight}</Text>
-                        </View>
-
-                
-                    </View>
-            </View>
-    
-</TouchableOpacity>
-        )}
-
-
+        renderItem=({ item , index}) => 
+        {
+          return (
+            <View style={
+              index % 2 == 0 ? styles.listItemWhite : styles.listItemBlack
+            } >
+                 <View style = {styles.submain}>
+                          <View style = {styles.details} >
+                              <View style = {styles.menudetailsTop}>
+                                  <View style = {styles.menudetailsTopchild}>
+                                      <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>Airline</Text>
+                                      <Text style={{marginTop:7, fontSize: 15, fontWeight: '500',  color: URL.bgcolor,}}>{item.airline}</Text>                                           
+                                    </View>
+                                 
+                                          <View style = {styles.menudetailsTopchild}>
+                              <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>Metric</Text>
+                              <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: URL.bgcolor,}}>{this.renderStatusSwitch(this.state.sta)}</Text>
+                              </View>
+      
+                                <View style = {styles.menudetailsTopchild}>
+                                   <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>Performance</Text>
+                                  <Text style={{marginTop:7, fontSize: 15, fontWeight: '500',  color: '#000',}}>{parseInt(item.percentage)}</Text>
+                                </View>
+                          
+                              </View>
+                       </View>
+      
+      
+                  </View>
+      
+      
+          
+      </View>
+      
+              )}
   render() {
 
     const { search } = this.state;
@@ -158,7 +218,7 @@ export default class AirLinePerfomance extends Component{
           <View style = {styles.container}>
 
             <View style={{alignItems: 'center', justifyContent: 'center',paddingTop:8, paddingBottom:10, color:"#fff", fontWeight: '900',  fontSize:13,}}>
-          <Text style={{color:"#fff", fontWeight: '900',  fontSize:16,}}>Performance</Text>
+          <Text style={{color:"#fff", fontWeight: '900',  fontSize:16,}}>Airline Performance</Text>
         </View>
              <View style = {styles.main}>
 
@@ -180,11 +240,12 @@ export default class AirLinePerfomance extends Component{
   
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#a8bbf3',
+    backgroundColor: URL.bgcolor,
     paddingTop:Platform.OS === 'ios' ? 25 : 10,
   },
   main: {
@@ -193,7 +254,7 @@ const styles = StyleSheet.create({
     paddingTop:14,
     paddingBottom:14,
     borderRadius: 20,
-    marginBottom:50,
+    marginBottom:20,
     marginLeft:10,
     marginRight:10,
     backgroundColor: '#fff',
@@ -212,6 +273,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flex: 1,
      marginBottom:9,
+     marginLeft:10,
+    marginRight:10,
+  },
+  menudetailsMid:{
+    flexDirection: "row",
+    flex: 1,
+     marginBottom:9,
+     marginLeft:10,
+    marginRight:10,
   },
   menudetailsTopchild:{
     flex: 1,
@@ -219,6 +289,8 @@ const styles = StyleSheet.create({
   menudetailsBottom:{
     flexDirection: "row",
     flex: 1,
+    marginLeft:10,
+    marginRight:10,
   },
 
   listItemWhite: {
@@ -235,7 +307,7 @@ const styles = StyleSheet.create({
     height:40,
     backgroundColor: '#eff3fd',
     marginBottom:15,
-    color: '#a8bbf3',
+    color: URL.bgcolor,
     paddingHorizontal: 40,
     borderRadius: 25,
     marginLeft:40,
@@ -245,8 +317,7 @@ const styles = StyleSheet.create({
     
     },
     image:{
-        flex: 2,
-        margin:5,
+        margin:2,
         justifyContent: 'center',
         alignItems: 'center',
       },
@@ -271,5 +342,43 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center',
-     }
+     },
+     buttonContainer:{
+        height:30,
+        backgroundColor: URL.bgcolor,
+        justifyContent: 'center',
+        borderRadius: 20,
+      },
+      buttonText:{
+        textAlign:'center',
+        color: "#FFFFFF",
+        fontWeight: '500',
+        fontSize:13,
+      },
+
+      headerform:{
+        height:40,
+        flexDirection: "row",
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginBottom:4,
+        marginRight:15,
+        marginLeft:15, 
+         marginTop:4,
+      },
+      circle: {
+       width: 40,
+       height: 40,
+       backgroundColor: URL.bgcolor,
+       borderRadius: 10,
+       justifyContent: 'center',
+       alignItems: 'center',
+       shadowColor: '#000',
+       shadowOffset: { width: 0, height: 2 },
+       shadowOpacity: 0.5,
+       shadowRadius: 2,
+       elevation: 2,
+       marginLeft:10
+    },
 });
+

@@ -95,7 +95,37 @@ export default class Checkout extends Component{
             this.setState({ loading: false})
         }); 
     };
-
+    renderStatusSwitch(param) {
+      switch(param) {
+          case 1:
+          return 'On Time Arrival';
+          case 2:
+          return 'On Time Departure';
+          case 3:
+          return 'Delayed Arrival';
+          case 4:
+          return ' Delayed Departure';
+          case 5:
+          return 'Cancelled';
+          case 6:
+          return 'Rescheduled';
+          case 7:
+          return 'On Ground';
+          case 8:
+          return 'Air Borne';
+          case 9:
+          return 'Taxiing';
+          case 10:
+          return 'Boarding ';
+          case 11:
+          return 'Early Arrival';
+          case 12:
+          return 'Early Departure';
+        default:
+          return 'ON TIME';
+      }
+    }
+  
   
   render() {
 
@@ -158,7 +188,7 @@ export default class Checkout extends Component{
                 
                         <View style = {styles.menudetailsTopchild}>
                         <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>Status</Text>
-                        <Text style={{marginTop:7, fontSize: 16, fontWeight: '500',  color: '#000',}}>{ this.state.name.status == 0 ? "Not Time" :"djdjd"}</Text>
+                        <Text style={{marginTop:7, fontSize: 16, fontWeight: '500',  color: '#000',}}>{   this.renderStatusSwitch(this.state.name.status)}</Text>
                         </View>
 
                     
@@ -178,7 +208,7 @@ export default class Checkout extends Component{
                  <View style={styles.Linkcontainer}>
                 <TouchableOpacity style={styles.buttonContainer} >
                     <Text style={styles.buttonText}
-                     onPress={() => this.props.navigation.navigate('Pay', 
+                     onPress={() => this.props.navigation.navigate('Confirm', 
                      {
                        s_id: this.state.id,
                      

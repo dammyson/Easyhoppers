@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import io.invertase.firebase.RNFirebasePackage;
+import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
+
 import com.horcrux.svg.SvgPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -30,7 +32,8 @@ public class MainApplication extends Application implements ReactApplication {
             new RNFirebasePackage(),
             new SvgPackage(),
             new RNGestureHandlerPackage(),
-            new VectorIconsPackage()
+            new VectorIconsPackage(),
+              new RNFirebaseMessagingPackage()
       );
     }
 
