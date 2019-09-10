@@ -79,8 +79,7 @@ export default class RoutePerfomanceArivall extends Component{
         //since there are only two lines
        
         onDateChange(date) {
-        console.warn(date);
-
+          console.warn(date);
           this.setState({
             selectedStartDate: date,
           });
@@ -97,14 +96,13 @@ export default class RoutePerfomanceArivall extends Component{
     var year = new Date().getFullYear();
     this.setState({
       today: year + '-' + month + '-' + date,
-      
-    });
+     });
    
     this.setState({
       airlinename: this.props.navigation.getParam("airlinename", "defaultValue"),
-  route:this.props.navigation.getParam("route", "defaultValue"),
-  airline:this.props.navigation.getParam("airline", "defaultValue"),
-  rout:this.props.navigation.getParam("rout", "defaultValue")
+      route:this.props.navigation.getParam("route", "defaultValue"),
+      airline:this.props.navigation.getParam("airline", "defaultValue"),
+      rout:this.props.navigation.getParam("rout", "defaultValue")
     })
     AsyncStorage.getItem('auth').then((value) => this.setState({ 'auth': value.toString()}))
     AsyncStorage.getItem('auth').then((value) => {
@@ -143,7 +141,7 @@ export default class RoutePerfomanceArivall extends Component{
                 this.setState({
                   loading: false,
                   status: res.status,
-                  data: res.data.departure,
+                  data: res.data.arrival,
                   
                 });
                 this.arrayholder = res.data;
@@ -177,7 +175,7 @@ export default class RoutePerfomanceArivall extends Component{
         this.setState({
           loading: false,
           status: res.status,
-          data: res.data.departure,
+          data: res.data.arrival,
           
         });
         this.arrayholder = res.data;
@@ -341,18 +339,18 @@ export default class RoutePerfomanceArivall extends Component{
   />
 </TouchableOpacity>
 
-  <TouchableOpacity style={styles.circle }   onPress={ () => this.setState({visible:true})} >
-
-    <Icon
-      name="bars"
-      style={{marginRight:10}} name="calendar" size={20}
-      type="font-awesome"
-      color="#fff"
-      />
-</TouchableOpacity>
+ 
        </View>
 
+ <TouchableOpacity style={styles.circle }   onPress={ () => this.setState({visible:true})} >
 
+<Icon
+  name="bars"
+  style={{marginRight:10}} name="calendar" size={20}
+  type="font-awesome"
+  color="#fff"
+  />
+</TouchableOpacity>
 
 
 

@@ -36,7 +36,7 @@ export default class Pay extends Component{
       }
 
 
-      componentDidMount() {
+      componentWillMount() {
         this.setState({
           id:this.props.navigation.getParam("s_id", "defaultValue")
         })
@@ -48,7 +48,7 @@ export default class Pay extends Component{
 
 
     render() {
-    if (1== 1) {
+    if (this.state.email != "" || this.state.fname != "" || this.state.lname != "") {
       return (
         <Rave 
         amount="1000" 
@@ -57,9 +57,9 @@ export default class Pay extends Component{
         email={this.state.email} 
         firstname={this.state.fname} 
         lastname={this.state.lname} 
-        publickey="FLWPUBK_TEST-8d866546d7b3d37c30059fe6399553ae-X" 
-        secretkey="FLWSECK_TEST-625ffc0717dae32ea91bd64268e34b95-X" 
-        encryptionkey="FLWSECK_TEST7639abe0500a"
+        publickey="FLWPUBK_TEST-22d34551ee18e239ebc5352e72aee939-X" 
+        secretkey="FLWSECK_TEST-f485459a1cd272596d0d303039e43367-X" 
+        encryptionkey="FLWSECK_TEST617e95564acd"
         meta={[{ metaname: "color", metavalue: "red" }, { metaname: "storelocation", metavalue: "ikeja" }]}
         production={false} 
         onSuccess={res => this.onSuccess(res)} 

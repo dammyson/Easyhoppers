@@ -125,7 +125,7 @@ AsyncStorage.getItem('auth').then((value) => {
  }
 
 makeRemoteRequest = () => {
-        const {auth, airline, rout,fromdate, todate, today} = this.state
+        const {auth, airline, rout, fromdate, todate, today} = this.state
     this.setState({ loading: true });
     fetch(URL.url+'/api/graph', { method: 'POST',  headers: {
       Accept: 'application/json',
@@ -141,13 +141,15 @@ makeRemoteRequest = () => {
       })
           .then(res => res.json())
           .then(res => {
+            console.warn(res);
             if(!res.data){
               Alert.alert('Operation failed', res.message, [{text: 'Okay'}])
-          }
+             }
+             
             this.setState({
               loading: false,
               status: res.status,
-              data: res.data.arrival,
+              data: res.data.departure,
               
             });
             this.arrayholder = res.data;
@@ -176,10 +178,11 @@ Accept: 'application/json',
 })
     .then(res => res.json())
     .then(res => {
+      console.warn(res);
       this.setState({
         loading: false,
         status: res.status,
-        data: res.data.arrival,
+        data: res.data.departure,
         
       });
       this.arrayholder = res.data;
@@ -346,16 +349,17 @@ Accept: 'application/json',
   />
    </TouchableOpacity>
 
-  <TouchableOpacity style={styles.circle }   onPress={ () => this.setState({visible:true})} >
-
-    <Icon
-      name="bars"
-      style={{marginRight:10}} name="calendar" size={20}
-      type="font-awesome"
-      color="#fff"
-      />
-    </TouchableOpacity>
+ 
 </View>
+<TouchableOpacity style={styles.circle }   onPress={ () => this.setState({visible:true})} >
+
+<Icon
+  name="bars"
+  style={{marginRight:10}} name="calendar" size={20}
+  type="font-awesome"
+  color="#fff"
+  />
+</TouchableOpacity>
 
 </View>
 

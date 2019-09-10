@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import {TextInput, StyleSheet, ImageBackground,Dimensions, Text, View,TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, Alert, AsyncStorage} from 'react-native';
+import {TextInput, StyleSheet, ScrollView, ImageBackground,Dimensions, Text, View,TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, Alert, AsyncStorage} from 'react-native';
 const URL = require("../../components/server");
 import RadioGroup from 'react-native-radio-buttons-group';
 import CheckBox from 'react-native-check-box'
@@ -122,7 +122,7 @@ async checkPermission() {
   } else {
       this.requestPermission();
   }
-  //firebase.messaging().subscribeToTopic("global");
+ // firebase.messaging().subscribeToTopic("global");
 }
 async getToken() {
   let fcmToken = await AsyncStorage.getItem('fcmToken');
@@ -130,10 +130,12 @@ async getToken() {
   this.setState({token: fcmToken})
   if (!fcmToken) {
       fcmToken = await firebase.messaging().getToken();
+      Alert.alert(fcmToken);
       console.warn(fcmToken);
       if (fcmToken) {
           // user has a device token
           console.warn(fcmToken);
+          Alert.alert(fcmToken);
           await AsyncStorage.setItem('fcmToken', fcmToken);
           this.setState({token: fcmToken})
       }
@@ -176,16 +178,19 @@ async requestPermission() {
       resizeMode="cover"
       >
       <View behavior="padding" style={styles.container}>
-          <View style={styles.welcomecontainer}> 
+         
+         <KeyboardAvoidingView style={styles.textInputcontainer}>
+         <ScrollView >
+                      <View style={{paddingBottom:200}}>
+                      <View style={styles.welcomecontainer}> 
           <Text style={styles.headText}
                         > Welcome back</Text>
           </View>
        
-         <KeyboardAvoidingView style={styles.textInputcontainer}>
          <View>
         <Text style={styles.headText}
                         >Sign In</Text>
-        </View>
+         </View>
                       <TextInput
                         placeholder= "Email"
                         placeholderTextColor= '#55575b'
@@ -226,8 +231,6 @@ async requestPermission() {
                     </View>
 
 
-
-           </KeyboardAvoidingView>    
            <View style={styles.Linkcontainer}>
                 <TouchableOpacity style={styles.buttonContainer} >
                     <Text style={styles.buttonText}
@@ -253,6 +256,10 @@ async requestPermission() {
           </TouchableOpacity>
 
         </View>
+
+               </View>
+                </ScrollView>
+           </KeyboardAvoidingView>    
       </View>
     
       </ImageBackground>

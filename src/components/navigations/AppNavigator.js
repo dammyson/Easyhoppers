@@ -117,6 +117,7 @@ const AppNavigator = createStackNavigator({
     navigationOptions: {
       header:null 
     }},
+    
     RoutePerfomanceArivall: {screen: RoutePerfomanceArivall,
       navigationOptions: {
         header:null 

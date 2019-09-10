@@ -208,7 +208,7 @@ export default class Checkout extends Component{
                  <View style={styles.Linkcontainer}>
                 <TouchableOpacity style={styles.buttonContainer} >
                     <Text style={styles.buttonText}
-                     onPress={() => this.props.navigation.navigate('Confirm', 
+                     onPress={() => this.props.navigation.navigate('Pay', 
                      {
                        s_id: this.state.id,
                      

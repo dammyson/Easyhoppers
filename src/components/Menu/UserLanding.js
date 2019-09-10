@@ -37,12 +37,6 @@ export default class UserLanding extends Component{
       }
       this.makeRemoteRequest();
     })
-    this.props.navigation.addListener(
-      'didFocus',
-      payload => {
-       this.makeRemoteRequest();
-      }
-    );
 
   }
 
@@ -61,7 +55,7 @@ export default class UserLanding extends Component{
 
       .then(res => res.json())
       .then(res => {
-        console.warn(res)
+        console.warn(res.user.firstname)
         if(res.status){
           AsyncStorage.setItem('email', res.user.email);
           AsyncStorage.setItem('first', res.user.firstname);

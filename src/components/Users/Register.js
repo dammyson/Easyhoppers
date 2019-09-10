@@ -12,8 +12,8 @@ export default class Register extends Component{
         phone: "", 
         fname: "", 
         lname: "", 
-        password: ""
-                  }
+        password: ""        
+      }
 
   }
 
@@ -75,11 +75,12 @@ export default class Register extends Component{
       >
       <ScrollView behavior="padding" style={styles.container}>
       <View style={styles.welcomecontainer}> 
-          <Text style={styles.headText}
-                        >Getting started</Text>
+          <Text style={styles.headText}>Getting started</Text>
           </View>
        
          <KeyboardAvoidingView style={styles.textInputcontainer}>
+         <ScrollView >
+                      <View style={{paddingBottom:200}}>
                       <View>
                       <Text style={styles.headText}
                                       >Sign Up</Text>
@@ -95,8 +96,8 @@ export default class Register extends Component{
                         style = {styles.input}
                         onChangeText = {text => this.setState({email: text})}
                        
-                />
-                  <TextInput
+                    />
+                    <TextInput
                         placeholder= "Phone"
                         placeholderTextColor= '#55575b'
                         returnKeyType = "next"
@@ -107,8 +108,8 @@ export default class Register extends Component{
                         style = {styles.input}
                         onChangeText = {text => this.setState({phone: text})}
                        
-                />
-                 <TextInput
+                    />
+                    <TextInput
                         placeholder= "First Name"
                         placeholderTextColor= '#55575b'
                         returnKeyType = "next"
@@ -119,9 +120,9 @@ export default class Register extends Component{
                         style = {styles.input}
                         onChangeText = {text => this.setState({fname: text})}
                        
-                />
+                     />
 
-                <TextInput
+                    <TextInput
                         placeholder= "Last Name"
                         placeholderTextColor= '#55575b'
                         returnKeyType = "next"
@@ -132,9 +133,9 @@ export default class Register extends Component{
                         style = {styles.input}
                         onChangeText = {text => this.setState({lname: text})}
                        
-                />
+                     />
 
-                <TextInput
+                    <TextInput
                         placeholder= "Password"
                         secureTextEntry
                         keyboardType = "default"
@@ -144,10 +145,9 @@ export default class Register extends Component{
                         style = {styles.input}
                         ref={(input)=> this.passwordInput = input}
                         onChangeText = {text => this.setState({password: text})}
-                />
+                     />
 
-           </KeyboardAvoidingView>    
-           <View style={styles.Linkcontainer}>
+                       <View style={styles.Linkcontainer}>
                 <TouchableOpacity style={styles.buttonContainer} >
                     <Text style={styles.buttonText}
                      onPress ={() => this.checkReg()} >SIGN UP</Text>
@@ -174,6 +174,11 @@ export default class Register extends Component{
         <TouchableOpacity style={styles.link} onPress={ ()=>{ Linking.openURL('https://easyhoppers.co/privacy-policy/')}} >
           <Text  style={styles.linkText} >Privacy Policy</Text>
           </TouchableOpacity>
+   </View>
+                </ScrollView>
+           </KeyboardAvoidingView>    
+         
+     
       </ScrollView>
       </ImageBackground >
     );
@@ -190,7 +195,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingTop:70
+    paddingTop:70,
   },
   textInputcontainer: {
     flex: 6,

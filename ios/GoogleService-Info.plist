@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>616042626720-qbpof0a0ovq5ttfjhk1ms54vqd797l3n.apps.googleusercontent.com</string>
+	<string>379514122245-oqug53atitcda40otht486haipaqi8to.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.616042626720-qbpof0a0ovq5ttfjhk1ms54vqd797l3n</string>
+	<string>com.googleusercontent.apps.379514122245-oqug53atitcda40otht486haipaqi8to</string>
 	<key>API_KEY</key>
-	<string>AIzaSyANvRYDopulX0Rs6ZdyAaMgeTsbGKXwawY</string>
+	<string>AIzaSyCuNM_-ZaYY20FzzrFT2iwArnd1RwRkw40</string>
 	<key>GCM_SENDER_ID</key>
-	<string>616042626720</string>
+	<string>379514122245</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>org.reactjs.native.example.EasyHopperApp</string>
+	<string>co.easyhoppers.easyhoppers</string>
 	<key>PROJECT_ID</key>
-	<string>easyhoppers</string>
+	<string>ehapp-7b393</string>
 	<key>STORAGE_BUCKET</key>
-	<string>easyhoppers.appspot.com</string>
+	<string>ehapp-7b393.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,8 +29,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:616042626720:ios:c2f5cc019f6f6823</string>
+	<string>1:379514122245:ios:0a82bc35c7e7894f3aec6c</string>
 	<key>DATABASE_URL</key>
-	<string>https://easyhoppers.firebaseio.com</string>
+	<string>https://ehapp-7b393.firebaseio.com</string>
 </dict>
 </plist>

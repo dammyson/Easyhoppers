@@ -88,7 +88,7 @@ export default class Confirm extends Component{
     if (this.state.status) {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text style={{color:URL.bgcolor, fontWeight: '900',  fontSize:16,}}>Subscription to boarding Alert was successful</Text>
+        <Text style={{color:URL.bgcolor, margin:20, fontWeight: '900',  fontSize:16,}}>Subscription to boarding Alert was successful</Text>
         <TouchableOpacity style={styles.buttonContainer} >
           <Text style={styles.buttonText}
           onPress={() => this.props.navigation.navigate('Boarding')} >Bording Alert</Text>

@@ -1,41 +1,41 @@
 {
   "project_info": {
-    "project_number": "616042626720",
-    "firebase_url": "https://easyhoppers.firebaseio.com",
-    "project_id": "easyhoppers",
-    "storage_bucket": "easyhoppers.appspot.com"
+    "project_number": "379514122245",
+    "firebase_url": "https://ehapp-7b393.firebaseio.com",
+    "project_id": "ehapp-7b393",
+    "storage_bucket": "ehapp-7b393.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:616042626720:android:fc128162ad1275f1",
+        "mobilesdk_app_id": "1:379514122245:android:65620a60fac6bef83aec6c",
         "android_client_info": {
           "package_name": "com.easyhopperapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "616042626720-9o2d7ks5gagppokjd3tuljvihol2l8hh.apps.googleusercontent.com",
+          "client_id": "379514122245-cdkgpshk2abk83pgo8tcsjunabrq06bh.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC_lG7ahq6HMXitSVzauHHISxfLNv-sGJ8"
+          "current_key": "AIzaSyC3qPUcTGEcZ7MRNIztx3R8ydsY4Yjhk2c"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "616042626720-9o2d7ks5gagppokjd3tuljvihol2l8hh.apps.googleusercontent.com",
+              "client_id": "379514122245-cdkgpshk2abk83pgo8tcsjunabrq06bh.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "616042626720-qbpof0a0ovq5ttfjhk1ms54vqd797l3n.apps.googleusercontent.com",
+              "client_id": "379514122245-oqug53atitcda40otht486haipaqi8to.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "org.reactjs.native.example.EasyHopperApp"
+                "bundle_id": "co.easyhoppers.easyhoppers"
               }
             }
           ]
