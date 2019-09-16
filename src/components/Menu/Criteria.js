@@ -170,8 +170,8 @@ export default class Criteria extends Component{
                          <Text>select Metrics</Text>
                   <PickerModal
                     onSelected={(selected) =>  this.setState({metric: selected.Value})}
-                    onRequestClosed={()=> console.warn('closed...')}
-                    onBackRequest={()=> console.warn('back key pressed')}
+                    onRequestClosed={()=> console.log('closed...')}
+                    onBackRequest={()=> console.log('back key pressed')}
                     items={list}
                     showToTopButton={true}
                     defaultSelected={this.state.selectedItem}
@@ -190,8 +190,8 @@ export default class Criteria extends Component{
                    <Text>select route</Text>
                   <PickerModal
                     onSelected={(selected) => this.setState({route: selected.Value})}
-                    onRequestClosed={()=> console.warn('closed...')}
-                    onBackRequest={()=> console.warn('back key pressed')}
+                    onRequestClosed={()=> console.log('closed...')}
+                    onBackRequest={()=> console.log('back key pressed')}
                     items={this.state.data}
                     showToTopButton={true}
                     defaultSelected={this.state.selectedItem}
@@ -208,8 +208,8 @@ export default class Criteria extends Component{
                    <Text>select time</Text>
                   <PickerModal
                     onSelected={(selected) =>   this.weekfilter(selected.Value)}
-                    onRequestClosed={()=> console.warn('closed...')}
-                    onBackRequest={()=> console.warn('back key pressed')}
+                    onRequestClosed={()=> console.log('closed...')}
+                    onBackRequest={()=> console.log('back key pressed')}
                     items={time}
                     showToTopButton={true}
                     defaultSelected={this.state.selectedItem}

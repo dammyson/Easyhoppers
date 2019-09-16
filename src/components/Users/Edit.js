@@ -57,7 +57,7 @@ export default class Edit extends Component{
     
         const {dob, occupation, auth, phone, fname, lname} = this.state
 
-        console.warn(dob+occupation +fname+ lname+ selectedButton)  
+        console.log(dob+occupation +fname+ lname+ selectedButton)  
         this.setState({ loading: true})
         fetch(URL.url+'/api/user/update', { method: 'PUT',  headers: {
           Accept: 'application/json',
@@ -73,7 +73,7 @@ export default class Edit extends Component{
         }),  })
         .then(res => res.json())
         .then(res => {
-          console.warn(res);
+          console.log(res);
           if(res.status){
           this.setState({ loading: false})
           this.props.navigation.navigate('UserLanding')

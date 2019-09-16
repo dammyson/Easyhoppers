@@ -79,7 +79,7 @@ export default class RoutePerfomanceArivall extends Component{
         //since there are only two lines
        
         onDateChange(date) {
-          console.warn(date);
+          console.log(date);
           this.setState({
             selectedStartDate: date,
           });

@@ -100,7 +100,6 @@ export default class UpdateStatus extends Component{
      }
      makeRemoteRequest = () => {
       const {auth, id} = this.state
-      console.warn(id);
       this.setState({ loading: true });
       fetch(URL.url+'/api/getSchedule/'+id, { method: 'GET',  headers: {
         Accept: 'application/json',

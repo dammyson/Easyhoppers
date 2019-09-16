@@ -63,7 +63,7 @@ export default class ChangePassword extends Component{
    }),  })
    .then(res => res.json())
    .then(res => {
-     console.warn(res);
+     console.log(res);
      if(res.status){
      this.setState({ loading: false})
 

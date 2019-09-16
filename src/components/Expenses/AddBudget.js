@@ -181,8 +181,8 @@ setCurren(curr){
                          <View style = {styles.cat}>
                   <PickerModal
                     onSelected={(selected) =>   selected.Value=="other" ? this.setState({st: true}) : this.setState({cat: selected.Value})}
-                    onRequestClosed={()=> console.warn('closed...')}
-                    onBackRequest={()=> console.warn('back key pressed')}
+                    onRequestClosed={()=> console.log('closed...')}
+                    onBackRequest={()=> console.log('back key pressed')}
                     items={list}
                     showToTopButton={true}
                     defaultSelected={this.state.selectedItem}

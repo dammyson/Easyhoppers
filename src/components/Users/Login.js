@@ -126,16 +126,12 @@ async checkPermission() {
 }
 async getToken() {
   let fcmToken = await AsyncStorage.getItem('fcmToken');
-   console.warn(fcmToken);
   this.setState({token: fcmToken})
   if (!fcmToken) {
       fcmToken = await firebase.messaging().getToken();
-      Alert.alert(fcmToken);
-      console.warn(fcmToken);
+      console.log(fcmToken);
       if (fcmToken) {
           // user has a device token
-          console.warn(fcmToken);
-          Alert.alert(fcmToken);
           await AsyncStorage.setItem('fcmToken', fcmToken);
           this.setState({token: fcmToken})
       }
@@ -150,7 +146,7 @@ async requestPermission() {
       this.getToken();
   } catch (error) {
       // User has rejected permissions
-      console.warn('permission rejected');
+      console.log('permission rejected');
   }
 }
 
@@ -238,7 +234,7 @@ async requestPermission() {
 
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.cancelContainer} 
-                onPress= {() => this._onLoginPress()}>
+               >
                      <Text style={styles.cancleText}
                      >X</Text>
 

@@ -1,6 +1,6 @@
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, AsyncStorage, View, Image} from 'react-native';
+import {Text, StyleSheet, AsyncStorage, View, Image} from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 
 
@@ -12,7 +12,7 @@ export default class Splash extends Component{
       return new Promise((resolve) => {
           setTimeout(
             ()=> {resolve('result')},
-            3000
+            1000
           )
         })
     }
@@ -21,7 +21,7 @@ export default class Splash extends Component{
     const data = await this.performinTimeConsumingTask();
    
     AsyncStorage.getItem('rem').then((value) => {
-      console.warn(value)
+      console.log(value)
       if(value=='yes'){
         this.props.navigation.navigate('UserLanding');
       }else if(value==null){
@@ -49,6 +49,8 @@ export default class Splash extends Component{
        <Image
           style={styles.logo}
           source={require('../../images/logo.png')} />
+           <Text style={styles.headText}
+                        > Welcome To Easyhoppers</Text>
       </View>
     );
   }
@@ -70,6 +72,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
+  },
+  headText:{
+    color: "#000",
+    fontWeight: '900',
+    fontSize:25,
+    textAlign:'center',
+    marginLeft:1,
+    marginBottom:30
   },
   logo:{
     width:200,

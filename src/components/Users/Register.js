@@ -42,7 +42,7 @@ export default class Register extends Component{
         }),  })
         .then(res => res.json())
         .then(res => {
-          console.warn(res);
+          console.log(res);
           if(res.status){
           this.setState({ loading: false})
           this.props.navigation.navigate('Login')
@@ -52,7 +52,7 @@ export default class Register extends Component{
         this.setState({ loading: false})
           }
         }).catch((error)=>{
-          console.warn(error);
+          console.log(error);
           alert(error.message);
        });
    }
@@ -155,7 +155,7 @@ export default class Register extends Component{
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.cancelContainer} >
                      <Text style={styles.cancleText}
-                        onPress ={() => this.checkLogin()} >X</Text>
+                         onPress={() => this.props.navigation.navigate('Login')} >X</Text>
 
                 </TouchableOpacity>
 

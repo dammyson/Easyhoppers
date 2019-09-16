@@ -98,7 +98,7 @@ export default class AirLinePerfomance extends Component{
   
         .then(res => res.json())
         .then(res => {
-          console.warn(res);
+          console.log(res);
           if(!res.data){
             Alert.alert('Operation failed', res.message, [{text: 'Okay'}])
         }

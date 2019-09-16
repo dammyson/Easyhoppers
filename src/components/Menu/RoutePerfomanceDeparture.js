@@ -84,7 +84,7 @@ export default class RoutePerfomanceDeparture extends Component{
     //since there are only two lines
    
     onDateChange(date) {
-    console.warn(date);
+    console.log(date);
 
       this.setState({
         selectedStartDate: date,
@@ -141,7 +141,7 @@ makeRemoteRequest = () => {
       })
           .then(res => res.json())
           .then(res => {
-            console.warn(res);
+            console.log(res);
             if(!res.data){
               Alert.alert('Operation failed', res.message, [{text: 'Okay'}])
              }
@@ -178,7 +178,7 @@ Accept: 'application/json',
 })
     .then(res => res.json())
     .then(res => {
-      console.warn(res);
+      console.log(res);
       this.setState({
         loading: false,
         status: res.status,
