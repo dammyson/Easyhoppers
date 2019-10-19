@@ -1,0 +1,4 @@
+#Mon Aug 26 09:50:21 WAT 2019
+base.0=/Users/mac/Documents/eh/EasyHopperApp/android/app/build/intermediates/transforms/dexMerger/debug/6
+path.0=classes.dex
+renamed.0=classes.dex

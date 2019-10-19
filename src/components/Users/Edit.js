@@ -57,7 +57,12 @@ export default class Edit extends Component{
     
         const {dob, occupation, auth, phone, fname, lname} = this.state
 
-        console.log(dob+occupation +fname+ lname+ selectedButton)  
+        if(phone == "" || fname == "" || lname == "" ){
+          Alert.alert('Validation failed', 'field(s) cannot be empty', [{text: 'Okay'}])
+          return
+        } 
+        AsyncStorage.setItem('first', lname);
+        AsyncStorage.setItem('last', fname);
         this.setState({ loading: true})
         fetch(URL.url+'/api/user/update', { method: 'PUT',  headers: {
           Accept: 'application/json',

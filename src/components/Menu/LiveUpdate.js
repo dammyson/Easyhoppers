@@ -211,12 +211,12 @@ export default class LiveUpdate extends Component{
                     
                     <View style = {styles.menudetailsTopchild}>
                         <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>Depature</Text>
-                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.scheduled_departure_time}</Text>
+                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.scheduled_departure_time.substring(0, 5)}</Text>
                         </View>
 
                         <View style = {styles.menudetailsTopchild}>
                         <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor,}}>Arival</Text>
-                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.scheduled_arrival_time}</Text>
+                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.scheduled_arrival_time.substring(0, 5)}</Text>
                         </View>
                 
                     </View>
@@ -283,7 +283,7 @@ export default class LiveUpdate extends Component{
        
           <View style = {styles.container}>
         <View style={{alignItems: 'center', justifyContent: 'center',paddingTop:8, paddingBottom:10, color:"#fff", fontWeight: '900',  fontSize:13,}}>
-          <Text style={{color:"#fff", fontWeight: '900',  fontSize:16,}}>LiveUpdate</Text>
+          <Text style={{color:"#fff", fontWeight: '900',  fontSize:16,}}>Live Update</Text>
         </View>
 
 

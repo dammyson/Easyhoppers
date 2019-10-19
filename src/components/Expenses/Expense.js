@@ -327,7 +327,7 @@ export default class Expense extends Component{
                     legendPosition="topLeft"
                     label={{
                       fontFamily: 'Arial',
-                      fontSize: 9,
+                      fontSize: 8,
                       fontWeight: true,
                       color: '#ECF0F1'
                     }}

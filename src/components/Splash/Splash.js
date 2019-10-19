@@ -3,23 +3,16 @@ import React, {Component} from 'react';
 import {Text, StyleSheet, AsyncStorage, View, Image} from 'react-native';
 import { StackActions, NavigationActions } from 'react-navigation';
 
-
-
-
 export default class Splash extends Component{
 
-    performinTimeConsumingTask = async()=> {
-      return new Promise((resolve) => {
-          setTimeout(
-            ()=> {resolve('result')},
-            1000
-          )
-        })
-    }
-
   async componentDidMount(){
-    const data = await this.performinTimeConsumingTask();
-   
+   setTimeout(() => {
+     this.initPage();
+   }, 1000);
+  }
+
+  initPage = () => {
+     
     AsyncStorage.getItem('rem').then((value) => {
       console.log(value)
       if(value=='yes'){
@@ -33,14 +26,11 @@ export default class Splash extends Component{
       }
       else{
         this.props.navigation.navigate('Welcome'); 
-      }
-       
+      } 
         
     })
    
   }
-
-
   
 
   render() {

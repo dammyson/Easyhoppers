@@ -5,19 +5,13 @@ const URL = require("../../components/server");
 import DatePicker from 'react-native-datepicker'
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
 const list = [
-    {Id: 8, Name: 'Air Borne', Value: '8'},
-    {Id: 10, Name: 'Boarding', Value: '10'},
     {Id: 5, Name: 'Cancelled', Value: '5'},
     {Id: 3, Name: 'Delayed Arrival', Value: '3'},
     {Id: 4, Name: 'Delayed Departure', Value: '4'},
       {Id: 11, Name: 'Early Arrival', Value: '11'},
       {Id: 12, Name: 'Early Departure', Value: '12'},
-      {Id: 7, Name: 'On Ground', Value: '7'},
     {Id: 1, Name: 'On Time Arrival', Value: '1'},
       {Id: 2, Name: 'On Time Departure', Value: '2'},
-    {Id: 6, Name: 'Rescheduled', Value: '6'},
-    {Id: 9, Name: 'Taxiing', Value: '9'},
-  
   ]
 
   const listone = [

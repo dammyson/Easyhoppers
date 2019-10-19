@@ -45,8 +45,16 @@ export default class Register extends Component{
           console.log(res);
           if(res.status){
           this.setState({ loading: false})
-          this.props.navigation.navigate('Login')
 
+          Alert.alert(
+            'Registration successful',
+            'Please check your mail to activate your account so you can log in to the application',
+            [
+              {text: 'Cancel', onPress: () => console.log('Cancel Pressed!')},
+              {text: 'OK', onPress: () =>  this.props.navigation.navigate('Login')},
+            ],
+            { cancelable: false }
+          )
           }else{
         Alert.alert('Registration failed', res.message, [{text: 'Okay'}])
         this.setState({ loading: false})

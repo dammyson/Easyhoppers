@@ -195,7 +195,7 @@ checkAlert = () => {
                      }
                     >
 
-                        <Text style={{fontSize: 12, fontWeight: '200',  color: URL.bgcolor, marginBottom:10}}>Sub</Text>
+                        <Text style={{fontSize: 10, fontWeight: '200',  color: URL.bgcolor, marginBottom:10}}>Alert Me</Text>
                       
                      
                             <Animated.Image
@@ -222,12 +222,12 @@ checkAlert = () => {
                         </View>
                         <View style = {styles.menudetailsTopchild}>
                         <Text style={{fontSize: 12, fontWeight: '200',  color: URL.bgcolor,}}>Depature</Text>
-                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.scheduled_departure_time}</Text>
+                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.scheduled_departure_time.substring(0, 5)}</Text>
                         </View>
 
                         <View style = {styles.menudetailsTopchild}>
                         <Text style={{fontSize: 12, fontWeight: '200',  color: URL.bgcolor,}}>Arival</Text>
-                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.scheduled_arrival_time}</Text>
+                        <Text style={{marginTop:7, fontSize: 12, fontWeight: '500',  color: '#000',}}>{item.scheduled_arrival_time.substring(0, 5)}</Text>
                         </View>
                     
                 

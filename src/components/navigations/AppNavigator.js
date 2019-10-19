@@ -33,6 +33,7 @@ const AppNavigator = createStackNavigator({
     navigationOptions: {
       header:null 
     }},  
+
      Welcome: {screen: Welcome,
     navigationOptions: {
       header:null 

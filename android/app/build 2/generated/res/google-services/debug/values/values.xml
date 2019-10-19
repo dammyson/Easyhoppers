@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">616042626720-9o2d7ks5gagppokjd3tuljvihol2l8hh.apps.googleusercontent.com</string>
+    <string name="firebase_database_url" translatable="false">https://easyhoppers.firebaseio.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">616042626720</string>
+    <string name="google_api_key" translatable="false">AIzaSyC_lG7ahq6HMXitSVzauHHISxfLNv-sGJ8</string>
+    <string name="google_app_id" translatable="false">1:616042626720:android:fc128162ad1275f1</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyC_lG7ahq6HMXitSVzauHHISxfLNv-sGJ8</string>
+    <string name="google_storage_bucket" translatable="false">easyhoppers.appspot.com</string>
+    <string name="project_id" translatable="false">easyhoppers</string>
+</resources>
