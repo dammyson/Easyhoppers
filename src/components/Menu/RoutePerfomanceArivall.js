@@ -244,8 +244,16 @@ export default class RoutePerfomanceArivall extends Component {
     return (
 
       <View style={styles.container}>
-        <View style={{ alignItems: 'center', justifyContent: 'center', paddingTop: 8, paddingBottom: 10, color: "#fff", fontWeight: '900', fontSize: 13, }}>
-          <Text style={{ color: "#fff", fontWeight: '900', fontSize: 16, }}>Perfomance Details</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingTop: 8, paddingBottom: 10, color: "#fff", fontWeight: '900', fontSize: 13, }}>
+        <TouchableOpacity onPress={() =>this.props.navigation.goBack() } style={{ marginLeft: 10 }}>
+          <Icon
+              name="angle-left"
+              size={30}
+              type='font-awesome'
+              color="#fff"
+            />
+          </TouchableOpacity>
+          <Text style={{ color: "#fff", fontWeight: '900', fontSize: 16, flex:1, textAlign:'center' }}>Perfomance Details</Text>
         </View>
         <View style={styles.main}>
 

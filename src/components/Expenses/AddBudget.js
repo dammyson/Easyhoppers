@@ -4,6 +4,7 @@ import PickerModal from 'react-native-picker-modal-view';
 const URL = require("../../components/server");
 import DatePicker from 'react-native-datepicker'
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
+import { Card, Icon,SocialIcon} from 'react-native-elements'
 const list = [
 	{Id: 1, Name: 'Food', Value: 'Food'},
 	{Id: 2, Name: 'Hotel', Value: 'Hotel'},
@@ -164,8 +165,16 @@ setCurren(curr){
     return (
        
       <View style = {styles.container}>
-      <View style={{alignItems: 'center', justifyContent: 'center',paddingTop:8, paddingBottom:10, color:"#fff", fontWeight: '900',  fontSize:13,}}>
-          <Text style={{color:"#fff", fontWeight: '900',  fontSize:16,}}>Input Expense</Text>
+      <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center',paddingTop:8, paddingBottom:10, color:"#fff", fontWeight: '900',  fontSize:13,}}>
+      <TouchableOpacity onPress={() =>this.props.navigation.goBack() } style={{ marginLeft: 10 }}>
+            <Icon
+              name="angle-left"
+              size={30}
+              type='font-awesome'
+              color="#fff"
+            />
+          </TouchableOpacity>
+          <Text style={{ color: "#fff", fontWeight: '900', fontSize: 16, flex:1, textAlign:'center' }}>Input expense</Text>
         </View>
           <View style = {styles.main}>
             

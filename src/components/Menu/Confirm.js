@@ -2,6 +2,7 @@
 import React, {Component} from 'react';
 import {AsyncStorage, ActivityIndicator, Platform, StyleSheet, Text, View,Image, Alert, TouchableOpacity} from 'react-native';
 const URL = require("../server");
+import { Card, Icon,SocialIcon} from 'react-native-elements'
 
 export default class Confirm extends Component{
 
@@ -87,7 +88,7 @@ export default class Confirm extends Component{
     }
     if (this.state.status) {
     return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{flexDirection: 'row',  flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text style={{color:URL.bgcolor, margin:20, fontWeight: '900',  fontSize:16,}}>Subscription to boarding Alert was successful</Text>
         <TouchableOpacity style={styles.buttonContainer} >
           <Text style={styles.buttonText}

@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import {ActivityIndicator,Platform, Alert, TouchableOpacity, FlatList, StyleSheet, Text, View,AsyncStorage, Image, TextInput} from 'react-native';
 import { List, ListItem, SearchBar} from 'react-native-elements';
 const URL = require("../../components/server");
+import { Card, Icon,SocialIcon} from 'react-native-elements'
 
 export default class ExpensesSum extends Component{
 
@@ -200,8 +201,16 @@ export default class ExpensesSum extends Component{
     return (
        
           <View style = {styles.container}>
-        <View style={{alignItems: 'center', justifyContent: 'center',paddingTop:8, paddingBottom:10, color:"#fff", fontWeight: '900',  fontSize:13,}}>
-          <Text style={{color:"#fff", fontWeight: '900',  fontSize:16,}}>Expenses</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center',paddingTop:8, paddingBottom:10, color:"#fff", fontWeight: '900',  fontSize:13,}}>
+          <TouchableOpacity onPress={() =>this.props.navigation.goBack() } style={{ marginLeft: 10 }}>
+            <Icon
+              name="angle-left"
+              size={30}
+              type='font-awesome'
+              color="#fff"
+            />
+          </TouchableOpacity>
+          <Text style={{ color: "#fff", fontWeight: '900', fontSize: 16, flex:1, textAlign:'center' }}>Expenses</Text>
         </View>
 
 

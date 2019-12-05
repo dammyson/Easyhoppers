@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import {ActivityIndicator,Platform, TouchableOpacity, Alert, FlatList, StyleSheet, Text, View,AsyncStorage, Image, TextInput} from 'react-native';
 import { List, ListItem, SearchBar} from 'react-native-elements';
 const URL = require("../../components/server");
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { Card, Icon,SocialIcon} from 'react-native-elements'
 import { MaterialDialog } from 'react-native-material-dialog';
 export default class Reciept extends Component{
 
@@ -246,8 +246,16 @@ export default class Reciept extends Component{
     return (
        
           <View style = {styles.container}>
-        <View style={{alignItems: 'center', justifyContent: 'center',paddingTop:8, paddingBottom:10, color:"#fff", fontWeight: '900',  fontSize:13,}}>
-          <Text style={{color:"#fff", fontWeight: '900',  fontSize:16,}}>Expense Details</Text>
+        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center',paddingTop:8, paddingBottom:10, color:"#fff", fontWeight: '900',  fontSize:13,}}>
+          <TouchableOpacity onPress={() =>this.props.navigation.goBack() } style={{ marginLeft: 10 }}>
+            <Icon
+              name="angle-left"
+              size={30}
+              type='font-awesome'
+              color="#fff"
+            />
+          </TouchableOpacity>
+          <Text style={{ color: "#fff", fontWeight: '900', fontSize: 16, flex:1, textAlign:'center' }}>Expense Details</Text>
         </View>
 
 

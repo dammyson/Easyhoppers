@@ -2,6 +2,7 @@
 import React, {Component} from 'react';
 import {ActivityIndicator, Platform,AsyncStorage, StyleSheet, Text, View,Image, Alert, TouchableOpacity} from 'react-native';
 const URL = require("../../components/server");
+import { Card, Icon,SocialIcon} from 'react-native-elements'
 
 export default class Checkout extends Component{
 
@@ -142,8 +143,16 @@ export default class Checkout extends Component{
     return (
        
       <View style = {styles.container}>
-       <View style={{alignItems: 'center', justifyContent: 'center',paddingTop:8, paddingBottom:10, color:"#fff", fontWeight: '900',  fontSize:13,}}>
-          <Text style={{color:"#fff", fontWeight: '900',  fontSize:16,}}>Subscribe</Text>
+       <View style={{flexDirection: 'row',  alignItems: 'center', justifyContent: 'center',paddingTop:8, paddingBottom:10, color:"#fff", fontWeight: '900',  fontSize:13,}}>
+       <TouchableOpacity onPress={() =>this.props.navigation.goBack() } style={{ marginLeft: 10 }}>
+            <Icon
+              name="angle-left"
+              size={30}
+              type='font-awesome'
+              color="#fff"
+            />
+          </TouchableOpacity>
+          <Text style={{ color: "#fff", fontWeight: '900', fontSize: 16, flex:1, textAlign:'center' }}>Subscribe</Text>
         </View>
           <View style = {styles.main}>
             

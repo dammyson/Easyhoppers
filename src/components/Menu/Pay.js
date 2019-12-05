@@ -3,6 +3,7 @@ import React, {Component} from 'react';
 import {AsyncStorage, StyleSheet, Text, View,Image, Alert, TouchableOpacity} from 'react-native';
 const URL = require("../../components/server");
 import Rave from 'react-native-rave';
+import { Card, Icon,SocialIcon} from 'react-native-elements'
 
 export default class Pay extends Component{
 
