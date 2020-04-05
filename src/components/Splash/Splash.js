@@ -1,24 +1,29 @@
 
 import React, {Component} from 'react';
 import {Platform, StyleSheet, Text, View, Image} from 'react-native';
-
+import { Actions } from 'react-native-router-flux';
 
 export default class Splash extends Component{
-
-    performinTimeConsumingTask = async()=> {
-      return new Promise((resolve) => {
-          setTimeout(
-            ()=> {resolve('result')},
-            3000
-          )
-        })
+      async componentDidMount() {
+        setTimeout(() => {
+    //this.initPage();
+     Actions.reg();
+          }, 3000);
     }
 
-  async componentDidMount(){
-    const data = await this.performinTimeConsumingTask();
-    if(data !== null){
-     this.props.navigation.navigate('Login');
-    }
+initPage = () => {
+ 
+    AsyncStorage.getItem('login').then((value) => {
+      if(value=='true'){
+        Actions.home({type: 'replace'});
+      }else if(value==null){
+        Actions.intro({type: 'replace'});
+      }else{
+        Actions.intro({type: 'replace'});
+      } 
+        
+    })
+   
   }
 
   render() {
