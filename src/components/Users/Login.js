@@ -1,234 +1,261 @@
+// React native and others libraries imports
+import React, { Component } from 'react';
+import { Alert, TextInput, ImageBackground, View, Dimensions, TouchableOpacity, Image, ScrollView, StyleSheet, AsyncStorage } from 'react-native';
+import { Container, Content, Text, Button, Left, } from 'native-base';
+import { Avatar, Icon, } from 'react-native-elements';
+import { Actions } from 'react-native-router-flux';
+import {
+    BarIndicator,
+}
+    from 'react-native-indicators';
 
-import React, {Component} from 'react';
-import {TextInput, StyleSheet,ScrollView, Text, View,TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, Alert, AsyncStorage} from 'react-native';
 const URL = require("../../components/server");
-export default class Login extends Component{
 
-  constructor(props) 
-  {
-      super(props);
-      this.state = {
-        loading: false,
-        email: "", 
-        password: "",
-        demail: "", 
-
-                  }
-
-  }
+import color from '../../components/color';
 
 
-  componentDidMount() {
-  
-    AsyncStorage.getItem('email').then((value) => this.setState({ 'demail': value.toString()}))
-  }
 
-
-  checkLogin()
-  {
-    
-        const {email, password} = this.state
-
-          if(email == "" || password == "" ){
-            Alert.alert('Validation failed', 'Email and password field cannot be empty', [{text: 'Okay'}])
-            return
-          }
-        this.setState({ loading: true})
-        fetch(URL.url+'/api/login', { method: 'POST',  headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        }, body: JSON.stringify({
-          email: email,
-          password: password,
-        }),  })
-        .then(res => res.json())
-        .then(res => {
-
-          if(res.status){
-          AsyncStorage.setItem('auth', res.token.toString());
-          AsyncStorage.setItem('role', res.Role);
-          AsyncStorage.setItem('email', email);
-          this.setState({ loading: false})
-
-              if(res.Role=="customer"){
-                this.props.navigation.navigate('UserLanding')
-              }else{
-                this.props.navigation.navigate('AgentLanding')
-              }
-
-         
-
-          }else{
-
-        Alert.alert('Login failed', "Check your email and password", [{text: 'Okay'}])
-        this.setState({ loading: false})
-          }
-        }).catch((error)=>{
-          console.log("Api call error");
-          alert(error.message);
-          this.setState({ loading: false})
-       });
-}
-
-  render() {
-    if (this.state.loading) {
-      return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <ActivityIndicator />
-          <Text>Processing</Text>
-        </View>
-      );
+export default class Login extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            items: [],
+            loading: false,
+            email: '',
+            password: '',
+            userInfo: {},
+            remember: true,
+        };
     }
-    return (
-      <View behavior="padding" style={styles.container}>
 
-       
-         <KeyboardAvoidingView style={styles.textInputcontainer}>
-         <View>
-        <Text style={styles.headText}
-                        >Sign In</Text>
-        </View>
-                    <TextInput
-                        placeholder= "Email"
-                        placeholderTextColor= '#55575b'
-                        returnKeyType = "next"
-                        text= {this.state.demail}
-                        onSubmitEditing = {() => this.passwordInput.focus()}
-                        keyboardType = "email-address"
-                        autoCapitalize= "none"
-                        autoCorrect = {false}
-                        style = {styles.input}
-                        onChangeText = {text => this.setState({email: text})}
-                       
-                />
+    componentDidMount() {
 
-                <TextInput
-                        placeholder= "Password"
-                        secureTextEntry
-                        keyboardType = "email-address"
-                        maxLength={16}
-                        placeholderTextColor= '#55575b'
-                        returnKeyType= "go"
-                        style = {styles.input}
-                        ref={(input)=> this.passwordInput = input}
-                        onChangeText = {text => this.setState({password: text})}
-                />
 
-           </KeyboardAvoidingView>    
-           <View style={styles.Linkcontainer}>
-                <TouchableOpacity style={styles.buttonContainer} >
-                    <Text style={styles.buttonText}
-                     onPress ={() => this.checkLogin()}  >SIGN IN</Text>
+    }
 
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.cancelContainer} >
-                     <Text style={styles.cancleText}
-                     >X</Text>
 
-                </TouchableOpacity>
+    render() {
 
-          </View>   
-          <View style={styles.bottom}>
-          <TouchableOpacity style={styles.link}
-           onPress={() => this.props.navigation.navigate('ForgotPassword')}>
-          <Text  style={styles.linkText} >Forgot Password</Text>
-          </TouchableOpacity>
-        <TouchableOpacity style={styles.link} 
-            onPress={() => this.props.navigation.navigate('Register')}>
-          <Text  style={styles.linkText} >New User</Text>
-          </TouchableOpacity>
+        return (
+            <ImageBackground
+                source={require('../../images/login_bg.png')}
+                style={styles.mainsection}
+                resizeMode="cover"
+            >
+                <Container style={{ backgroundColor: 'transparent' }}>
+                    <Content>
+                        <View style={styles.body}>
+                                <View style={{ flex: 1, marginTop: 6, marginLeft: 40, marginRight: 40, paddingTop: 40,  justifyContent:'center' }}>
 
-        </View>
-      </View>
-    );
-  }
+                                    <Text style={{ color: '#fff', marginBottom: 7, marginTop: 10, fontWeight: '400', fontSize: 13, }}> Email</Text>
+                                    <View style={styles.oneRowTextInput}>
+                                        <View style={styles.textInputIconContainer}>
+                                            <Icon type='antdesign' name='user' size={30} color='#fff' />
+                                        </View>
+                                        <View style={styles.textInputContainer}>
+                                            <TextInput
+                                                placeholder={"First name"}
+                                                placeholderTextColor={'#403C3B'}
+                                                returnKeyType="next"
+                                                onSubmitEditing={() => this.passwordInput.focus()}
+                                                keyboardType='email-address'
+                                                autoCapitalize="none"
+                                                autoCorrect={false}
+                                                inlineImageLeft='ios-call'
+                                                style={{ flex: 1, fontSize: 13 }}
+
+                                            />
+
+                                        </View>
+
+                                    </View>
+
+
+                                    <Text style={{ color: '#fff', marginBottom: 7, marginTop: 10, fontWeight: '400', fontSize: 13, }}> Password</Text>
+                                    <View style={styles.oneRowTextInput}>
+                                        <View style={styles.textInputIconContainer}>
+                                            <View style={{ transform: [{ rotateX: "180deg" }] }}>
+                                                <Icon type='foundation' name='key' size={30} color='#fff' />
+                                            </View>
+                                        </View>
+                                        <View style={styles.textInputContainer}>
+                                            <TextInput
+                                                placeholder={"******"}
+                                                placeholderTextColor={'#403C3B'}
+                                                secureTextEntry
+                                                returnKeyType="next"
+                                                onSubmitEditing={() => this.passwordInput.focus()}
+                                                keyboardType='password'
+                                                autoCapitalize="none"
+                                                autoCorrect={false}
+                                                inlineImageLeft='ios-call'
+                                                style={{ flex: 1, fontSize: 13 }}
+
+                                            />
+
+                                        </View>
+
+                                    </View>
+
+
+                                    <TouchableOpacity style={{ flexDirection: 'row', marginTop: 20, backgroundColor: '#01215B', justifyContent: 'flex-end', borderRadius: 10, padding: 12 }}>
+
+                                        <View style={{ marginLeft: 20, }}>
+                                            <Icon type='ionicon' name='ios-airplane' size={30} color='#01215B' />
+                                        </View>
+
+                                        <View  style={styles.actionButton}>
+                                            <Text style={{ color: '#FFF', fontWeight: '900', fontSize: 16, }}>Log In </Text>
+
+                                        </View>
+
+
+                                        <View style={{ marginLeft: 20, }}>
+                                            <Icon type='ionicon' name='ios-airplane' size={30} color='#fff' />
+                                        </View>
+
+                                    </TouchableOpacity>
+
+                                    <View style={{ flexDirection: 'row', marginTop: 20, }}>
+                                    <TouchableOpacity onPress={()=> Actions.reg({type: 'replace'})}>
+                                        <Text style={{ color: '#FFF', fontWeight: '600', fontSize: 12, }}>Create New Account  </Text>
+                                        </TouchableOpacity>    
+                                        <View style={{ flex: 1, justifyContent: 'center', }} />
+
+
+
+                                        <View style={{ width: 1, backgroundColor: '#fff' }} />
+
+                                        <View style={{ flex: 1, justifyContent: 'center', }} />
+
+
+
+                                        <TouchableOpacity onPress={()=> Actions.login({type: 'replace'})}>
+                                        <Text style={{ color: '#FFF', fontWeight: '400', fontSize: 12, }}>Forgot Password </Text>
+                                        </TouchableOpacity>
+                                    </View>
+
+
+                                    <View style={{ flexDirection: 'row', marginTop: 20, }}>
+                                        <TouchableOpacity onPress={() => this.rememberMe()} style={[{
+                                            height: 18,
+                                            width: 18,
+                                            borderRadius: 9,
+                                            borderWidth: 1,
+                                            borderColor: '#8D8D8D',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            marginRight: 10,
+                                            backgroundColor: '#fff',
+                                        }]}>
+                                            {this.state.remember ?
+
+
+                                                <View style={{
+                                                    height: 10,
+                                                    width: 10,
+                                                    borderRadius: 5,
+                                                    backgroundColor: '#8D8D8D',
+                                                }} />
+
+                                                :
+                                                null
+
+
+                                            }
+
+
+
+                                        </TouchableOpacity>
+                                        <Text style={{ color: '#FFF', fontWeight: '400', fontSize: 12, }}>Remember Me</Text>
+                                    </View>
+
+
+                                </View>
+                        </View>
+                    </Content>
+                </Container>
+            </ImageBackground>
+
+        );
+    }
+
+
+
+    itemClicked(item) {
+        Actions.product();
+    }
+
+
+
 }
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#FFF',
-    paddingTop:100
-  },
-  textInputcontainer: {
-    flex: 2,
-    justifyContent: 'flex-end',
-  },
-  Linkcontainer: {
-    flex: 3,
-    justifyContent: 'center',
-  },
-  input:{
-    height:45,
-    backgroundColor: '#d2e0f7',
-    marginBottom:15,
-    color: '#000000',
-    paddingHorizontal: 10,
-    borderTopLeftRadius: 25,
-    borderBottomLeftRadius: 25,
-    marginLeft:40,
-    fontWeight: '600',
+    backgroundImage: {
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
     },
-    buttonContainer:{
-        height:50,
-        backgroundColor: "#AFC1F2",
-        borderTopRightRadius: 30,
-        justifyContent: 'center',
-        borderBottomRightRadius: 30,
-        width:150,
-      },
-      buttonText:{
-        textAlign:'center',
-        color: "#FFFFFF",
-        fontWeight: '900',
-        fontSize:18,
-      },
-      cancelContainer:{
-        height:50,
-        backgroundColor: "#FFFFFF",
-        borderTopRightRadius: 30,
-        justifyContent: 'center',
-        borderBottomRightRadius: 30,
-        width:100,
-        elevation: 5,
-        borderColor:'#AFC1F2',
-        borderWidth: 2,
-        marginTop: 10
-      },
-      cancleText:{
-        textAlign:'center',
-        color: "#AFC1F2",
-        fontWeight: '900',
-        fontSize:18,
-      },
-      headText:{
-        color: "#000",
-        fontWeight: '900',
-        fontSize:25,
-        textAlign:'left',
-        marginLeft: 50,
-        marginBottom:30
-      },
-      bottom:{
-        height:30,
-        flexDirection: "row",
+    container: {
+        flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        marginBottom:1
-      },
-      linkText:{
+
+    },
+    body: {
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+       paddingBottom:30
+
+    },
+
+    header: {
         flex: 1,
-        color: "#000",
-        fontWeight: '700',
-        fontSize:15,
-        textAlign:'center',
-      },
-      link:{
+    },
+    headerContent: {
         flex: 1,
-        color: "#000",
-        fontWeight: '700',
-        fontSize:15,
-        textAlign:'center',
-      },
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    mainsection: {
+        flex: 4
+    },
+    oneRowTextInput: {
+        flexDirection: 'row',
+    },
+
+    textInputIconContainer: {
+        borderBottomLeftRadius: 10,
+        borderTopLeftRadius: 10,
+        marginRight: 7,
+        height: 45,
+        width: 45,
+        backgroundColor: '#3B424E',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    textInputContainer: {
+        flex: 1,
+        paddingLeft: 7,
+        backgroundColor: '#fff',
+        borderColor: '#B8B8B8',
+        borderBottomRightRadius: 10,
+        borderTopRightRadius: 10,
+        borderWidth: 1,
+        height: 45
+    },
+    actionButton:{ 
+        flexDirection: 'row',
+        marginTop:20, 
+        backgroundColor:'#01215B', 
+        justifyContent:'flex-end', 
+        borderRadius:10, 
+        padding:15 ,
+        shadowColor: '#1044A4',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    elevation: 10,
+    }
+
 });
+

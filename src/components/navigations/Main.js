@@ -13,9 +13,9 @@ import { Scene, Router, Actions } from 'react-native-router-flux';
 
 
 import Splash from '../Splash/Splash';
-import Login from '../Users/nLogin';
-import Register from '../Users/nRegister';
-import RegisterTwo from '../Users/nRegisterTwo';
+import Login from '../Users/Login';
+import Register from '../Users/Register';
+import RegisterTwo from '../Users/RegisterTwo';
 
 
 
