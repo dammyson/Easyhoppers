@@ -67,14 +67,14 @@ export default class RegisterTwo extends Component {
                             <ScrollView style={{ flex: 1, }}>
                                 <View style={{ flex: 1, marginTop: 6, marginLeft: 30, marginRight: 30, paddingTop: 40 }}>
 
-                                    <Text style={{ color: '#403C3B', marginBottom: 7, marginTop: 10, fontWeight: '400', fontSize: 13, }}> Email</Text>
+                                    <Text style={{ color: '#403C3B', marginBottom: 7, marginTop: 10, fontWeight: '400', fontSize: 13, }}> Username</Text>
                                     <View style={styles.oneRowTextInput}>
                                         <View style={styles.textInputIconContainer}>
                                             <Icon type='antdesign' name='user' size={30} color='#fff' />
                                         </View>
                                         <View style={styles.textInputContainer}>
                                             <TextInput
-                                                placeholder={"First name"}
+                                                placeholder={"Username"}
                                                 placeholderTextColor={'#403C3B'}
                                                 returnKeyType="next"
                                                 onSubmitEditing={() => this.passwordInput.focus()}
