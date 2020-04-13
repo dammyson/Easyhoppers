@@ -16,6 +16,10 @@ import Splash from '../Splash/Splash';
 import Login from '../Users/Login';
 import Register from '../Users/Register';
 import RegisterTwo from '../Users/RegisterTwo';
+import ForgotPassword from '../Users/ForgotPassword';
+import ChangePassword from '../Users/ChangePassword';
+import Home from '../Users/Home';
+import Intro from '../Splash/Intro';
 
 
 
@@ -48,9 +52,17 @@ export default class Main extends Component {
         <Router>
           <Scene key="root">
             <Scene initial key="splash" component={Splash} hideNavBar />
+            <Scene initial key="intro" component={Intro} hideNavBar />
+
             <Scene key="login" component={Login} hideNavBar />
             <Scene key="reg" component={Register} hideNavBar />
             <Scene key="regtwo" component={RegisterTwo} hideNavBar />
+            <Scene key="forgot" component={ForgotPassword} hideNavBar />
+            <Scene key="changepassword" component={ChangePassword} hideNavBar />
+            <Scene key="home" component={Home} hideNavBar />
+            
+
+
 
      
           </Scene>

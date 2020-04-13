@@ -7,7 +7,7 @@ export default class Splash extends Component{
       async componentDidMount() {
         setTimeout(() => {
     //this.initPage();
-     Actions.reg();
+     Actions.intro();
           }, 3000);
     }
 

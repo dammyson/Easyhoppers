@@ -15,7 +15,7 @@ import color from '../../components/color';
 
 
 
-export default class Login extends Component {
+export default class ChangePassword extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -24,7 +24,7 @@ export default class Login extends Component {
             email: '',
             password: '',
             userInfo: {},
-            remember: true,
+            gettingLoginStatus: true,
         };
     }
 
@@ -37,24 +37,44 @@ export default class Login extends Component {
     render() {
 
         return (
-            <ImageBackground
-                source={require('../../images/login_bg.png')}
-                style={styles.mainsection}
-                resizeMode="cover"
-            >
-                <Container style={{ backgroundColor: 'transparent' }}>
-                    <Content>
-                        <View style={styles.body}>
-                                <View style={{ flex: 1, marginTop: 6, marginLeft: 40, marginRight: 40, paddingTop: 40,  justifyContent:'center' }}>
+            <Container style={{ backgroundColor: 'black' }}>
+                <Content>
+                    <View style={styles.body}>
+                        <ImageBackground
+                            source={require('../../images/forgor_bg.png')}
+                            style={styles.header}
+                            resizeMode="cover"
+                        >
+                            <View style={styles.headerContent}>
+                                <Text style={{ color: '#FFF', margin: 15, fontWeight: '900', fontSize: 16, }}>Change Password </Text>
+                                <TouchableOpacity onPress={()=> Actions.login({type: 'replace'})} style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', }}>
 
-                                    <Text style={{ color: '#fff', marginBottom: 7, marginTop: 10, fontWeight: '400', fontSize: 13, }}> Email</Text>
+                                    <View style={{ marginRight: 15, transform: [{ rotate: "180deg" }] }}>
+                                        <Icon type='ionicon' name='ios-airplane' size={30} color='#fff' />
+                                    </View>
+
+                                    <Text style={{ color: '#FFF', fontWeight: '900', fontSize: 12, }}>Go Back to Login </Text>
+                                </TouchableOpacity>
+                            </View>
+
+                        </ImageBackground>
+
+                        <ImageBackground
+                            source={require('../../images/main_bg.png')}
+                            style={styles.mainsection}
+                            resizeMode="cover"
+                        >
+                            <ScrollView style={{ flex: 1, }}>
+                                <View style={{ flex: 1, marginTop: 6, marginLeft: 30, marginRight: 30, paddingTop: 40 }}>
+
+                                    <Text style={{ color: '#403C3B', marginBottom: 7, marginTop: 10, fontWeight: '400', fontSize: 13, }}> New Password</Text>
                                     <View style={styles.oneRowTextInput}>
                                         <View style={styles.textInputIconContainer}>
-                                            <Icon type='antdesign' name='user' size={30} color='#fff' />
+                                        <Icon type='foundation' name='key' size={30} color='#fff' />
                                         </View>
                                         <View style={styles.textInputContainer}>
                                             <TextInput
-                                                placeholder={"First name"}
+                                                placeholder={"password"}
                                                 placeholderTextColor={'#403C3B'}
                                                 returnKeyType="next"
                                                 onSubmitEditing={() => this.passwordInput.focus()}
@@ -71,16 +91,17 @@ export default class Login extends Component {
                                     </View>
 
 
-                                    <Text style={{ color: '#fff', marginBottom: 7, marginTop: 10, fontWeight: '400', fontSize: 13, }}> Password</Text>
+
+                                    <Text style={{ color: '#403C3B', marginBottom: 7, marginTop: 10, fontWeight: '400', fontSize: 13, }}> Confirm Password </Text>
                                     <View style={styles.oneRowTextInput}>
                                         <View style={styles.textInputIconContainer}>
                                             <View style={{ transform: [{ rotateX: "180deg" }] }}>
-                                                <Icon type='foundation' name='key' size={30} color='#fff' />
+                                            <Icon type='foundation' name='key' size={30} color='#fff' />
                                             </View>
                                         </View>
                                         <View style={styles.textInputContainer}>
                                             <TextInput
-                                                placeholder={"******"}
+                                                placeholder={"confirm password"}
                                                 placeholderTextColor={'#403C3B'}
                                                 secureTextEntry
                                                 returnKeyType="next"
@@ -98,84 +119,35 @@ export default class Login extends Component {
                                     </View>
 
 
-                                    <TouchableOpacity style={styles.actionButton} onPress={()=> Actions.home({type: 'replace'})}>
+                                    <TouchableOpacity   style={styles.actionButton}>
 
-                                        <View style={{ marginLeft: 20, }}>
-                                            <Icon type='ionicon' name='ios-airplane' size={30} color='#01215B' />
-                                        </View>
+                                          <View style={{ marginLeft: 20, }}>
+                                                <Icon type='ionicon' name='ios-airplane' size={30} color='#01215B' />
+                                            </View>
 
                                         <View style={{ flexDirection: 'row', flex:1, justifyContent: 'center', alignItems: 'center'}}>
-                                            <Text style={{ color: '#FFF', fontWeight: '900', fontSize: 16, }}>Log In </Text>
-
+                                        <Text style={{ color: '#FFF', fontWeight: '900', fontSize: 16, }}>Proceed </Text>
+                                             
                                         </View>
 
 
                                         <View style={{ marginLeft: 20, }}>
-                                            <Icon type='ionicon' name='ios-airplane' size={30} color='#fff' />
-                                        </View>
+                                                <Icon type='ionicon' name='ios-airplane' size={30} color='#fff' />
+                                            </View>
 
                                     </TouchableOpacity>
 
-                                    <View style={{ flexDirection: 'row', marginTop: 20, }}>
-                                    <TouchableOpacity onPress={()=> Actions.reg({type: 'replace'})}>
-                                        <Text style={{ color: '#FFF', fontWeight: '600', fontSize: 12, }}>Create New Account  </Text>
-                                        </TouchableOpacity>    
-                                        <View style={{ flex: 1, justifyContent: 'center', }} />
 
-
-
-                                        <View style={{ width: 1, backgroundColor: '#fff' }} />
-
-                                        <View style={{ flex: 1, justifyContent: 'center', }} />
-
-
-
-                                        <TouchableOpacity onPress={()=> Actions.forgot({type: 'replace'})}>
-                                        <Text style={{ color: '#FFF', fontWeight: '400', fontSize: 12, }}>Forgot Password </Text>
-                                        </TouchableOpacity>
-                                    </View>
-
-
-                                    <View style={{ flexDirection: 'row', marginTop: 20, }}>
-                                        <TouchableOpacity onPress={() => this.rememberMe()} style={[{
-                                            height: 18,
-                                            width: 18,
-                                            borderRadius: 9,
-                                            borderWidth: 1,
-                                            borderColor: '#8D8D8D',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            marginRight: 10,
-                                            backgroundColor: '#fff',
-                                        }]}>
-                                            {this.state.remember ?
-
-
-                                                <View style={{
-                                                    height: 10,
-                                                    width: 10,
-                                                    borderRadius: 5,
-                                                    backgroundColor: '#8D8D8D',
-                                                }} />
-
-                                                :
-                                                null
-
-
-                                            }
-
-
-
-                                        </TouchableOpacity>
-                                        <Text style={{ color: '#FFF', fontWeight: '400', fontSize: 12, }}>Remember Me</Text>
-                                    </View>
 
 
                                 </View>
-                        </View>
-                    </Content>
-                </Container>
-            </ImageBackground>
+                            </ScrollView>
+
+                        </ImageBackground>
+
+                    </View>
+                </Content>
+            </Container>
 
         );
     }
@@ -203,8 +175,6 @@ const styles = StyleSheet.create({
     body: {
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').height,
-       paddingBottom:30
-
     },
 
     header: {
@@ -235,8 +205,6 @@ const styles = StyleSheet.create({
     },
     textInputContainer: {
         flex: 1,
-        paddingLeft: 7,
-        backgroundColor: '#fff',
         borderColor: '#B8B8B8',
         borderBottomRightRadius: 10,
         borderTopRightRadius: 10,
@@ -256,7 +224,18 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 10,
     },
-   
+    lineStyle: {
+      height: 0.2,
+      flex: 1,
+      marginTop: 20,
+      backgroundColor: '#707070',
+  
+    },
+    inputContainer: {
+      flexDirection: "row",
+      marginTop: 20,
+      justifyContent: 'center',
+    },
 
 });
 
