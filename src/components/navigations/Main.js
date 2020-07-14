@@ -20,6 +20,9 @@ import ForgotPassword from '../Users/ForgotPassword';
 import ChangePassword from '../Users/ChangePassword';
 import Home from '../Users/Home';
 import Intro from '../Splash/Intro';
+import Airlines from '../Airlines/Airlines';
+import Airline from '../Airlines/Airline';
+import Graph from '../Airlines/Graph';
 
 
 
@@ -52,7 +55,7 @@ export default class Main extends Component {
         <Router>
           <Scene key="root">
             <Scene initial key="splash" component={Splash} hideNavBar />
-            <Scene initial key="intro" component={Intro} hideNavBar />
+            <Scene key="intro" component={Intro} hideNavBar />
 
             <Scene key="login" component={Login} hideNavBar />
             <Scene key="reg" component={Register} hideNavBar />
@@ -60,6 +63,9 @@ export default class Main extends Component {
             <Scene key="forgot" component={ForgotPassword} hideNavBar />
             <Scene key="changepassword" component={ChangePassword} hideNavBar />
             <Scene key="home" component={Home} hideNavBar />
+            <Scene key="airlines" component={Airlines} hideNavBar />
+            <Scene key="airline" component={Airline} hideNavBar />
+            <Scene key="graph" component={Graph} hideNavBar />
             
 
 

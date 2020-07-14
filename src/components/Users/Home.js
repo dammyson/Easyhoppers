@@ -136,7 +136,7 @@ export default class Home extends Component {
 
                                     </TouchableOpacity>
 
-                                    <TouchableOpacity style={styles.compareButton}>
+                                    <TouchableOpacity onPress={()=> Actions.airlines({type: 'replace'})} style={styles.compareButton}>
                                         <Icon type='material' name='compare-arrows' size={20} color='#fff' />
                                         <Text style={{ color: '#fff' }}> Search </Text>
 

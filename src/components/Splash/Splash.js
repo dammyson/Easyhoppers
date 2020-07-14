@@ -15,11 +15,11 @@ initPage = () => {
  
     AsyncStorage.getItem('login').then((value) => {
       if(value=='true'){
-        Actions.home({type: 'replace'});
+        Actions.graph({type: 'replace'});
       }else if(value==null){
-        Actions.intro({type: 'replace'});
+        Actions.graph({type: 'replace'});
       }else{
-        Actions.intro({type: 'replace'});
+        Actions.graph({type: 'replace'});
       } 
         
     })
