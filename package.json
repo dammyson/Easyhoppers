@@ -8,7 +8,7 @@
     "cleanRNSVG": "find ./node_modules -type d -mindepth 2 -name react-native-svg -exec rm -rf {} \\;"
   },
   "dependencies": {
-    "chart.js": "^2.8.0",
+    "chart.js": "^2.9.4",
     "react": "16.8.3",
     "react-chartkick": "^0.3.0",
     "react-native": "0.59.5",
